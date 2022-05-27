@@ -22,38 +22,40 @@ const FilterAsideLayout = (props) => {
         </div>
       </div>
 
-      <Grid columns={2} container stackable className="body-content">
+      <div className="body-content">
         <Ref innerRef={setRef}>
           {isLandingPage ? (
-            <Grid.Row>
-              <Grid.Column widescreen="12" tablet="12" className="col-full">
-                <div>{bodyHeader}</div>
-                <div>{bodyContent}</div>
-              </Grid.Column>
-            </Grid.Row>
+            <>
+              <div>{bodyHeader}</div>
+              <div>{bodyContent}</div>
+            </>
           ) : (
-            <Grid.Row>
-              <Grid.Column
-                widescreen="2"
-                tablet="2"
-                computer="2"
-                className="col-left"
-              >
-                <div className={cx({ scrolled: stateRef })}>{sideContent}</div>
-              </Grid.Column>
-              <Grid.Column
-                widescreen="10"
-                tablet="10"
-                computer="10"
-                className="col-mid"
-              >
-                <div>{bodyHeader}</div>
-                <div>{bodyContent}</div>
-              </Grid.Column>
-            </Grid.Row>
+            <Grid>
+              <Grid.Row>
+                <Grid.Column
+                  widescreen="2"
+                  tablet="2"
+                  computer="2"
+                  className="col-left"
+                >
+                  <div className={cx({ scrolled: stateRef })}>
+                    {sideContent}
+                  </div>
+                </Grid.Column>
+                <Grid.Column
+                  widescreen="10"
+                  tablet="10"
+                  computer="10"
+                  className="col-mid"
+                >
+                  <div>{bodyHeader}</div>
+                  <div>{bodyContent}</div>
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
           )}
         </Ref>
-      </Grid>
+      </div>
 
       <Grid className="body-footer">
         <Grid.Row>

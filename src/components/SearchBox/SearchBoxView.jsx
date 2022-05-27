@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Downshift from 'downshift';
 import cx from 'classnames';
-import { Container } from 'semantic-ui-react';
 import { Result } from '@elastic/react-search-ui-views';
 import Autocomplete from './Autocomplete';
 
@@ -66,14 +65,13 @@ function SearchBoxView(props) {
         let autocompleteClass = isOpen === true ? ' autocomplete' : '';
         return (
           <div className="header-content">
-            <Container>
-              <form
-                onSubmit={(e) => {
-                  closeMenu();
-                  onSubmit(e);
-                }}
-              >
-                {/*{appConfig.title ? (
+            <form
+              onSubmit={(e) => {
+                closeMenu();
+                onSubmit(e);
+              }}
+            >
+              {/*{appConfig.title ? (
                   <h2 className="searchApp-headline">
                     {appConfig.titleIsLink ? (
                       <a href={homeURL}>{appConfig.title}</a>
@@ -91,61 +89,57 @@ function SearchBoxView(props) {
                 ) : (
                   ''
                 )}*/}
-                <div
-                  className={cx('sui-search-box', className, autocompleteClass)}
-                >
-                  <InputView
-                    mode={mode}
-                    onSubmit={onSubmit}
-                    onChange={(newValue) => {
-                      // To avoid over dispatching
-                      if (value === newValue) return;
-                      onChange(newValue);
-                    }}
-                    {...downshiftProps}
-                    getInputProps={(additionalProps) => {
-                      const { className, ...rest } = additionalProps || {};
-                      return getInputProps({
-                        placeholder: 'Search with a question or keyword...',
-                        ...inputProps,
-                        className: cx(
-                          'sui-search-box__text-input',
-                          inputProps.className,
-                          className,
-                          focusedClass,
-                        ),
-                        ...rest,
-                      });
-                    }}
-                    getButtonProps={(additionalProps) => {
-                      const { className, ...rest } = additionalProps || {};
-                      return {
-                        type: 'submit',
-                        value: 'Search',
-                        className: cx(
-                          'button sui-search-box__submit',
-                          className,
-                        ),
-                        ...rest,
-                      };
-                    }}
-                    getAutocomplete={() => {
-                      if (
-                        useAutocomplete &&
-                        isOpen &&
-                        allAutocompletedItemsCount > 0
-                      ) {
-                        return (
-                          <AutocompleteView {...props} {...downshiftProps} />
-                        );
-                      } else {
-                        return null;
-                      }
-                    }}
-                  />
-                </div>
-              </form>
-            </Container>
+              <div
+                className={cx('sui-search-box', className, autocompleteClass)}
+              >
+                <InputView
+                  mode={mode}
+                  onSubmit={onSubmit}
+                  onChange={(newValue) => {
+                    // To avoid over dispatching
+                    if (value === newValue) return;
+                    onChange(newValue);
+                  }}
+                  {...downshiftProps}
+                  getInputProps={(additionalProps) => {
+                    const { className, ...rest } = additionalProps || {};
+                    return getInputProps({
+                      placeholder: 'Search with a question or keyword...',
+                      ...inputProps,
+                      className: cx(
+                        'sui-search-box__text-input',
+                        inputProps.className,
+                        className,
+                        focusedClass,
+                      ),
+                      ...rest,
+                    });
+                  }}
+                  getButtonProps={(additionalProps) => {
+                    const { className, ...rest } = additionalProps || {};
+                    return {
+                      type: 'submit',
+                      value: 'Search',
+                      className: cx('button sui-search-box__submit', className),
+                      ...rest,
+                    };
+                  }}
+                  getAutocomplete={() => {
+                    if (
+                      useAutocomplete &&
+                      isOpen &&
+                      allAutocompletedItemsCount > 0
+                    ) {
+                      return (
+                        <AutocompleteView {...props} {...downshiftProps} />
+                      );
+                    } else {
+                      return null;
+                    }
+                  }}
+                />
+              </div>
+            </form>
           </div>
         );
       }}
