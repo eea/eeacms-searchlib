@@ -43,10 +43,6 @@ function SearchInput({
     <>
       <div className="search-input">
         <div className="terms-box">
-          <div className="terms-box-left">
-            <Icon name="search" size="large" color="grey" />
-          </div>
-
           {searchPhrases.length === 0 ? (
             <input
               {...domProps}
@@ -118,6 +114,10 @@ function SearchInput({
           ) : (
             ''
           )}
+
+          <div className="terms-box-left">
+            <Icon name="search" color="grey" />
+          </div>
 
           <div className="input-controls">
             {(searchTerm || '').trim() && (
