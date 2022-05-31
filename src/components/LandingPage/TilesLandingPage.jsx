@@ -126,7 +126,6 @@ const LandingPage = (props) => {
         return (
           <React.Fragment key={`tab-${tabIndex}`}>
             <Menu.Item
-              className="tab-item"
               active={activeSection === section.facetField}
               onClick={() => setActiveSection(section.facetField)}
             >
@@ -139,48 +138,50 @@ const LandingPage = (props) => {
         return (
           <Tab.Pane>
             <div className="search-cards">
-              {sortedTiles(tiles, activeSectionConfig, appConfig).map(
-                (topic, index) => {
-                  const onClickHandler = () => {
-                    setFilter(
-                      activeSection,
-                      topic.value,
-                      activeSectionConfig.filterType || 'any',
+              <Card.Group itemsPerRow={5}>
+                {sortedTiles(tiles, activeSectionConfig, appConfig).map(
+                  (topic, index) => {
+                    const onClickHandler = () => {
+                      setFilter(
+                        activeSection,
+                        topic.value,
+                        activeSectionConfig.filterType || 'any',
+                      );
+
+                      // apply configured default values
+                      appConfig.facets
+                        .filter((f) => f.field !== activeSection && f.default)
+                        .forEach((facet) => {
+                          facet.default.values.forEach((value) =>
+                            setFilter(
+                              facet.field,
+                              value,
+                              facet.default.type || 'any',
+                            ),
+                          );
+                        });
+                      setSort(sortField, sortDirection);
+                      setShowFacets(true);
+                    };
+
+                    return (
+                      <Card onClick={onClickHandler} key={index}>
+                        <Card.Content>
+                          <Card.Header>
+                            {icon ? <Icon {...icon} type={topic.value} /> : ''}
+                            <Term term={topic.value} field={activeSection} />
+                          </Card.Header>
+                        </Card.Content>
+                        <Card.Content extra>
+                          <span className="count">
+                            {topic.count} {topic.count === 1 ? 'item' : 'items'}
+                          </span>
+                        </Card.Content>
+                      </Card>
                     );
-
-                    // apply configured default values
-                    appConfig.facets
-                      .filter((f) => f.field !== activeSection && f.default)
-                      .forEach((facet) => {
-                        facet.default.values.forEach((value) =>
-                          setFilter(
-                            facet.field,
-                            value,
-                            facet.default.type || 'any',
-                          ),
-                        );
-                      });
-                    setSort(sortField, sortDirection);
-                    setShowFacets(true);
-                  };
-
-                  return (
-                    <Card onClick={onClickHandler} key={index}>
-                      <Card.Content>
-                        <Card.Description>
-                          {icon ? <Icon {...icon} type={topic.value} /> : ''}
-                          <Term term={topic.value} field={activeSection} />
-                        </Card.Description>
-                      </Card.Content>
-                      <Card.Content extra>
-                        <span className="count">
-                          {topic.count} {topic.count === 1 ? 'item' : 'items'}
-                        </span>
-                      </Card.Content>
-                    </Card>
-                  );
-                },
-              )}
+                  },
+                )}
+              </Card.Group>
             </div>
           </Tab.Pane>
         );
@@ -191,9 +192,13 @@ const LandingPage = (props) => {
   return (
     <div className="landing-page-container">
       <div className="landing-page">
-        <h4 className="browse-by">Or search by</h4>
+        <h4>Or search by</h4>
         <div className="search-tab-wrapper">
-          <Tab className="search-tab" panes={panes} />
+          <Tab
+            className="search-tab"
+            menu={{ secondary: true, pointing: true }}
+            panes={panes}
+          />
         </div>
         {hasOverflow ? (
           <div className="info">
