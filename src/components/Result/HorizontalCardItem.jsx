@@ -72,9 +72,9 @@ const HorizontalCardItem = (props) => {
           </div>
 
           <div className="source">
-            {/*<span>Source: </span>*/}
+            <span>Source: </span>
             <ExternalLink href={result.href}>
-              {/*<strong title={result.source} className="source">
+              <strong title={result.source} className="source">
                 {firstWords(
                   getTermDisplayValue({
                     vocab,
@@ -83,7 +83,7 @@ const HorizontalCardItem = (props) => {
                   }),
                   8,
                 )}
-              </strong>*/}
+              </strong>
               <SegmentedBreadcrumb
                 href={result.href}
                 short={true}
