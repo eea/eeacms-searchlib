@@ -9,6 +9,7 @@ import MoreLikeThisTrigger from './MoreLikeThisTrigger';
 import ExternalLink from './ExternalLink';
 import ResultContext from './ResultContext';
 import ContentClusters from './ContentClusters';
+import { DateTime } from '@eeacms/search/components';
 
 const HorizontalCardItem = (props) => {
   const { result, showControls = true } = props;
@@ -29,6 +30,8 @@ const HorizontalCardItem = (props) => {
   const isSmallScreen = width < 1000;
   const clusters = result.clusterInfo;
 
+  // console.log('props', props);
+
   return (
     <div
       className={cx('search-result', { hovered })}
@@ -37,10 +40,13 @@ const HorizontalCardItem = (props) => {
     >
       <div className="col-full">
         <div className="meta">
+          <span className="date">
+            <DateTime format="DATE_MED" value={result.issued} />
+          </span>
           <ContentClusters clusters={clusters} item={result} />
-          <div className="tags-list">
+          {/*<div className="tags-list">
             <TagsList value={result.tags} />
-          </div>
+          </div>*/}
         </div>
       </div>
       <div className={classColLeft}>
@@ -60,10 +66,15 @@ const HorizontalCardItem = (props) => {
               </Label>
             )}
           </h3>
+
+          <div className="result-description">
+            {props.children ? props.children : <ResultContext {...props} />}
+          </div>
+
           <div className="source">
-            <span>Source: </span>
+            {/*<span>Source: </span>*/}
             <ExternalLink href={result.href}>
-              <strong title={result.source} className="source">
+              {/*<strong title={result.source} className="source">
                 {firstWords(
                   getTermDisplayValue({
                     vocab,
@@ -72,7 +83,7 @@ const HorizontalCardItem = (props) => {
                   }),
                   8,
                 )}
-              </strong>
+              </strong>*/}
               <SegmentedBreadcrumb
                 href={result.href}
                 short={true}
@@ -102,8 +113,6 @@ const HorizontalCardItem = (props) => {
               </Dropdown>
             )}
           </div>
-
-          {props.children ? props.children : <ResultContext {...props} />}
         </div>
         {debugQuery && (
           <div>

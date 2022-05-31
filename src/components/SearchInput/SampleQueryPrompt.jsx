@@ -67,7 +67,7 @@ export default function SampleQueryPrompt() {
 
   return isLandingPage && queries.length ? (
     <div className="demo-question">
-      <h4>Try our suggestions: </h4>
+      <h4>Try our suggestions</h4>
       {/*<Button
         as="a"
         basic

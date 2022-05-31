@@ -103,7 +103,7 @@ const SectionTabs = (props) => {
                 );
               }}
             >
-              <Icon type={value} family="Content types" />
+              {/*<Icon type={value} family="Content types" />*/}
               <span className="title">{value}</span>
               <span className="count">({count})</span>
             </Menu.Item>

@@ -27,7 +27,8 @@ const URLBreadcrumb = ({
 
   return short ? (
     <span className="" title={generateSimpleBreadcrumb(pathname)}>
-      {firstChars(generateSimpleBreadcrumb(pathname), maxChars)}
+      {/*{firstChars(generateSimpleBreadcrumb(pathname), maxChars)}*/}
+      {href}
     </span>
   ) : (
     <Breadcrumb>

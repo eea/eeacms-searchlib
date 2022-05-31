@@ -115,13 +115,9 @@ function SearchInput({
             ''
           )}
 
-          <div className="terms-box-left">
-            <Icon name="search" color="grey" />
-          </div>
-
           <div className="input-controls">
             {(searchTerm || '').trim() && (
-              <div className="ui button basic">
+              <div className="ui button basic clear-button">
                 <Icon
                   name="close"
                   role="button"
@@ -138,6 +134,10 @@ function SearchInput({
                 />
               </div>
             )}
+          </div>
+
+          <div className="terms-box-left">
+            <Icon name="search" color="grey" />
           </div>
 
           {getAutocomplete()}

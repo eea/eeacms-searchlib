@@ -40,9 +40,9 @@ const ResultContext = (props) => {
     <Highlight fragments={result.highlight} result={result} />
   ) : (
     <p>
-      <span className="date">
+      {/*<span className="date">
         <DateTime format="DATE_MED" value={result.issued} /> &mdash;{' '}
-      </span>
+      </span>*/}
 
       {description?.slice(0, max_length)}
       {description?.length > max_length - 3 ? <>&#8230;</> : ''}
