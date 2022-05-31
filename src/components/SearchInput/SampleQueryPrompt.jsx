@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
-import { Icon, List, Accordion } from 'semantic-ui-react';
+import { Modal, Icon, List, Button } from 'semantic-ui-react';
 import { isLandingPageAtom } from '@eeacms/search/state';
 import { useAtom } from 'jotai';
 
@@ -17,6 +17,7 @@ function toArray(s) {
 export default function SampleQueryPrompt() {
   const { appConfig } = useAppConfig();
   const { setSearchTerm, setSort, resetFilters } = useSearchContext();
+  const [showModal, setShowModal] = React.useState();
   const [isLandingPage] = useAtom(isLandingPageAtom);
 
   const {
@@ -57,14 +58,6 @@ export default function SampleQueryPrompt() {
     [resetFilters, setSearchTerm, setSort],
   );
 
-  const [activeIndex, setActiveIndex] = React.useState([]);
-
-  const toggleOpenAccordion = (e, titleProps) => {
-    const { index } = titleProps;
-    const newIndex = activeIndex === index ? -1 : index;
-    setActiveIndex((activeIndex) => (activeIndex = newIndex));
-  };
-
   return isLandingPage && queries.length ? (
     <div className="demo-question">
       <h4>Try our suggestions</h4>
@@ -104,18 +97,29 @@ export default function SampleQueryPrompt() {
           ))}
       </List>
 
-      <Accordion className="suggestion-accordion">
-        <Accordion.Title
-          active={activeIndex === 0}
-          index={0}
-          onClick={toggleOpenAccordion}
-        >
-          <div className="accordion-title-wrapper">
-            More
-            <Icon className="ri-arrow-down-s-line" />
-          </div>
-        </Accordion.Title>
-        <Accordion.Content active={activeIndex === 0}>
+      <Button
+        className="explore-more-queries"
+        basic
+        compact
+        as="a"
+        onClick={(e) => {
+          setShowModal(true);
+          e.preventDefault();
+          e.stopPropagation();
+        }}
+        onKeyDown={() => {}}
+      >
+        More
+        <Icon className="ri-arrow-down-s-line" />
+      </Button>
+
+      <Modal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onOpen={() => setShowModal(true)}
+      >
+        <Modal.Header>Pick one of our sample questions</Modal.Header>
+        <Modal.Content scrolling>
           <List>
             {queries
               .filter((i, index) => index > 3)
@@ -134,8 +138,13 @@ export default function SampleQueryPrompt() {
                 </List.Item>
               ))}
           </List>
-        </Accordion.Content>
-      </Accordion>
+        </Modal.Content>
+        <Modal.Actions>
+          <Button color="black" onClick={() => setShowModal(false)}>
+            Close
+          </Button>
+        </Modal.Actions>
+      </Modal>
     </div>
   ) : null;
 }
