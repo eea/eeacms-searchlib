@@ -1,18 +1,27 @@
 import React from 'react';
 import cx from 'classnames';
-import { Label, Button, Dropdown } from 'semantic-ui-react';
-import { useAppConfig, useWindowDimensions } from '@eeacms/search/lib/hocs';
-import { SegmentedBreadcrumb, TagsList } from '@eeacms/search/components';
+import { Label } from 'semantic-ui-react';
+import {
+  useAppConfig,
+  // useWindowDimensions
+} from '@eeacms/search/lib/hocs';
+import {
+  SegmentedBreadcrumb,
+  // TagsList
+} from '@eeacms/search/components';
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
-import MoreLikeThisTrigger from './MoreLikeThisTrigger';
+// import MoreLikeThisTrigger from './MoreLikeThisTrigger';
 import ExternalLink from './ExternalLink';
 import ResultContext from './ResultContext';
 import ContentClusters from './ContentClusters';
 import { DateTime } from '@eeacms/search/components';
 
 const HorizontalCardItem = (props) => {
-  const { result, showControls = true } = props;
+  const {
+    result,
+    // showControls = true
+  } = props;
   const { appConfig } = useAppConfig();
   const { vocab = {}, debugQuery } = appConfig;
   const [hovered, setHovered] = React.useState(false);
@@ -26,11 +35,9 @@ const HorizontalCardItem = (props) => {
 
   const classColLeft = result.hasImage ? 'col-left' : 'col-left no-image';
 
-  const { width } = useWindowDimensions();
-  const isSmallScreen = width < 1000;
+  // const { width } = useWindowDimensions();
+  // const isSmallScreen = width < 1000;
   const clusters = result.clusterInfo;
-
-  // console.log('props', props);
 
   return (
     <div
@@ -91,7 +98,7 @@ const HorizontalCardItem = (props) => {
               />
             </ExternalLink>
 
-            {showControls && !isSmallScreen && (
+            {/*{showControls && !isSmallScreen && (
               <MoreLikeThisTrigger
                 view={Button}
                 className="mlt"
@@ -102,8 +109,8 @@ const HorizontalCardItem = (props) => {
               >
                 more like this
               </MoreLikeThisTrigger>
-            )}
-            {showControls && isSmallScreen && (
+            )}*/}
+            {/*{showControls && isSmallScreen && (
               <Dropdown icon="ellipsis vertical">
                 <Dropdown.Menu className="mlt">
                   <MoreLikeThisTrigger result={result} view={Dropdown.Item}>
@@ -111,7 +118,7 @@ const HorizontalCardItem = (props) => {
                   </MoreLikeThisTrigger>
                 </Dropdown.Menu>
               </Dropdown>
-            )}
+            )}*/}
           </div>
         </div>
         {debugQuery && (
