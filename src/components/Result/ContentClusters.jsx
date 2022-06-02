@@ -1,5 +1,8 @@
 import React from 'react';
-import { Icon, StringList } from '@eeacms/search/components';
+import {
+  // Icon,
+  StringList,
+} from '@eeacms/search/components';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 
 const ContentClusters = ({ clusters, item }) => {

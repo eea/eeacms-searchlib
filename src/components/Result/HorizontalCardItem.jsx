@@ -5,10 +5,7 @@ import {
   useAppConfig,
   // useWindowDimensions
 } from '@eeacms/search/lib/hocs';
-import {
-  SegmentedBreadcrumb,
-  // TagsList
-} from '@eeacms/search/components';
+import { SegmentedBreadcrumb, TagsList } from '@eeacms/search/components';
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
 // import MoreLikeThisTrigger from './MoreLikeThisTrigger';
@@ -51,16 +48,14 @@ const HorizontalCardItem = (props) => {
             <DateTime format="DATE_MED" value={result.issued} />
           </span>
           <ContentClusters clusters={clusters} item={result} />
-          {/*<div className="tags-list">
-            <TagsList value={result.tags} />
-          </div>*/}
         </div>
       </div>
       <div className={classColLeft}>
         <div className="details">
           <h3>
             <ExternalLink href={result.href} title={result.title}>
-              {firstWords(result.title, 12)}
+              {/*{firstWords(result.title, 12)}*/}
+              {result.title}
             </ExternalLink>
             {result.isNew && (
               <Label className="new-item" horizontal>
@@ -77,7 +72,9 @@ const HorizontalCardItem = (props) => {
           <div className="result-description">
             {props.children ? props.children : <ResultContext {...props} />}
           </div>
-
+          <div className="tags-list">
+            <TagsList value={result.tags} />
+          </div>
           <div className="source">
             <span>Source: </span>
             <ExternalLink href={result.href}>
