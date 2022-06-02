@@ -82,7 +82,7 @@ const SectionTabs = (props) => {
         ''
       )}
       <Ref innerRef={menuRef}>
-        <Menu className="content-section-tabs">
+        <Menu secondary pointing className="content-section-tabs">
           <Menu.Item
             onClick={() => {
               searchContext.removeFilter(facetField, '', 'any');

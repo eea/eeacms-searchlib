@@ -11,6 +11,7 @@ import FacetsList from './Facets/FacetsList';
 import FilterList from './FilterList/FilterList';
 import InlineFilterList from './FilterList/InlineFilterList';
 import FilterAsideLayout from './Layout/FilterAsideLayout';
+import TopFilterLayout from './Layout/TopFilterLayout';
 import LeftColumnLayout from './Layout/LeftColumnLayout';
 import RightColumnLayout from './Layout/RightColumnLayout';
 import TableRowItem from './Result/TableRowItem';
@@ -46,6 +47,7 @@ export {
   Term,
   SegmentedBreadcrumb,
   FilterAsideLayout,
+  TopFilterLayout,
   MultiCheckboxFacet,
   CardItem,
   DateTime,
