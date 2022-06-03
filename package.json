@@ -9,7 +9,8 @@
     "test": "__tests__"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "storybook": "start-storybook -p 6006",
