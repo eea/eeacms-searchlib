@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/search",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "main": "src/index.js",
   "browser": {
     "./dist/index.js": "./dist/index.js"
@@ -9,7 +9,8 @@
     "test": "__tests__"
   },
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "scripts": {
     "storybook": "start-storybook -p 6006",
