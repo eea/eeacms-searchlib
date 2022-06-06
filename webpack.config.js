@@ -14,6 +14,10 @@ if (process.env.BUNDLE_ANALYZE) {
   plugins.push(new BundleAnalyzerPlugin());
 }
 
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+plugins.push(new MiniCssExtractPlugin());
+
 module.exports = {
   plugins,
   entry: {
@@ -48,7 +52,10 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader"
+        ],
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
