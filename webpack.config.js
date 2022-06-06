@@ -1,7 +1,7 @@
 const pkg = require('./package.json');
 const path = require('path');
 
-// const nodeExternals = require('webpack-node-externals');
+const nodeExternals = require('webpack-node-externals');
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
@@ -46,17 +46,38 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
     ],
   },
   externals: [
+    'classnames',
+    'd3-array',
+    'deep-equal',
+    'downshift',
+    'luxon',
     'react',
     'react-dom',
-    'regenerator-runtime',
-    'luxon',
-    'superagent',
+    'react-motion',
     'react-select',
+    'react-toastify',
+    // 'regenerator-runtime',
     'semantic-ui-react',
-    // 'downshift',
+    'superagent',
+    'react-compound-slider',
+    'redux',
+    'd3-scale',
+    nodeExternals()
   ], //nodeExternals()    // , 'semantic-ui-react'
 };
 
