@@ -18,8 +18,15 @@ def main(source, destination):
         for dep in sj.get(branch, {}).keys():
             if dep in dj.get(branch, {}) and dj[branch][dep] != sj[branch][dep]:
                 dj[branch][dep] = sj[branch][dep]
-                print(f"Updated: {dep}")
+                print(f"Updated (same branch): {dep}")
                 dirty = True
+
+    for dep in dj.get("devDependencies", {}).keys():
+        # sync devDependencies versions with
+        if dep in sj.get("dependencies", {}):
+            dj["devDependencies"][dep] = sj["dependencies"][dep]
+            print(f"Updated from dependencies: {dep}")
+            dirty = True
 
     if dirty:
         with open(destination, "w") as f:
