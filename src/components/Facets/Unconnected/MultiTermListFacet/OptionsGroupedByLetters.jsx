@@ -1,4 +1,5 @@
 import React from 'react';
+import { Card } from 'semantic-ui-react'; // , Header, Divider
 
 const OptionsGroupedByLetters = ({
   groupedOptionsByLetters,
@@ -17,16 +18,18 @@ const OptionsGroupedByLetters = ({
         <span>{letter}</span>
       </div>
       <div className="group-content" key={letter + 'c'}>
-        {groupedOptionsByLetters[letter].map((option, i) => (
-          <OptionButton
-            option={option}
-            checked={option.selected}
-            iconsFamily={iconsFamily}
-            field={field}
-            onRemove={onRemove}
-            onSelect={onSelect}
-          />
-        ))}
+        <Card.Group itemsPerRow={5}>
+          {groupedOptionsByLetters[letter].map((option, i) => (
+            <OptionButton
+              option={option}
+              checked={option.selected}
+              iconsFamily={iconsFamily}
+              field={field}
+              onRemove={onRemove}
+              onSelect={onSelect}
+            />
+          ))}
+        </Card.Group>
       </div>
     </div>
   ));

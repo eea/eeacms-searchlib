@@ -1,6 +1,7 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react'; // , Header, Divider
+import { Card } from 'semantic-ui-react'; // , Header, Divider
 import { Icon, Term } from '@eeacms/search/components';
+import cx from 'classnames';
 
 import { getFilterValueDisplay } from './utils';
 
@@ -32,41 +33,46 @@ const OptionsGroupedByNumbers = ({
     }
     return (
       <div className="by-groups" key={number}>
-        <div
+        <h5
           className={`group-heading ${index === 0 ? 'first' : ''}`}
           key={number + 'h'}
         >
           <span>{label}</span>
-        </div>
+        </h5>
         <div className="group-content" key={number + 'c'}>
-          {groupedOptionsByNumbers[number].map((option, i) => {
-            const checked = option.selected;
-            return (
-              <Button
-                key={`${getFilterValueDisplay(option.value)}`}
-                className="term"
-                toggle
-                active={checked}
-                onClick={() =>
-                  checked ? onRemove(option.value) : onSelect(option.value)
-                }
-              >
-                {iconsFamily && (
-                  <Icon
-                    family={iconsFamily}
-                    type={option.value}
-                    className="facet-option-icon"
-                  />
-                )}
-                <span className="title">
-                  <Term term={option.value} field={field} />
-                </span>
-                <span className="count">
-                  {option.count.toLocaleString('en')}
-                </span>
-              </Button>
-            );
-          })}
+          <Card.Group itemsPerRow={5}>
+            {groupedOptionsByNumbers[number].map((option, i) => {
+              const checked = option.selected;
+              return (
+                <Card
+                  key={`${getFilterValueDisplay(option.value)}`}
+                  onClick={() =>
+                    checked ? onRemove(option.value) : onSelect(option.value)
+                  }
+                  className={cx('term', { active: checked })}
+                >
+                  <Card.Content>
+                    <Card.Header>
+                      {iconsFamily && (
+                        <Icon
+                          family={iconsFamily}
+                          type={option.value}
+                          className="facet-option-icon"
+                        />
+                      )}
+
+                      <Term term={option.value} field={field} />
+                    </Card.Header>
+                  </Card.Content>
+                  <Card.Content extra>
+                    <span className="count">
+                      ({option.count.toLocaleString('en')})
+                    </span>
+                  </Card.Content>
+                </Card>
+              );
+            })}
+          </Card.Group>
         </div>
       </div>
     );

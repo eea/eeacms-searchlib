@@ -1,12 +1,13 @@
 import React from 'react';
-
 import { Icon, Term } from '@eeacms/search/components';
-import { Button } from 'semantic-ui-react'; // , Header, Divider
+import { Card } from 'semantic-ui-react'; // , Header, Divider
 
 import OptionsGroupedByLetters from './OptionsGroupedByLetters';
 import OptionsGroupedByNumbers from './OptionsGroupedByNumbers';
 import SortedOptions from './SortedOptions';
 import { getFilterValueDisplay } from './utils';
+
+import cx from 'classnames';
 
 const FacetOptions = (props) => {
   const {
@@ -52,27 +53,30 @@ const FacetOptions = (props) => {
 
   const OptionButton = React.useMemo(
     () => ({ option, checked, iconsFamily, field, onRemove, onSelect }) => (
-      <Button
+      <Card
         key={`${getFilterValueDisplay(option.value)}`}
-        className="term"
-        toggle
-        active={checked}
         onClick={() =>
           checked ? onRemove(option.value) : onSelect(option.value)
         }
+        className={cx('term', { active: checked })}
       >
-        {iconsFamily && (
-          <Icon
-            family={iconsFamily}
-            type={option.value}
-            className="facet-option-icon"
-          />
-        )}
-        <span className="title">
-          <Term term={option.value} field={field} />
-        </span>
-        <span className="count">{option.count.toLocaleString('en')}</span>
-      </Button>
+        <Card.Content>
+          <Card.Header>
+            {iconsFamily && (
+              <Icon
+                family={iconsFamily}
+                type={option.value}
+                className="facet-option-icon"
+              />
+            )}
+
+            <Term term={option.value} field={field} />
+          </Card.Header>
+        </Card.Content>
+        <Card.Content extra>
+          <span className="count">({option.count.toLocaleString('en')})</span>
+        </Card.Content>
+      </Card>
     ),
     [],
   );
@@ -101,27 +105,33 @@ const FacetOptions = (props) => {
 
       {sortedOptions.length < 1 && <div>No matching options</div>}
 
-      {zeroValueOptions.map((option, index) => (
-        <Button
-          key={`${getFilterValueDisplay(option.value)}`}
-          className="term"
-          toggle
-          active={false}
-          disabled
-        >
-          {iconsFamily && (
-            <Icon
-              family={iconsFamily}
-              type={option.value}
-              className="facet-option-icon"
-            />
-          )}
-          <span className="title">
-            <Term term={option.value} field={field} />
-          </span>
-          <span className="count">{option.count.toLocaleString('en')}</span>
-        </Button>
-      ))}
+      <Card.Group itemsPerRow={5}>
+        {zeroValueOptions.map((option, index) => (
+          <Card
+            key={`${getFilterValueDisplay(option.value)}`}
+            className="disabled term"
+          >
+            <Card.Content>
+              <Card.Header>
+                {iconsFamily && (
+                  <Icon
+                    family={iconsFamily}
+                    type={option.value}
+                    className="facet-option-icon"
+                  />
+                )}
+
+                <Term term={option.value} field={field} />
+              </Card.Header>
+            </Card.Content>
+            <Card.Content extra>
+              <span className="count">
+                ({option.count.toLocaleString('en')})
+              </span>
+            </Card.Content>
+          </Card>
+        ))}
+      </Card.Group>
     </div>
   );
 };

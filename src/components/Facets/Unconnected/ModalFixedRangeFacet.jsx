@@ -1,6 +1,8 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react'; // , Header, Image
+import { Card } from 'semantic-ui-react'; // , Header, Image
 import { useAppConfig } from '@eeacms/search/lib/hocs';
+
+import cx from 'classnames';
 
 function getFilterValueDisplay(filterValue) {
   if (filterValue === undefined || filterValue === null) return '';
@@ -12,31 +14,36 @@ const FacetOptions = (props) => {
   const { options, onSelect, onRemove } = props;
   return (
     <div className="sui-multi-checkbox-facet">
-      {options.map((option) => {
-        const checked = option.selected;
-        return (
-          <Button
-            key={`${getFilterValueDisplay(option.value)}`}
-            className="term"
-            toggle
-            active={checked}
-            onClick={() =>
-              //              checked ? onRemove(option.value) : onSelect(option.value)
-              options.forEach((opt) => {
-                if (opt.value.name === option.value.name) {
-                  onSelect(opt.value);
-                } else {
-                  onRemove(opt.value);
-                }
-              })
-            }
-            //onRemove={() => onRemove(option.value)}
-          >
-            <span className="title">{getFilterValueDisplay(option.value)}</span>
-            <span className="count">{option.count.toLocaleString('en')}</span>
-          </Button>
-        );
-      })}
+      <Card.Group itemsPerRow={5}>
+        {options.map((option) => {
+          const checked = option.selected;
+          return (
+            <Card
+              key={`${getFilterValueDisplay(option.value)}`}
+              onClick={() =>
+                //              checked ? onRemove(option.value) : onSelect(option.value)
+                options.forEach((opt) => {
+                  if (opt.value.name === option.value.name) {
+                    onSelect(opt.value);
+                  } else {
+                    onRemove(opt.value);
+                  }
+                })
+              }
+              className={cx('term', { active: checked })}
+            >
+              <Card.Content>
+                <Card.Header>{getFilterValueDisplay(option.value)}</Card.Header>
+              </Card.Content>
+              <Card.Content extra>
+                <span className="count">
+                  ({option.count.toLocaleString('en')})
+                </span>
+              </Card.Content>
+            </Card>
+          );
+        })}
+      </Card.Group>
     </div>
   );
 };

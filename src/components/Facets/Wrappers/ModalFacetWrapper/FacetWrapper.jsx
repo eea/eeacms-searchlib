@@ -3,9 +3,11 @@ import { Facet } from '@eeacms/search/components';
 import { Card, Modal, Button, Icon } from 'semantic-ui-react'; // , Header, Image
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
 
-import Filter from '@eeacms/search/components/FilterList/Filter';
+// import Filter from '@eeacms/search/components/FilterList/Filter';
 import OptionsWrapper from './OptionsWrapper';
 import { useFilterState } from './state';
+import { selectedFiltersAtom } from '@eeacms/search/state';
+import { useAtom } from 'jotai';
 
 const FacetWrapperComponent = (props) => {
   const searchContext = useSearchContext();
@@ -44,7 +46,9 @@ const FacetWrapperComponent = (props) => {
       : [initialValue],
   );
 
-  const { clearFilters, setFilter } = useSearchContext();
+  // const { clearFilters, setFilter } = useSearchContext();
+
+  const [activeFilters, setActiveFilters] = useAtom(selectedFiltersAtom);
 
   const OptionsView = props.view;
 
@@ -74,33 +78,31 @@ const FacetWrapperComponent = (props) => {
       open={isOpened}
       trigger={
         <Card
-          fluid
           header={
-            <div className="header">
+            <div className="card-header">
               <span className="text" title={label}>
                 {label}
-              </span>
-              {state.length > 1 ? (
-                <span className="clear-filters">
-                  <Button
-                    size="mini"
-                    onClick={(evt) => {
-                      evt.preventDefault();
-                      setIsOpened(false);
-                      if (Array.isArray(state)) {
-                        (state || []).forEach((v) => {
-                          dispatch({
-                            type: 'reset',
-                            value: [],
-                            id: 'btn-clear-filters',
-                          });
-                          removeFilter(
-                            field,
-                            v,
-                            `${localFilterType}${isExact ? ':exact' : ''}`,
-                          );
-                        });
-                      } else {
+                <>
+                  {filters.map((filter, index) => {
+                    return filter.field === field ? (
+                      <>
+                        <span key={index}> ({filter.values.length})</span>
+                      </>
+                    ) : null;
+                  })}
+                </>
+                <Button
+                  className="clear-filters"
+                  size="mini"
+                  onClick={(evt) => {
+                    evt.preventDefault();
+                    // setIsOpened(false);
+                    let filteredValues = activeFilters.filter(
+                      (l) => l !== facet.field,
+                    );
+                    setActiveFilters(filteredValues);
+                    if (Array.isArray(state)) {
+                      (state || []).forEach((v) => {
                         dispatch({
                           type: 'reset',
                           value: [],
@@ -108,50 +110,27 @@ const FacetWrapperComponent = (props) => {
                         });
                         removeFilter(
                           field,
-                          [state || ''],
+                          v,
                           `${localFilterType}${isExact ? ':exact' : ''}`,
                         );
-                      }
-                    }}
-                  >
-                    Clear
-                  </Button>
-                </span>
-              ) : null}
-            </div>
-          }
-          description={
-            <div className="filter description">
-              {filters.map((filter, index) => {
-                return filter.field === field ? (
-                  <Filter
-                    key={index}
-                    {...filter}
-                    noTitle={true}
-                    setFilter={setFilter}
-                    removeFilter={(field, value, type) => {
-                      // console.log('remove', { field, value, type });
-                      // TODO: add dispatch call here, can remove useEffect
-                      // from OptionsWrapper
-                      dispatch({ type: 'remove', value });
-                      removeFilter(field, value, type);
-                    }}
-                    onClear={(field) => {
-                      const activeFilters = filters.map(({ field }) => field);
-                      const exclude = activeFilters.filter(
-                        (name) => name !== field,
-                      );
-                      clearFilters(exclude);
-                      // dispatch({ type: 'remove', exclude });
+                      });
+                    } else {
                       dispatch({
                         type: 'reset',
                         value: [],
-                        id: 'filter-onClear',
+                        id: 'btn-clear-filters',
                       });
-                    }}
-                  />
-                ) : null;
-              })}
+                      removeFilter(
+                        field,
+                        [state || ''],
+                        `${localFilterType}${isExact ? ':exact' : ''}`,
+                      );
+                    }
+                  }}
+                >
+                  <Icon name="close" role="button" />
+                </Button>
+              </span>
             </div>
           }
           className={(isActive && 'facet active') || 'facet'}
@@ -167,7 +146,6 @@ const FacetWrapperComponent = (props) => {
       />
       <Modal.Actions>
         <Button
-          color="black"
           onClick={() => {
             setIsOpened(false);
             dispatch({ type: 'reset', value: initialValue, id: 'btn-cancel' });
@@ -176,9 +154,8 @@ const FacetWrapperComponent = (props) => {
           Cancel
         </Button>
         <Button
+          primary
           content="Apply"
-          labelPosition="right"
-          icon="checkmark"
           onClick={() => {
             setIsOpened(false);
             removeFilter(field, '', '');
@@ -203,9 +180,8 @@ const FacetWrapperComponent = (props) => {
               );
             }
           }}
-          positive
         />
-        {state.length > 1 ? (
+        {/*{state.length > 1 ? (
           <a
             href="/"
             className="clear-filters"
@@ -219,7 +195,7 @@ const FacetWrapperComponent = (props) => {
             <Icon name="delete" />
             Clear
           </a>
-        ) : null}
+        ) : null}*/}
       </Modal.Actions>
     </Modal>
   );
