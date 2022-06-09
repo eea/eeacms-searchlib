@@ -34,6 +34,9 @@ import AnswerBox from './AnswerBox/AnswerBox';
 import DownloadButton from './DownloadButton/DownloadButton';
 import AppInfo from './AppInfo/AppInfo';
 import String from './Result/String';
+import ContentClusters from './Result/ContentClusters';
+import ResultContext from './Result/ResultContext';
+import MoreLikeThisTrigger from './Result/MoreLikeThisTrigger';
 import { ResultHeader } from './Result/ResultModal';
 import DefaultContentView from './SearchView/DefaultContentView';
 import SegmentedBreadcrumb from './SegmentedBreadcrumb/Breadcrumb';
@@ -78,6 +81,9 @@ export {
   DefaultContentView,
   SectionTabs,
   ResultSource,
+  ContentClusters,
+  MoreLikeThisTrigger,
+  ResultContext,
 };
 
 // SimpleSearchInput,
