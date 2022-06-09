@@ -80,6 +80,7 @@ module.exports = {
     'react-select',
     'react-toastify',
     // 'regenerator-runtime',
+    'elasticsearch',
     'semantic-ui-react',
     'superagent',
     'react-compound-slider',
