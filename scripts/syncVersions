@@ -1,0 +1,44 @@
+#!/bin/env python
+
+import argparse
+import json
+
+sync_keys = ["dependencies", "devDependencies", "peerDependencies"]
+
+
+def main(source, destination):
+    with open(source) as f:
+        sj = json.load(f)
+    with open(destination) as f:
+        dj = json.load(f)
+
+    dirty = False
+
+    for branch in sync_keys:
+        for dep in sj.get(branch, {}).keys():
+            if dep in dj.get(branch, {}) and dj[branch][dep] != sj[branch][dep]:
+                dj[branch][dep] = sj[branch][dep]
+                print(f"Updated (same branch): {dep}")
+                dirty = True
+
+    for dep in dj.get("devDependencies", {}).keys():
+        # sync devDependencies versions with
+        if dep in sj.get("dependencies", {}):
+            dj["devDependencies"][dep] = sj["dependencies"][dep]
+            print(f"Updated from dependencies: {dep}")
+            dirty = True
+
+    if dirty:
+        with open(destination, "w") as f:
+            json.dump(dj, f, indent=2)
+            print("Destination file has been synced")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("source", help="Path to package.json with good versions")
+    parser.add_argument(
+        "destination", help="Path to package.json with versions to be replaced"
+    )
+    args = parser.parse_args()
+    main(args.source, args.destination)

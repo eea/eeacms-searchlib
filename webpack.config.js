@@ -1,7 +1,7 @@
 const pkg = require('./package.json');
 const path = require('path');
 
-// const nodeExternals = require('webpack-node-externals');
+const nodeExternals = require('webpack-node-externals');
 
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
   .BundleAnalyzerPlugin;
@@ -13,6 +13,10 @@ const plugins = [];
 if (process.env.BUNDLE_ANALYZE) {
   plugins.push(new BundleAnalyzerPlugin());
 }
+
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+
+plugins.push(new MiniCssExtractPlugin());
 
 module.exports = {
   plugins,
@@ -27,6 +31,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    // modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     alias: {
       '@eeacms/search': path.resolve('./src'),
     },
@@ -46,17 +51,42 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.css$/i,
+        use: [
+          MiniCssExtractPlugin.loader,
+          "css-loader"
+        ],
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: 'file-loader',
+          },
+        ],
+      },
     ],
   },
   externals: [
+    'classnames',
+    'd3-array',
+    'deep-equal',
+    'downshift',
+    'luxon',
     'react',
     'react-dom',
-    'regenerator-runtime',
-    'luxon',
-    'superagent',
+    'react-motion',
     'react-select',
+    'react-toastify',
+    // 'regenerator-runtime',
+    'elasticsearch',
     'semantic-ui-react',
-    // 'downshift',
+    'superagent',
+    'react-compound-slider',
+    'redux',
+    'd3-scale',
+    nodeExternals()
   ], //nodeExternals()    // , 'semantic-ui-react'
 };
 

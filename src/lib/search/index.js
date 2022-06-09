@@ -3,6 +3,8 @@
 
 export { default as buildRequest } from './query';
 export { default as buildState } from './state';
+export * from './state';
+
 export {
   default as applyDisjunctiveFaceting,
   getDisjunctiveFacetCounts,
