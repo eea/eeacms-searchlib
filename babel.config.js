@@ -13,10 +13,20 @@ if (env === 'es') {
   defaultPresets = [
     [
       '@babel/preset-env',
+
       {
-        targets: { node: 'current' },
-        modules: ['esm', 'umd'].includes(env) ? false : 'commonjs',
-      },
+        "targets": {
+          "browsers": [
+            ">0.25%",
+            "not ie 11",
+            "not op_mini all"
+          ]
+        }
+      }
+      // {
+      //   targets: { node: 'current' },
+      //   modules: ['esm', 'umd'].includes(env) ? false : 'commonjs',
+      // },
     ],
   ];
 }
@@ -26,11 +36,39 @@ module.exports = {
   // customize: require.resolve('babel-preset-react-app/webpack-overrides'),
 
   plugins: [
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-export-default-from",
+    ["@babel/plugin-proposal-private-methods", { "loose": true }],
+    [
+      "@babel/plugin-proposal-class-properties",
+      {
+        "loose": true
+      }
+    ],
+    [
+      "@babel/plugin-proposal-private-property-in-object", {
+        "loose": true
+      }
+    ],
+
+
+
+
+
     /** mainly required to make storybook work, see
      * - https://github.com/storybooks/storybook/issues/3346#issuecomment-415982589
      * - https://github.com/storybooks/storybook/issues/3346#issuecomment-423719241
      */
-    '@babel/plugin-transform-modules-commonjs',
+    // '@babel/plugin-transform-modules-commonjs',
+
+    // "@babel/plugin-transform-runtime",
+    // [
+    //   "@babel/plugin-proposal-class-properties",
+    //   {
+    //     "loose": true
+    //   }
+    // ]
+
     // [
     //   '@babel/plugin-transform-runtime',
     //   {
