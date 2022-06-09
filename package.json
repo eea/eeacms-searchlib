@@ -28,18 +28,6 @@
       "react-app/jest"
     ]
   },
-  "old_browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
   "jest": {
     "roots": [
       "<rootDir>/src"
@@ -91,14 +79,6 @@
       "jest-watch-typeahead/testname"
     ],
     "resetMocks": true
-  },
-  "old_babel": {
-    "presets": [
-      "react-app"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-export-default-from"
-    ]
   },
   "dependencies": {
     "@elastic/react-search-ui": "^1.9.0",
