@@ -31,6 +31,7 @@ module.exports = {
   },
   resolve: {
     extensions: ['.js', '.jsx'],
+    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     alias: {
       '@eeacms/search': path.resolve('./src'),
     },
@@ -79,6 +80,7 @@ module.exports = {
     'react-select',
     'react-toastify',
     // 'regenerator-runtime',
+    'elasticsearch',
     'semantic-ui-react',
     'superagent',
     'react-compound-slider',
