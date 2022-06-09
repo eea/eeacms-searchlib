@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/search",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "main": "dist/index.js",
   "browser": {
     "./dist/index.js": "./dist/index.js"
@@ -154,6 +154,6 @@
     "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^4.7.4",
-    "webpack-node-externals": "^3.0.0"
+    "webpack-node-externals": "1.7.2"
   }
 }
