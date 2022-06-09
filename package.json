@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/search",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "main": "dist/index.js",
   "browser": {
     "./dist/index.js": "./dist/index.js"
