@@ -3,10 +3,9 @@ import { Facet } from '@eeacms/search/components';
 import { Card, Modal, Button, Icon } from 'semantic-ui-react'; // , Header, Image
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
 
-// import Filter from '@eeacms/search/components/FilterList/Filter';
 import OptionsWrapper from './OptionsWrapper';
 import { useFilterState } from './state';
-import { selectedFiltersAtom } from '@eeacms/search/state';
+import { visibleFiltersAtom } from '@eeacms/search/state';
 import { useAtom } from 'jotai';
 
 const FacetWrapperComponent = (props) => {
@@ -14,8 +13,10 @@ const FacetWrapperComponent = (props) => {
   const { filters = [], addFilter, removeFilter } = searchContext;
   const { field, label } = props;
   const [isOpened, setIsOpened] = React.useState();
+  const [visibleFilters, setVisibleFilters] = useAtom(visibleFiltersAtom);
 
   const { appConfig } = useAppConfig();
+  const { facets } = appConfig;
   const facet = appConfig.facets?.find((f) => f.field === field);
   // const fallback = facet ? facet.filterType : defaultType;
 
@@ -33,6 +34,10 @@ const FacetWrapperComponent = (props) => {
 
   const [isExact, setIsExact] = React.useState(defaultIsExact);
 
+  const alwaysVisibleFacets = facets
+    .filter((f) => f.alwaysVisible)
+    .map((f) => f.field);
+
   const initialValue =
     (filters.find((f) => f.field === field) || {})?.values || [];
   const isActive = initialValue.length > 0;
@@ -45,10 +50,6 @@ const FacetWrapperComponent = (props) => {
       ? initialValue
       : [initialValue],
   );
-
-  // const { clearFilters, setFilter } = useSearchContext();
-
-  const [activeFilters, setActiveFilters] = useAtom(selectedFiltersAtom);
 
   const OptionsView = props.view;
 
@@ -82,27 +83,43 @@ const FacetWrapperComponent = (props) => {
             <div className="card-header">
               <span className="text" title={label}>
                 {label}
-                <>
-                  {filters.map((filter, index) => {
-                    return filter.field === field ? (
-                      <>
-                        <span key={index}> ({filter.values.length})</span>
-                      </>
-                    ) : null;
-                  })}
-                </>
-                <Button
-                  className="clear-filters"
-                  size="mini"
-                  onClick={(evt) => {
-                    evt.preventDefault();
-                    // setIsOpened(false);
-                    let filteredValues = activeFilters.filter(
-                      (l) => l !== facet.field,
-                    );
-                    setActiveFilters(filteredValues);
-                    if (Array.isArray(state)) {
-                      (state || []).forEach((v) => {
+
+                {filters.map((filter, index) => {
+                  return filter.field === field ? (
+                    <>
+                      <span key={index}> ({filter.values.length})</span>
+                    </>
+                  ) : null;
+                })}
+
+                {initialValue.length > 0 && (
+                  <Button
+                    className="clear-filters"
+                    size="mini"
+                    onClick={(evt) => {
+                      evt.preventDefault();
+
+                      if (!alwaysVisibleFacets.includes(field)) {
+                        let filteredValues = visibleFilters.filter(
+                          (l) => l !== facet.field,
+                        );
+                        setVisibleFilters(filteredValues);
+                      }
+
+                      if (Array.isArray(state)) {
+                        (state || []).forEach((v) => {
+                          dispatch({
+                            type: 'reset',
+                            value: [],
+                            id: 'btn-clear-filters',
+                          });
+                          removeFilter(
+                            field,
+                            v,
+                            `${localFilterType}${isExact ? ':exact' : ''}`,
+                          );
+                        });
+                      } else {
                         dispatch({
                           type: 'reset',
                           value: [],
@@ -110,26 +127,15 @@ const FacetWrapperComponent = (props) => {
                         });
                         removeFilter(
                           field,
-                          v,
+                          [state || ''],
                           `${localFilterType}${isExact ? ':exact' : ''}`,
                         );
-                      });
-                    } else {
-                      dispatch({
-                        type: 'reset',
-                        value: [],
-                        id: 'btn-clear-filters',
-                      });
-                      removeFilter(
-                        field,
-                        [state || ''],
-                        `${localFilterType}${isExact ? ':exact' : ''}`,
-                      );
-                    }
-                  }}
-                >
-                  <Icon name="close" role="button" />
-                </Button>
+                      }
+                    }}
+                  >
+                    <Icon name="close" role="button" />
+                  </Button>
+                )}
               </span>
             </div>
           }
@@ -144,6 +150,7 @@ const FacetWrapperComponent = (props) => {
         view={BoundOptionsWrapper}
         state={state}
       />
+
       <Modal.Actions>
         <Button
           onClick={() => {
@@ -181,21 +188,6 @@ const FacetWrapperComponent = (props) => {
             }
           }}
         />
-        {/*{state.length > 1 ? (
-          <a
-            href="/"
-            className="clear-filters"
-            onClick={(evt) => {
-              evt.preventDefault();
-              if (state.length) {
-                dispatch({ type: 'reset', value: [], id: 'btn-clear-filters' });
-              }
-            }}
-          >
-            <Icon name="delete" />
-            Clear
-          </a>
-        ) : null}*/}
       </Modal.Actions>
     </Modal>
   );
