@@ -4,9 +4,15 @@ import { Component } from '@eeacms/search/components';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 import { Modal, Button, Icon, Card } from 'semantic-ui-react';
 import { useAtom } from 'jotai';
-import { selectedFiltersAtom } from './state';
+import { visibleFacetsAtom } from './state';
 
-const Facet = ({ info, defaultWrapper, filters, selectedFilters }) => {
+const Facet = ({
+  info,
+  defaultWrapper,
+  filters,
+  selectedFilters,
+  visibleFacets,
+}) => {
   const { factory, wrapper } = info;
 
   // const facet = registry.resolve[factory];
@@ -24,11 +30,11 @@ const Facet = ({ info, defaultWrapper, filters, selectedFilters }) => {
 
   return (
     <>
-      {selectedFilters.map((filter, i) => {
+      {visibleFacets.map((filter, i) => {
         return info.field === filter ? (
           <FacetWrapperComponent
-            factoryName={wrapper}
             {...props}
+            factoryName={wrapper}
             field={info.field}
             view={Facet}
             key={i}
@@ -41,21 +47,31 @@ const Facet = ({ info, defaultWrapper, filters, selectedFilters }) => {
 
 const FacetsList = ({ view, defaultWrapper }) => {
   const { appConfig } = useAppConfig();
-  const { facets = [] } = appConfig;
-  const ViewComponent = view || Component;
-
   const searchContext = useSearchContext();
+  const ViewComponent = view || Component;
+  const { facets = [] } = appConfig;
   const { filters = [], clearFilters } = searchContext;
 
+  const facetValues = facets
+    .filter((f) => !f.isFilter && f.showInFacetsList)
+    .map((f) => f.field);
+  const filterValues = filters
+    .filter((f) => facetValues.includes(f.field))
+    .map((f) => f.field);
+  const alwaysVisibleFacets = facets
+    .filter((f) => f.alwaysVisible)
+    .map((f) => f.field);
+
   const [isOpened, setIsOpened] = React.useState();
-  const filterValues = filters.map((f) => f.field);
-  const [selectedFilters, setSelectedFilters] = useAtom(selectedFiltersAtom);
+  const [visibleFacets, setVisibleFacets] = useAtom(visibleFacetsAtom);
+  const [selectFilters, setSelectFilters] = React.useState(visibleFacets);
+  const { current: defaultValues } = React.useRef(filterValues);
+  const { current: selectFiltersValues } = React.useRef(selectFilters);
 
   React.useEffect(() => {
-    const activeFilters = [...new Set([...selectedFilters, ...filterValues])];
-    setSelectedFilters(activeFilters);
-    //eslint-disable-next-line
-  }, []);
+    const allFilters = [...new Set([...defaultValues, ...selectFiltersValues])];
+    setVisibleFacets(allFilters);
+  }, [setVisibleFacets, selectFiltersValues, defaultValues]);
 
   return (
     <>
@@ -66,10 +82,15 @@ const FacetsList = ({ view, defaultWrapper }) => {
           className="clear-btn"
           content="clear all filters"
           onClick={() => {
-            clearFilters();
+            const exclude = facets
+              .filter((f) => f.isFilter)
+              .map((f) => f.field);
+            clearFilters(exclude);
+            setVisibleFacets(alwaysVisibleFacets);
           }}
         />
       </div>
+
       <ViewComponent name="DefaultFacetsList">
         <>
           {facets
@@ -78,7 +99,7 @@ const FacetsList = ({ view, defaultWrapper }) => {
               <Facet
                 info={info}
                 filters={filters}
-                selectedFilters={selectedFilters}
+                visibleFacets={visibleFacets}
                 key={i}
                 defaultWrapper={defaultWrapper}
               />
@@ -92,16 +113,25 @@ const FacetsList = ({ view, defaultWrapper }) => {
           open={isOpened}
           trigger={<Button className="facet">+ Add filters</Button>}
         >
-          <Modal.Header>Add filters</Modal.Header>
+          <Modal.Header>
+            <h4>Add filters</h4>
+          </Modal.Header>
           <Modal.Content>
             <div className="modal-content-section">
-              <div className="modal-section-title">
-                Active filters ({selectedFilters.length})
-              </div>
+              <h5 className="modal-section-title">
+                Active filters ({visibleFacets.length})
+                <Button
+                  basic
+                  className="clear-btn"
+                  content="clear all filters"
+                  onClick={() => {
+                    setSelectFilters(alwaysVisibleFacets);
+                  }}
+                />
+              </h5>
               <div className="facets-wrapper">
                 {facets
-                  .filter((facet) => selectedFilters.includes(facet.field))
-                  .filter((facet) => facet.label.trim() !== '')
+                  .filter((facet) => selectFilters.includes(facet.field))
                   .map((facet, i) => (
                     <Card
                       key={i}
@@ -110,18 +140,20 @@ const FacetsList = ({ view, defaultWrapper }) => {
                           <span className="text" title={facet.label}>
                             {facet.label}
                           </span>
-                          <Button
-                            className="clear-filters"
-                            size="mini"
-                            onClick={() => {
-                              let filterValuesBtn = selectedFilters.filter(
-                                (l) => l !== facet.field,
-                              );
-                              setSelectedFilters(filterValuesBtn);
-                            }}
-                          >
-                            <Icon name="close" role="button" />
-                          </Button>
+                          {!facet.alwaysVisible && (
+                            <Button
+                              className="clear-filters"
+                              size="mini"
+                              onClick={() => {
+                                let filterValuesBtn = selectFilters.filter(
+                                  (l) => l !== facet.field,
+                                );
+                                setSelectFilters(filterValuesBtn);
+                              }}
+                            >
+                              <Icon name="close" role="button" />
+                            </Button>
+                          )}
                         </div>
                       }
                       className="facet"
@@ -131,23 +163,21 @@ const FacetsList = ({ view, defaultWrapper }) => {
               </div>
             </div>
             <div className="modal-content-section">
-              <div className="modal-section-title">Add more filters</div>
+              <h5 className="modal-section-title">Add more filters</h5>
               <div className="filter-buttons">
                 {facets
                   .filter((facet) => facet.showInFacetsList)
-                  .filter((facet) => !selectedFilters.includes(facet.field))
+                  .filter((facet) => !selectFilters.includes(facet.field))
                   .map((facet, i) => (
-                    <>
-                      <Button
-                        className="add-filter"
-                        key={i}
-                        onClick={() => {
-                          setSelectedFilters([...selectedFilters, facet.field]);
-                        }}
-                      >
-                        {facet.label}
-                      </Button>
-                    </>
+                    <Button
+                      className="add-filter"
+                      key={i}
+                      onClick={() => {
+                        setSelectFilters([...selectFilters, facet.field]);
+                      }}
+                    >
+                      {facet.label}
+                    </Button>
                   ))}
               </div>
             </div>
@@ -163,6 +193,11 @@ const FacetsList = ({ view, defaultWrapper }) => {
               primary
               content="Apply"
               onClick={() => {
+                const exclude = facets
+                  .filter((f) => selectFilters.includes(f.field))
+                  .map((f) => f.field);
+                clearFilters(exclude);
+                setVisibleFacets(selectFilters);
                 setIsOpened(false);
               }}
             />
