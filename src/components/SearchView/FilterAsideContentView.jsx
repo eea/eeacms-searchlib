@@ -1,5 +1,6 @@
 import React from 'react';
 import { Sorting } from '@elastic/react-search-ui';
+import { Grid } from 'semantic-ui-react';
 import ResultsPerPageSelector from './../ResultsPerPageSelector/ResultsPerPageSelector';
 import Paging from './../Paging/Paging';
 import {
@@ -65,20 +66,26 @@ export const FilterAsideContentView = (props) => {
           {<ResultViewComponent>{children}</ResultViewComponent>}
 
           {children.length > 0 && (
-            <div className="row">
-              <div className="search-body-footer">
-                <div className="prev-next-paging">
-                  {wasInteracted ? (
-                    <>
-                      <Paging />
-                    </>
-                  ) : null}
-                </div>
-                <ResultsPerPageSelector />
-                <div>
+            <div className="search-body-footer">
+              <Grid columns={2}>
+                <Grid.Column>
+                  <ResultsPerPageSelector />
+                </Grid.Column>
+                <Grid.Column textAlign="right">
                   <DownloadButton appConfig={appConfig} />
-                </div>
-              </div>
+                </Grid.Column>
+              </Grid>
+              <Grid centered>
+                <Grid.Column textAlign="center">
+                  <div className="prev-next-paging">
+                    {wasInteracted ? (
+                      <>
+                        <Paging />
+                      </>
+                    ) : null}
+                  </div>
+                </Grid.Column>
+              </Grid>
             </div>
           )}
         </div>
