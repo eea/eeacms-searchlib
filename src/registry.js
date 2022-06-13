@@ -444,8 +444,10 @@ const config = {
   },
 };
 
-// if (window) {
-//   window.searchUiConfig = config;
-// }
+if (typeof window !== 'undefined') {
+  window.searchUiConfig = config;
+}
+
+// console.log('whole config', config);
 
 export default config;
