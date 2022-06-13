@@ -1,4 +1,4 @@
 import { atom } from 'jotai';
 
-export const visibleFiltersAtom = atom([]);
+export const visibleFacetsAtom = atom([]);
 export const openFacetsAtom = atom({});

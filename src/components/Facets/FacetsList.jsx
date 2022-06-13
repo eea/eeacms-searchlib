@@ -4,14 +4,14 @@ import { Component } from '@eeacms/search/components';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 import { Modal, Button, Icon, Card } from 'semantic-ui-react';
 import { useAtom } from 'jotai';
-import { visibleFiltersAtom } from './state';
+import { visibleFacetsAtom } from './state';
 
 const Facet = ({
   info,
   defaultWrapper,
   filters,
   selectedFilters,
-  alwaysVisibleFacets,
+  visibleFacets,
 }) => {
   const { factory, wrapper } = info;
 
@@ -30,7 +30,7 @@ const Facet = ({
 
   return (
     <>
-      {selectedFilters.map((filter, i) => {
+      {visibleFacets.map((filter, i) => {
         return info.field === filter ? (
           <FacetWrapperComponent
             {...props}
@@ -50,10 +50,7 @@ const FacetsList = ({ view, defaultWrapper }) => {
   const searchContext = useSearchContext();
   const ViewComponent = view || Component;
   const { facets = [] } = appConfig;
-  const {
-    filters = [],
-    // clearFilters
-  } = searchContext;
+  const { filters = [], clearFilters } = searchContext;
 
   const facetValues = facets
     .filter((f) => !f.isFilter && f.showInFacetsList)
@@ -66,21 +63,21 @@ const FacetsList = ({ view, defaultWrapper }) => {
     .map((f) => f.field);
 
   const [isOpened, setIsOpened] = React.useState();
-  const [visibleFilters, setVisibleFilters] = useAtom(visibleFiltersAtom);
+  const [visibleFacets, setVisibleFacets] = useAtom(visibleFacetsAtom);
+  const [selectFilters, setSelectFilters] = React.useState(visibleFacets);
+  const { current: defaultValues } = React.useRef(filterValues);
+  const { current: selectFiltersValues } = React.useRef(selectFilters);
 
   React.useEffect(() => {
-    const allFilters = [
-      ...new Set([...alwaysVisibleFacets, ...visibleFilters, ...filterValues]),
-    ];
-    setVisibleFilters(allFilters);
-    //eslint-disable-next-line
-  }, []);
+    const allFilters = [...new Set([...defaultValues, ...selectFiltersValues])];
+    setVisibleFacets(allFilters);
+  }, [setVisibleFacets, selectFiltersValues, defaultValues]);
 
   return (
     <>
       <div className="facet-list-header">
         <h4>Filter Results</h4>
-        {/*<Button
+        <Button
           basic
           className="clear-btn"
           content="clear all filters"
@@ -89,9 +86,9 @@ const FacetsList = ({ view, defaultWrapper }) => {
               .filter((f) => f.isFilter)
               .map((f) => f.field);
             clearFilters(exclude);
-            setVisibleFilters(alwaysVisibleFacets);
+            setVisibleFacets(alwaysVisibleFacets);
           }}
-        />*/}
+        />
       </div>
 
       <ViewComponent name="DefaultFacetsList">
@@ -102,7 +99,7 @@ const FacetsList = ({ view, defaultWrapper }) => {
               <Facet
                 info={info}
                 filters={filters}
-                selectedFilters={visibleFilters}
+                visibleFacets={visibleFacets}
                 key={i}
                 defaultWrapper={defaultWrapper}
               />
@@ -122,12 +119,19 @@ const FacetsList = ({ view, defaultWrapper }) => {
           <Modal.Content>
             <div className="modal-content-section">
               <h5 className="modal-section-title">
-                Active filters ({visibleFilters.length})
+                Active filters ({visibleFacets.length})
+                <Button
+                  basic
+                  className="clear-btn"
+                  content="clear all filters"
+                  onClick={() => {
+                    setSelectFilters(alwaysVisibleFacets);
+                  }}
+                />
               </h5>
               <div className="facets-wrapper">
                 {facets
-                  .filter((facet) => visibleFilters.includes(facet.field))
-                  .filter((facet) => facet.label.trim() !== '')
+                  .filter((facet) => selectFilters.includes(facet.field))
                   .map((facet, i) => (
                     <Card
                       key={i}
@@ -141,10 +145,10 @@ const FacetsList = ({ view, defaultWrapper }) => {
                               className="clear-filters"
                               size="mini"
                               onClick={() => {
-                                let filterValuesBtn = visibleFilters.filter(
+                                let filterValuesBtn = selectFilters.filter(
                                   (l) => l !== facet.field,
                                 );
-                                setVisibleFilters(filterValuesBtn);
+                                setSelectFilters(filterValuesBtn);
                               }}
                             >
                               <Icon name="close" role="button" />
@@ -163,19 +167,17 @@ const FacetsList = ({ view, defaultWrapper }) => {
               <div className="filter-buttons">
                 {facets
                   .filter((facet) => facet.showInFacetsList)
-                  .filter((facet) => !visibleFilters.includes(facet.field))
+                  .filter((facet) => !selectFilters.includes(facet.field))
                   .map((facet, i) => (
-                    <>
-                      <Button
-                        className="add-filter"
-                        key={i}
-                        onClick={() => {
-                          setVisibleFilters([...visibleFilters, facet.field]);
-                        }}
-                      >
-                        {facet.label}
-                      </Button>
-                    </>
+                    <Button
+                      className="add-filter"
+                      key={i}
+                      onClick={() => {
+                        setSelectFilters([...selectFilters, facet.field]);
+                      }}
+                    >
+                      {facet.label}
+                    </Button>
                   ))}
               </div>
             </div>
@@ -191,6 +193,11 @@ const FacetsList = ({ view, defaultWrapper }) => {
               primary
               content="Apply"
               onClick={() => {
+                const exclude = facets
+                  .filter((f) => selectFilters.includes(f.field))
+                  .map((f) => f.field);
+                clearFilters(exclude);
+                setVisibleFacets(selectFilters);
                 setIsOpened(false);
               }}
             />

@@ -5,7 +5,7 @@ import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
 
 import OptionsWrapper from './OptionsWrapper';
 import { useFilterState } from './state';
-import { visibleFiltersAtom } from '@eeacms/search/state';
+import { visibleFacetsAtom } from '@eeacms/search/state';
 import { useAtom } from 'jotai';
 
 const FacetWrapperComponent = (props) => {
@@ -13,7 +13,7 @@ const FacetWrapperComponent = (props) => {
   const { filters = [], addFilter, removeFilter } = searchContext;
   const { field, label } = props;
   const [isOpened, setIsOpened] = React.useState();
-  const [visibleFilters, setVisibleFilters] = useAtom(visibleFiltersAtom);
+  const [visibleFacets, setVisibleFacets] = useAtom(visibleFacetsAtom);
 
   const { appConfig } = useAppConfig();
   const { facets } = appConfig;
@@ -100,10 +100,10 @@ const FacetWrapperComponent = (props) => {
                       evt.preventDefault();
 
                       if (!alwaysVisibleFacets.includes(field)) {
-                        let filteredValues = visibleFilters.filter(
+                        let filteredValues = visibleFacets.filter(
                           (l) => l !== facet.field,
                         );
-                        setVisibleFilters(filteredValues);
+                        setVisibleFacets(filteredValues);
                       }
 
                       if (Array.isArray(state)) {

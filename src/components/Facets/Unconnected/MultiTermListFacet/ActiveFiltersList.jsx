@@ -8,7 +8,7 @@ import { useFilterState } from '@eeacms/search/state';
 import { getFilterValueDisplay } from './utils';
 
 const ActiveFilters = (props) => {
-  const { onRemove, iconsFamily, field } = props;
+  const { onRemove, field } = props;
 
   const searchContext = useSearchContext();
   const { filters = [] } = searchContext;
@@ -59,14 +59,6 @@ const ActiveFilters = (props) => {
             >
               <Card.Content>
                 <Card.Header className="card-header">
-                  {iconsFamily && (
-                    <Icon
-                      family={iconsFamily}
-                      type={option.value}
-                      className="facet-option-icon"
-                    />
-                  )}
-
                   <Term term={option} field={field} />
                   <Button
                     className="clear-filters"
