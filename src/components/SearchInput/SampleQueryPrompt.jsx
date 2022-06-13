@@ -1,6 +1,8 @@
 import React from 'react';
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
-import { Modal, Button, Icon, List } from 'semantic-ui-react';
+import { Modal, Icon, List, Button } from 'semantic-ui-react';
+import { isLandingPageAtom } from '@eeacms/search/state';
+import { useAtom } from 'jotai';
 
 function toArray(s) {
   let a = [];
@@ -16,11 +18,12 @@ export default function SampleQueryPrompt() {
   const { appConfig } = useAppConfig();
   const { setSearchTerm, setSort, resetFilters } = useSearchContext();
   const [showModal, setShowModal] = React.useState();
+  const [isLandingPage] = useAtom(isLandingPageAtom);
 
   const {
     defaultPromptQueries = [],
     promptQueries,
-    promptQueryInterval = 10000,
+    // promptQueryInterval = 10000,
   } = appConfig;
 
   const pqa = toArray(promptQueries);
@@ -28,23 +31,23 @@ export default function SampleQueryPrompt() {
 
   const queries = pqa.length ? pqa : dpqa.length ? dpqa : [];
 
-  const nrQueries = queries.length;
+  // const nrQueries = queries.length;
 
-  const randomizer = React.useCallback(
-    () => Math.max(Math.ceil(Math.random() * nrQueries) - 1, 0),
-    [nrQueries],
-  );
-  const [index, setIndex] = React.useState(randomizer());
-  const [paused, setPaused] = React.useState(false);
-  const timerRef = React.useRef();
+  // const randomizer = React.useCallback(
+  //   () => Math.max(Math.ceil(Math.random() * nrQueries) - 1, 0),
+  //   [nrQueries],
+  // );
+  // const [index, setIndex] = React.useState(randomizer());
+  // const [paused, setPaused] = React.useState(false);
+  // const timerRef = React.useRef();
 
-  React.useEffect(() => {
-    timerRef.current = setInterval(() => {
-      const next = randomizer();
-      if (!paused) setIndex(next);
-    }, promptQueryInterval);
-    return () => clearInterval(timerRef.current);
-  }, [paused, promptQueryInterval, randomizer]);
+  // React.useEffect(() => {
+  //   timerRef.current = setInterval(() => {
+  //     const next = randomizer();
+  //     if (!paused) setIndex(next);
+  //   }, promptQueryInterval);
+  //   return () => clearInterval(timerRef.current);
+  // }, [paused, promptQueryInterval, randomizer]);
 
   const applyQuery = React.useCallback(
     (text) => {
@@ -55,10 +58,10 @@ export default function SampleQueryPrompt() {
     [resetFilters, setSearchTerm, setSort],
   );
 
-  return queries.length ? (
-    <p className="demo-question">
-      <span>Try searching for: </span>
-      <Button
+  return isLandingPage && queries.length ? (
+    <div className="demo-question">
+      <h4>Try our suggestions</h4>
+      {/*<Button
         as="a"
         basic
         onMouseOver={() => setPaused(true)}
@@ -73,12 +76,31 @@ export default function SampleQueryPrompt() {
         key={queries[index]}
       >
         {queries[index]}
-      </Button>
+      </Button>*/}
+
+      <List>
+        {queries
+          .filter((i, index) => index < 3)
+          .map((text, i) => (
+            <List.Item
+              key={i}
+              as="a"
+              onClick={() => {
+                applyQuery(text);
+              }}
+              onKeyDown={() => {
+                applyQuery(text);
+              }}
+            >
+              {text}
+            </List.Item>
+          ))}
+      </List>
 
       <Button
         className="explore-more-queries"
+        basic
         compact
-        inverted
         as="a"
         onClick={(e) => {
           setShowModal(true);
@@ -87,8 +109,8 @@ export default function SampleQueryPrompt() {
         }}
         onKeyDown={() => {}}
       >
-        Explore more queries
-        <Icon name="caret down" />
+        More
+        <Icon className="ri-arrow-down-s-line" />
       </Button>
 
       <Modal
@@ -99,25 +121,22 @@ export default function SampleQueryPrompt() {
         <Modal.Header>Pick one of our sample questions</Modal.Header>
         <Modal.Content scrolling>
           <List>
-            {queries.map((text, i) => (
-              <List.Item key={i}>
-                <List.Content>
-                  <List.Header
-                    as="a"
-                    onClick={() => {
-                      setShowModal(false);
-                      applyQuery(text);
-                    }}
-                    onKeyDown={() => {
-                      setShowModal(false);
-                      applyQuery(text);
-                    }}
-                  >
-                    {text}
-                  </List.Header>
-                </List.Content>
-              </List.Item>
-            ))}
+            {queries
+              .filter((i, index) => index > 3)
+              .map((text, i) => (
+                <List.Item
+                  key={i}
+                  as="a"
+                  onClick={() => {
+                    applyQuery(text);
+                  }}
+                  onKeyDown={() => {
+                    applyQuery(text);
+                  }}
+                >
+                  {text}
+                </List.Item>
+              ))}
           </List>
         </Modal.Content>
         <Modal.Actions>
@@ -126,6 +145,6 @@ export default function SampleQueryPrompt() {
           </Button>
         </Modal.Actions>
       </Modal>
-    </p>
+    </div>
   ) : null;
 }

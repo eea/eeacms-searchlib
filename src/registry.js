@@ -26,12 +26,13 @@ import {
   MultiCheckboxFacet,
   ModalFacetWrapper,
   FilterAsideLayout,
+  TopFilterLayout,
 } from '@eeacms/search/components';
 
 import SimpleSearchInput from '@eeacms/search/components/SearchInput/SimpleSearchInput';
 import SearchInput from '@eeacms/search/components/SearchInput/SearchInput';
 import ListingViewItem from '@eeacms/search/components/Result/ListingViewItem';
-import StickyFacetList from '@eeacms/search/components/Facets/StickyFacetList';
+import TopFacetList from '@eeacms/search/components/Facets/TopFacetList';
 import SecondaryFacetsList from '@eeacms/search/components/Facets/SecondaryFacetsList';
 import DefaultFacetsList from '@eeacms/search/components/Facets/DefaultFacetsList';
 import CardItem from '@eeacms/search/components/Result/CardItem';
@@ -196,10 +197,13 @@ const config = {
       component: ModalFacetWrapper,
     },
     VerticalCardsModalFacets: {
-      component: StickyFacetList,
+      component: TopFacetList,
     },
     FilterAsideLayout: {
       component: FilterAsideLayout,
+    },
+    TopFilterLayout: {
+      component: TopFilterLayout,
     },
     DefaultContentView: {
       component: DefaultContentView,
@@ -440,8 +444,10 @@ const config = {
   },
 };
 
-// if (window) {
-//   window.searchUiConfig = config;
-// }
+if (typeof window !== 'undefined') {
+  window.searchUiConfig = config;
+}
+
+// console.log('whole config', config);
 
 export default config;

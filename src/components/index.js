@@ -11,6 +11,7 @@ import FacetsList from './Facets/FacetsList';
 import FilterList from './FilterList/FilterList';
 import InlineFilterList from './FilterList/InlineFilterList';
 import FilterAsideLayout from './Layout/FilterAsideLayout';
+import TopFilterLayout from './Layout/TopFilterLayout';
 import LeftColumnLayout from './Layout/LeftColumnLayout';
 import RightColumnLayout from './Layout/RightColumnLayout';
 import TableRowItem from './Result/TableRowItem';
@@ -34,6 +35,9 @@ import AnswerBox from './AnswerBox/AnswerBox';
 import DownloadButton from './DownloadButton/DownloadButton';
 import AppInfo from './AppInfo/AppInfo';
 import String from './Result/String';
+import ContentClusters from './Result/ContentClusters';
+import ResultContext from './Result/ResultContext';
+import MoreLikeThisTrigger from './Result/MoreLikeThisTrigger';
 import { ResultHeader } from './Result/ResultModal';
 import DefaultContentView from './SearchView/DefaultContentView';
 import SegmentedBreadcrumb from './SegmentedBreadcrumb/Breadcrumb';
@@ -46,6 +50,7 @@ export {
   Term,
   SegmentedBreadcrumb,
   FilterAsideLayout,
+  TopFilterLayout,
   MultiCheckboxFacet,
   CardItem,
   DateTime,
@@ -78,6 +83,9 @@ export {
   DefaultContentView,
   SectionTabs,
   ResultSource,
+  ContentClusters,
+  MoreLikeThisTrigger,
+  ResultContext,
 };
 
 // SimpleSearchInput,

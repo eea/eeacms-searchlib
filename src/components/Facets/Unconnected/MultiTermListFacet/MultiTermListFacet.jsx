@@ -95,57 +95,32 @@ const MultiTermListFacet = (props) => {
     <>
       <HeaderWrapper className={customClass}>
         <div className="multitermlist__facet__header">
-          <div className="facet-title">
-            <h3>{facetConfig?.title || label}</h3>
-          </div>
-
           <div className="multitermlist__facet__header_bottom">
-            <div className="search-wrapper">
-              {showSearch && (
-                <div className="search">
-                  <Icon name="search" size="small" color="blue" />
-                  <input
-                    className="multitermlist__search__text-input"
-                    type="search"
-                    placeholder={searchPlaceholder || 'Search'}
-                    onChange={(e) => onSearch(e.target.value)}
-                  />
-                </div>
-              )}
-
+            <div className="facet-title">
+              <h4>{facetConfig?.title || label}</h4>
+            </div>
+            <div className="order-controls">
+              <span className="label">match all selected</span>
               <Checkbox
                 toggle
-                label="Match all selected"
                 checked={filterType === 'all'}
                 onChange={(e, { checked }) =>
                   onChangeFilterType(checked ? 'all' : 'any')
                 }
               />
               {enableExact && (
-                <Checkbox
-                  toggle
-                  label="Only specific to selection"
-                  checked={!!filterExact}
-                  onChange={(e, { checked }) => {
-                    onChangeFilterExact(checked);
-                  }}
-                />
+                <>
+                  <span className="label">Only specific to selection</span>
+                  <Checkbox
+                    toggle
+                    checked={!!filterExact}
+                    onChange={(e, { checked }) => {
+                      onChangeFilterExact(checked);
+                    }}
+                  />
+                </>
               )}
-            </div>
-            <div className="order-controls">
-              <span className="label">Order:</span>
-              <ToggleSort
-                label="By Count"
-                onToggle={() => toggleSort('count')}
-                on={sorting.sortOn === 'count'}
-                icon={
-                  sorting.sortOrder === 'ascending' ? (
-                    <Icon name="sort numeric ascending" />
-                  ) : (
-                    <Icon name="sort numeric descending" />
-                  )
-                }
-              />
+              <span className="label">Sort by:</span>
               <ToggleSort
                 label={secondToggleSortConfig.label}
                 onToggle={() => toggleSort(secondToggleSortConfig.sortOn)}
@@ -158,8 +133,31 @@ const MultiTermListFacet = (props) => {
                   )
                 }
               />
+              <ToggleSort
+                label="Count"
+                onToggle={() => toggleSort('count')}
+                on={sorting.sortOn === 'count'}
+                icon={
+                  sorting.sortOrder === 'ascending' ? (
+                    <Icon name="sort numeric ascending" />
+                  ) : (
+                    <Icon name="sort numeric descending" />
+                  )
+                }
+              />
             </div>
           </div>
+          {showSearch && (
+            <div className="search">
+              <Icon name="search" size="small" color="blue" />
+              <input
+                className="multitermlist__search__text-input"
+                type="search"
+                placeholder={searchPlaceholder || 'Search'}
+                onChange={(e) => onSearch(e.target.value)}
+              />
+            </div>
+          )}
         </div>
       </HeaderWrapper>
       <ContentWrapper>

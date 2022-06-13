@@ -3,17 +3,20 @@ import { Facet } from '@eeacms/search/components';
 import { Card, Modal, Button, Icon } from 'semantic-ui-react'; // , Header, Image
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
 
-import Filter from '@eeacms/search/components/FilterList/Filter';
 import OptionsWrapper from './OptionsWrapper';
 import { useFilterState } from './state';
+import { visibleFacetsAtom } from '@eeacms/search/state';
+import { useAtom } from 'jotai';
 
 const FacetWrapperComponent = (props) => {
   const searchContext = useSearchContext();
   const { filters = [], addFilter, removeFilter } = searchContext;
   const { field, label } = props;
   const [isOpened, setIsOpened] = React.useState();
+  const [visibleFacets, setVisibleFacets] = useAtom(visibleFacetsAtom);
 
   const { appConfig } = useAppConfig();
+  const { facets } = appConfig;
   const facet = appConfig.facets?.find((f) => f.field === field);
   // const fallback = facet ? facet.filterType : defaultType;
 
@@ -31,6 +34,10 @@ const FacetWrapperComponent = (props) => {
 
   const [isExact, setIsExact] = React.useState(defaultIsExact);
 
+  const alwaysVisibleFacets = facets
+    .filter((f) => f.alwaysVisible)
+    .map((f) => f.field);
+
   const initialValue =
     (filters.find((f) => f.field === field) || {})?.values || [];
   const isActive = initialValue.length > 0;
@@ -43,8 +50,6 @@ const FacetWrapperComponent = (props) => {
       ? initialValue
       : [initialValue],
   );
-
-  const { clearFilters, setFilter } = useSearchContext();
 
   const OptionsView = props.view;
 
@@ -74,19 +79,33 @@ const FacetWrapperComponent = (props) => {
       open={isOpened}
       trigger={
         <Card
-          fluid
           header={
-            <div className="header">
+            <div className="card-header">
               <span className="text" title={label}>
                 {label}
-              </span>
-              {state.length > 1 ? (
-                <span className="clear-filters">
+
+                {filters.map((filter, index) => {
+                  return filter.field === field ? (
+                    <>
+                      <span key={index}> ({filter.values.length})</span>
+                    </>
+                  ) : null;
+                })}
+
+                {initialValue.length > 0 && (
                   <Button
+                    className="clear-filters"
                     size="mini"
                     onClick={(evt) => {
                       evt.preventDefault();
-                      setIsOpened(false);
+
+                      if (!alwaysVisibleFacets.includes(field)) {
+                        let filteredValues = visibleFacets.filter(
+                          (l) => l !== facet.field,
+                        );
+                        setVisibleFacets(filteredValues);
+                      }
+
                       if (Array.isArray(state)) {
                         (state || []).forEach((v) => {
                           dispatch({
@@ -114,44 +133,10 @@ const FacetWrapperComponent = (props) => {
                       }
                     }}
                   >
-                    Clear
+                    <Icon name="close" role="button" />
                   </Button>
-                </span>
-              ) : null}
-            </div>
-          }
-          description={
-            <div className="filter description">
-              {filters.map((filter, index) => {
-                return filter.field === field ? (
-                  <Filter
-                    key={index}
-                    {...filter}
-                    noTitle={true}
-                    setFilter={setFilter}
-                    removeFilter={(field, value, type) => {
-                      // console.log('remove', { field, value, type });
-                      // TODO: add dispatch call here, can remove useEffect
-                      // from OptionsWrapper
-                      dispatch({ type: 'remove', value });
-                      removeFilter(field, value, type);
-                    }}
-                    onClear={(field) => {
-                      const activeFilters = filters.map(({ field }) => field);
-                      const exclude = activeFilters.filter(
-                        (name) => name !== field,
-                      );
-                      clearFilters(exclude);
-                      // dispatch({ type: 'remove', exclude });
-                      dispatch({
-                        type: 'reset',
-                        value: [],
-                        id: 'filter-onClear',
-                      });
-                    }}
-                  />
-                ) : null;
-              })}
+                )}
+              </span>
             </div>
           }
           className={(isActive && 'facet active') || 'facet'}
@@ -165,9 +150,9 @@ const FacetWrapperComponent = (props) => {
         view={BoundOptionsWrapper}
         state={state}
       />
+
       <Modal.Actions>
         <Button
-          color="black"
           onClick={() => {
             setIsOpened(false);
             dispatch({ type: 'reset', value: initialValue, id: 'btn-cancel' });
@@ -176,9 +161,8 @@ const FacetWrapperComponent = (props) => {
           Cancel
         </Button>
         <Button
+          primary
           content="Apply"
-          labelPosition="right"
-          icon="checkmark"
           onClick={() => {
             setIsOpened(false);
             removeFilter(field, '', '');
@@ -203,23 +187,7 @@ const FacetWrapperComponent = (props) => {
               );
             }
           }}
-          positive
         />
-        {state.length > 1 ? (
-          <a
-            href="/"
-            className="clear-filters"
-            onClick={(evt) => {
-              evt.preventDefault();
-              if (state.length) {
-                dispatch({ type: 'reset', value: [], id: 'btn-clear-filters' });
-              }
-            }}
-          >
-            <Icon name="delete" />
-            Clear
-          </a>
-        ) : null}
       </Modal.Actions>
     </Modal>
   );

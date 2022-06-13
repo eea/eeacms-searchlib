@@ -1,17 +1,24 @@
 import React from 'react';
 import cx from 'classnames';
-import { Label, Button, Dropdown } from 'semantic-ui-react';
-import { useAppConfig, useWindowDimensions } from '@eeacms/search/lib/hocs';
+import { Label } from 'semantic-ui-react';
+import {
+  useAppConfig,
+  // useWindowDimensions
+} from '@eeacms/search/lib/hocs';
 import { SegmentedBreadcrumb, TagsList } from '@eeacms/search/components';
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
-import MoreLikeThisTrigger from './MoreLikeThisTrigger';
+// import MoreLikeThisTrigger from './MoreLikeThisTrigger';
 import ExternalLink from './ExternalLink';
 import ResultContext from './ResultContext';
 import ContentClusters from './ContentClusters';
+import { DateTime } from '@eeacms/search/components';
 
 const HorizontalCardItem = (props) => {
-  const { result, showControls = true } = props;
+  const {
+    result,
+    // showControls = true
+  } = props;
   const { appConfig } = useAppConfig();
   const { vocab = {}, debugQuery } = appConfig;
   const [hovered, setHovered] = React.useState(false);
@@ -25,8 +32,8 @@ const HorizontalCardItem = (props) => {
 
   const classColLeft = result.hasImage ? 'col-left' : 'col-left no-image';
 
-  const { width } = useWindowDimensions();
-  const isSmallScreen = width < 1000;
+  // const { width } = useWindowDimensions();
+  // const isSmallScreen = width < 1000;
   const clusters = result.clusterInfo;
 
   return (
@@ -37,17 +44,18 @@ const HorizontalCardItem = (props) => {
     >
       <div className="col-full">
         <div className="meta">
+          <span className="date">
+            <DateTime format="DATE_MED" value={result.issued} />
+          </span>
           <ContentClusters clusters={clusters} item={result} />
-          <div className="tags-list">
-            <TagsList value={result.tags} />
-          </div>
         </div>
       </div>
       <div className={classColLeft}>
         <div className="details">
           <h3>
             <ExternalLink href={result.href} title={result.title}>
-              {firstWords(result.title, 12)}
+              {/*{firstWords(result.title, 12)}*/}
+              {result.title}
             </ExternalLink>
             {result.isNew && (
               <Label className="new-item" horizontal>
@@ -60,6 +68,13 @@ const HorizontalCardItem = (props) => {
               </Label>
             )}
           </h3>
+
+          <div className="result-description">
+            {props.children ? props.children : <ResultContext {...props} />}
+          </div>
+          <div className="tags-list">
+            <TagsList value={result.tags} />
+          </div>
           <div className="source">
             <span>Source: </span>
             <ExternalLink href={result.href}>
@@ -80,7 +95,7 @@ const HorizontalCardItem = (props) => {
               />
             </ExternalLink>
 
-            {showControls && !isSmallScreen && (
+            {/*{showControls && !isSmallScreen && (
               <MoreLikeThisTrigger
                 view={Button}
                 className="mlt"
@@ -91,8 +106,8 @@ const HorizontalCardItem = (props) => {
               >
                 more like this
               </MoreLikeThisTrigger>
-            )}
-            {showControls && isSmallScreen && (
+            )}*/}
+            {/*{showControls && isSmallScreen && (
               <Dropdown icon="ellipsis vertical">
                 <Dropdown.Menu className="mlt">
                   <MoreLikeThisTrigger result={result} view={Dropdown.Item}>
@@ -100,10 +115,8 @@ const HorizontalCardItem = (props) => {
                   </MoreLikeThisTrigger>
                 </Dropdown.Menu>
               </Dropdown>
-            )}
+            )}*/}
           </div>
-
-          {props.children ? props.children : <ResultContext {...props} />}
         </div>
         {debugQuery && (
           <div>

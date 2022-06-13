@@ -1,5 +1,8 @@
 import React from 'react';
-import { Icon, StringList } from '@eeacms/search/components';
+import {
+  // Icon,
+  StringList,
+} from '@eeacms/search/components';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 
 const ContentClusters = ({ clusters, item }) => {
@@ -18,19 +21,19 @@ const ContentClusters = ({ clusters, item }) => {
       // protect against async cluster information not filled in yet
       return Object.keys(cluster).length ? (
         <span className="tags-wrapper" key={index}>
-          <span className="cluster-icon">
+          {/*<span className="cluster-icon">
             <Icon {...cluster.icon} />
-          </span>
+          </span>*/}
           <span className="tags">
             <StringList value={clusterName} />
-            {clusterName !== cluster.content_types?.[0] && (
+            {/*{clusterName !== cluster.content_types?.[0] && (
               <>
                 <Icon name="angle right" />
                 <StringList
                   value={displayClusters[clusterName].content_types}
                 />
               </>
-            )}
+            )}*/}
             {format.includes('application/pdf') ? (
               <span className="pdf-icon">PDF</span>
             ) : (
