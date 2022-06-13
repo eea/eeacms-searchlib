@@ -57,9 +57,10 @@ function Paging({ className, onChange, ...rest }) {
 
       {/*<SUIPagingInfo view={PagingPrevNext} />*/}
 
-      {paginationRange.map((pageNumber) => {
+      {paginationRange.map((pageNumber, index) => {
         return (
           <Button
+            key={index}
             className={cx('pagination-item', {
               active: pageNumber === current,
             })}
