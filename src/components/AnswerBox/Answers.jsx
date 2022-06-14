@@ -20,13 +20,12 @@ const Answers = (props) => {
 
   const ExtractMessageWarning = React.useMemo(() => {
     return () => (
-      <Message warning>
+      <Message warning className="answers-warning">
         This answer is extracted from documents matching the active filters. You
         can{' '}
         <Button
           size="mini"
           compact
-          primary
           onClick={(e) => {
             e.stopPropagation();
             e.preventDefault();
@@ -82,7 +81,7 @@ const Answers = (props) => {
                     <div className="answer-header-title">Direct answers</div>
                     <AnswerBoxDetails basic />
                   </div>
-
+                  {hasActiveFilters && <ExtractMessageWarning />}
                   <AnswerContext
                     item={primaryResult}
                     answerItem={primaryAnswer}
@@ -96,12 +95,14 @@ const Answers = (props) => {
                     />
                   </div>
                 </div>
-                <AnswerFeedback
-                  basic
-                  answer={primaryAnswer}
-                  query={searchedTerm}
-                />
-                <div className="answers__bottom">
+                <div className="answers-feedback">
+                  <AnswerFeedback
+                    basic
+                    answer={primaryAnswer}
+                    query={searchedTerm}
+                  />
+                </div>
+                {/*<div className="answers__bottom">
                   <Popup
                     trigger={
                       <Rating
@@ -121,9 +122,8 @@ const Answers = (props) => {
                       document or page.
                     </p>
                   </Popup>
-                  {/*<div className="answers__bottom__spacer"></div>*/}
-                </div>
-                {hasActiveFilters && <ExtractMessageWarning />}
+                  <div className="answers__bottom__spacer"></div>
+                </div>*/}
               </Segment>
             </div>
           );

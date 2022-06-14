@@ -111,7 +111,7 @@ const FacetsList = ({ view, defaultWrapper }) => {
           onClose={() => setIsOpened(false)}
           onOpen={() => setIsOpened(true)}
           open={isOpened}
-          trigger={<Button className="facet">+ Add filters</Button>}
+          trigger={<Button className="add-facet-btn">+ Add filters</Button>}
         >
           <Modal.Header>
             <h4>Add filters</h4>
