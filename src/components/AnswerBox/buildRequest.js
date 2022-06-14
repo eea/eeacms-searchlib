@@ -79,7 +79,6 @@ export const buildClassifyQuestionRequest = (state, appConfig) => {
 };
 
 export const buildQuestionRequest = (state, config) => {
-  console.log('buildQuestionRequest');
   const {
     searchTerm,
     filters,
