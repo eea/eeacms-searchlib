@@ -1,14 +1,10 @@
 import React from 'react';
-// import PagingPrevNext from './../PagingInfo/PagingPrevNext';
-// import { PagingInfo as SUIPagingInfo } from '@elastic/react-search-ui';
+import { usePaging } from './usePaging';
 import { Button } from 'semantic-ui-react';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 import cx from 'classnames';
-
-const range = (start, end) => {
-  let length = end - start + 1;
-  return Array.from({ length }, (_, idx) => idx + start);
-};
+// import PagingPrevNext from './../PagingInfo/PagingPrevNext';
+// import { PagingInfo as SUIPagingInfo } from '@elastic/react-search-ui';
 
 function Paging({ className, onChange, ...rest }) {
   const searchContext = useSearchContext();
@@ -20,6 +16,12 @@ function Paging({ className, onChange, ...rest }) {
     resultsPerPage,
   } = searchContext;
 
+  const paginationRange = usePaging({
+    current,
+    totalResults,
+    resultsPerPage,
+  });
+
   const goToNext = () => {
     setCurrent(current + 1);
   };
@@ -27,16 +29,6 @@ function Paging({ className, onChange, ...rest }) {
   const goToPrev = () => {
     setCurrent(current - 1);
   };
-
-  const paginationRange = React.useMemo(() => {
-    const siblingCount = 2;
-    const totalPageCount = Math.ceil(totalResults / resultsPerPage);
-    const leftSiblingIndex = Math.max(current - siblingCount, 1);
-    const rightSiblingIndex = Math.min(current + siblingCount, totalPageCount);
-    const paginationRange = range(leftSiblingIndex, rightSiblingIndex);
-
-    return paginationRange;
-  }, [totalResults, resultsPerPage, current]);
 
   return (
     <div className="paging-wrapper">
