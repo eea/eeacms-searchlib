@@ -51,6 +51,7 @@ export const SearchView = (props) => {
   // const searchedTerm = driver.URLManager.getStateFromURL().searchTerm;
   const searchContext = useSearchContext();
   const { resultSearchTerm } = searchContext;
+
   const wasInteracted = checkInteracted({
     wasSearched,
     filters,
@@ -67,41 +68,9 @@ export const SearchView = (props) => {
   React.useEffect(() => {
     // TODO: use searchui alwaysSearchOnInitialLoad ?
     if (!wasSearched && !InitialViewComponent) {
-      const state = driver.URLManager.getStateFromURL();
-      setSearchTerm(state.searchTerm || defaultSearchText);
-
-      // eslint-disable-next-line
-      state.filters?.forEach((f) => addFilter(f.field, f.values, f.type));
-
-      if (state.current) {
-        setCurrent(state.current);
-      }
-      if (state.sortField) {
-        setSort(state.sortField, state.sortDirection);
-      }
-
-      if (defaultFilterValues) {
-        const presetFilters = state?.filters?.map((filter) => filter.field);
-        Object.keys(defaultFilterValues).forEach((k) => {
-          const { values, type = 'any' } = defaultFilterValues[k];
-          if (!presetFilters || presetFilters?.indexOf(k) === -1) {
-            addFilter(k, values, type);
-          }
-        });
-      }
+      searchContext.resetSearch();
     }
-  }, [
-    appConfig,
-    wasSearched,
-    setSearchTerm,
-    defaultSearchText,
-    defaultFilterValues,
-    driver,
-    addFilter,
-    setCurrent,
-    setSort,
-    InitialViewComponent,
-  ]);
+  }, [searchContext, InitialViewComponent, wasSearched]);
 
   return (
     <div className={`searchapp searchapp-${appName} ${customClassName}`}>
