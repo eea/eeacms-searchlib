@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Button, Icon } from 'semantic-ui-react';
+import { Modal, Button } from 'semantic-ui-react'; // Icon
 import AnswerFeedback from './AnswerFeedback';
 
 export default (props) => {
@@ -9,8 +9,12 @@ export default (props) => {
     <Modal
       open={open}
       trigger={
-        <Button basic={basic} size="mini" onClick={() => setOpen(true)}>
-          <Icon name="help circle" />
+        <Button
+          basic={basic}
+          onClick={() => setOpen(true)}
+          className="header-btn"
+        >
+          {/*<Icon name="help circle" />*/}
           About direct answers
         </Button>
       }

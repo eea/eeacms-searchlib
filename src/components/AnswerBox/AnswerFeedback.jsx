@@ -7,9 +7,10 @@ import {
   Header,
   TextArea,
   Segment,
+  Icon,
 } from 'semantic-ui-react';
 // import loadable from '@loadable/component';
-import { Icon } from '@eeacms/search/components';
+// import { Icon } from '@eeacms/search/components';
 import runRequest from '@eeacms/search/lib/runRequest';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 
@@ -45,9 +46,14 @@ const AnswerFeedback = (props) => {
     <Modal
       open={open}
       trigger={
-        <Button basic={basic} size="mini" onClick={() => setOpen(true)}>
-          <Icon name="comment" />
-          Feedback
+        <Button
+          basic={basic}
+          onClick={() => setOpen(true)}
+          className="feedback-btn"
+          floated="right"
+        >
+          Help us improve our answers
+          <Icon name="angle right icon" />
         </Button>
       }
     >

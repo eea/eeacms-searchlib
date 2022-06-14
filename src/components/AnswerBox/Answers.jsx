@@ -78,6 +78,11 @@ const Answers = (props) => {
               <Segment className="answers-wrapper">
                 <div className="answerCard">
                   {/* <h3 className="answers__directAnswer">{filtered[0].answer}</h3> */}
+                  <div className="answer-header">
+                    <div className="answer-header-title">Direct answers</div>
+                    <AnswerBoxDetails basic />
+                  </div>
+
                   <AnswerContext
                     item={primaryResult}
                     answerItem={primaryAnswer}
@@ -91,6 +96,11 @@ const Answers = (props) => {
                     />
                   </div>
                 </div>
+                <AnswerFeedback
+                  basic
+                  answer={primaryAnswer}
+                  query={searchedTerm}
+                />
                 <div className="answers__bottom">
                   <Popup
                     trigger={
@@ -111,15 +121,7 @@ const Answers = (props) => {
                       document or page.
                     </p>
                   </Popup>
-                  <div className="answers__bottom__spacer"></div>
-                  <div className="right">
-                    <AnswerBoxDetails basic />
-                    <AnswerFeedback
-                      basic
-                      answer={primaryAnswer}
-                      query={searchedTerm}
-                    />
-                  </div>
+                  {/*<div className="answers__bottom__spacer"></div>*/}
                 </div>
                 {hasActiveFilters && <ExtractMessageWarning />}
               </Segment>
