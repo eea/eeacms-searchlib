@@ -3,7 +3,10 @@
  */
 import React from 'react';
 import ExternalLink from '@eeacms/search/components/Result/ExternalLink';
-import { SegmentedBreadcrumb, DateTime } from '@eeacms/search/components'; //, StringList
+import {
+  SegmentedBreadcrumb,
+  // DateTime
+} from '@eeacms/search/components'; //, StringList
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 
@@ -29,9 +32,9 @@ const ResultSource = ({ item }) => {
         <SegmentedBreadcrumb href={item.href} short={true} maxChars={40} />
       </ExternalLink>
 
-      <span className="answer__date">
+      {/*<span className="answer__date">
         (<DateTime format="DATE_MED" value={item.issued} />)
-      </span>
+      </span>*/}
     </div>
   );
 };

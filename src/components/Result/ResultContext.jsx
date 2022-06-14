@@ -1,5 +1,5 @@
 import React from 'react';
-import { DateTime } from '@eeacms/search/components';
+// import { DateTime } from '@eeacms/search/components';
 
 // TODO: this is rather hackish and possibly insecure. Ideally all results
 // already provide simple text instead of HTML
@@ -11,15 +11,14 @@ const normalizeStr = (str) => {
 };
 
 function Highlight(props) {
-  const { result } = props;
+  // const { result } = props;
   const { fragments = {} } = props;
   return Object.keys(fragments).map((name, i) => {
     return (
       <p className={`highlight-${name}`} key={`${i}-${name}`}>
-        <span className="date">
+        {/*<span className="date">
           <DateTime format="DATE_MED" value={result.issued} /> &mdash;{' '}
-        </span>
-
+        </span>*/}
         {fragments[name].map((f, j) => (
           <span className="fragment" key={`${i}-${j}-${name}`}>
             <span dangerouslySetInnerHTML={{ __html: f }} />
