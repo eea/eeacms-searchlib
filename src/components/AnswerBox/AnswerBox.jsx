@@ -72,33 +72,40 @@ const AnswerBox = (props) => {
     </div>
   ) : hasActiveFilters ? (
     <div className="answers-list">
-      <Message warning>
-        <Icon name="warning sign" />
-        No answers found, but you have active filters. You may try to{' '}
-        <Button
-          size="mini"
-          compact
-          primary
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            resetFilters();
-          }}
-        >
-          reset
-        </Button>{' '}
-        the filters to improve the quality of results.
+      <Message icon warning size="small">
+        <Icon name="exclamation circle" />
+        <Message.Content>
+          <p>
+            No answers found, but you have active filters. You may try to{' '}
+            <Button
+              size="mini"
+              compact
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                resetFilters();
+              }}
+            >
+              reset
+            </Button>{' '}
+            the filters to improve the quality of results.
+          </p>
+        </Message.Content>
       </Message>
     </div>
   ) : (
     messageCounter > 0 && (
       <div className="answers-list">
-        <Message warning>
-          <Icon name="warning sign" />
-          No direct answers for your question.
-          <Label circular color="teal">
-            {messageCounter}
-          </Label>
+        <Message icon warning size="small">
+          <Icon name="exclamation circle" />
+          <Message.Content>
+            <p>
+              No direct answers for your question.
+              <Label circular color="teal">
+                {messageCounter}
+              </Label>
+            </p>
+          </Message.Content>
         </Message>
       </div>
     )
