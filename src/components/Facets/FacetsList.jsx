@@ -82,11 +82,12 @@ const FacetsList = ({ view, defaultWrapper }) => {
           className="clear-btn"
           content="clear all filters"
           onClick={() => {
-            const exclude = facets
-              .filter((f) => f.isFilter)
-              .map((f) => f.field);
-            clearFilters(exclude);
-            setVisibleFacets(alwaysVisibleFacets);
+            searchContext.resetFilters();
+            // const exclude = facets
+            //   .filter((f) => f.isFilter)
+            //   .map((f) => f.field);
+            // clearFilters(exclude);
+            // setVisibleFacets(alwaysVisibleFacets);
           }}
         />
       </div>
