@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Rating, Popup, Button, Message } from 'semantic-ui-react'; //, Accordion
+import { Segment, Button, Message, Icon } from 'semantic-ui-react'; //, Accordion, Rating, Popup,
 
 // import { Icon } from '@eeacms/search/components'; //, StringList//, Toast
 import { useAppConfig } from '@eeacms/search/lib/hocs';
@@ -20,21 +20,26 @@ const Answers = (props) => {
 
   const ExtractMessageWarning = React.useMemo(() => {
     return () => (
-      <Message warning className="answers-warning">
-        This answer is extracted from documents matching the active filters. You
-        can{' '}
-        <Button
-          size="mini"
-          compact
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            resetFilters();
-          }}
-        >
-          reset
-        </Button>{' '}
-        the filters to improve the quality of results.
+      <Message icon warning size="small">
+        <Icon name="exclamation circle" />
+        <Message.Content>
+          <p>
+            This answer is extracted from documents matching the active filters.
+            You can{' '}
+            <Button
+              size="mini"
+              compact
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                resetFilters();
+              }}
+            >
+              reset
+            </Button>{' '}
+            the filters to improve the quality of results.
+          </p>
+        </Message.Content>
       </Message>
     );
   }, [resetFilters]);
