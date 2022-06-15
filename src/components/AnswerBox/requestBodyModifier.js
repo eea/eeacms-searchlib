@@ -19,6 +19,9 @@ export default function addQAParams(body, config) {
     AnswerOptimizer: {
       cutoff: parseFloat(config.nlp.qa.cutoffScore ?? 0.1),
     },
+    QuerySearch: {
+      query_types: config.nlp.qa.qa_queryTypes,
+    },
   };
 
   return body;

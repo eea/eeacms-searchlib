@@ -31,7 +31,7 @@ function resetFilters() {
   return resetFiltersToDefault(searchContext, appConfig);
 }
 
-function resetSearch() {
+function resetSearch(resetState) {
   const { appConfig, searchContext, driver } = this;
 
   const {
@@ -42,7 +42,7 @@ function resetSearch() {
     addFilter,
   } = searchContext;
 
-  const state = driver.URLManager.getStateFromURL();
+  const state = resetState || driver.URLManager.getStateFromURL();
   const { defaultSearchText = '', facets } = appConfig;
   setSearchTerm(state.searchTerm || defaultSearchText);
 
@@ -67,8 +67,6 @@ function resetSearch() {
       }
     });
   }
-
-  console.log('done reset');
 }
 
 function MapDriver({ children }) {
@@ -195,7 +193,11 @@ function SearchApp(props) {
               driver,
               isLoading,
               resetFilters: resetFilters.bind({ appConfig, searchContext }),
-              resetSearch: resetSearch.bind({ searchContext, appConfig }),
+              resetSearch: resetSearch.bind({
+                searchContext,
+                appConfig,
+                driver,
+              }),
               facetOptions,
             })}
           >
