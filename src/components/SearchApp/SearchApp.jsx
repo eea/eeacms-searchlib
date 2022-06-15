@@ -1,6 +1,10 @@
 import React from 'react';
 
-import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
+import {
+  SearchProvider,
+  WithSearch,
+  SearchContext as SUISearchContext,
+} from '@elastic/react-search-ui'; // ErrorBoundary,
 import {
   AppConfigContext,
   SearchContext,
@@ -28,13 +32,13 @@ function resetFilters() {
 }
 
 function resetSearch() {
-  const { appConfig, searchContext } = this;
+  const { appConfig, searchContext, driver } = this;
 
   const {
     setCurrent,
     setSearchTerm,
     setSort,
-    driver,
+    // driver,
     addFilter,
   } = searchContext;
 
@@ -43,7 +47,7 @@ function resetSearch() {
   setSearchTerm(state.searchTerm || defaultSearchText);
 
   // eslint-disable-next-line
-      state.filters?.forEach((f) => addFilter(f.field, f.values, f.type));
+  state.filters?.forEach((f) => addFilter(f.field, f.values, f.type));
 
   if (state.current) {
     setCurrent(state.current);
@@ -63,6 +67,35 @@ function resetSearch() {
       }
     });
   }
+
+  console.log('done reset');
+}
+
+function MapDriver({ children }) {
+  const { driver } = React.useContext(SUISearchContext);
+  return children({ driver });
+}
+
+function SearchWrappers({
+  params,
+  appConfigContext,
+  appName,
+  appConfig,
+  mode,
+}) {
+  // const { driver } = React.useContext(SUISearchContext);
+  return (
+    <AppConfigContext.Provider value={appConfigContext}>
+      <SearchContext.Provider value={params}>
+        <SearchView
+          {...params}
+          appName={appName}
+          appConfig={appConfig}
+          mode={mode}
+        />
+      </SearchContext.Provider>
+    </AppConfigContext.Provider>
+  );
 }
 
 function SearchApp(props) {
@@ -154,31 +187,30 @@ function SearchApp(props) {
 
   return (
     <SearchProvider config={config}>
-      <WithSearch
-        mapContextToProps={(searchContext) => ({
-          ...searchContext,
-          isLoading,
-          resetFilters: resetFilters.bind({ appConfig, searchContext }),
-          resetSearch: resetSearch.bind({ searchContext, appConfig }),
-          facetOptions,
-        })}
-      >
-        {(params) => {
-          // TODO: this needs to be optimized, it causes unmounts
-          return (
-            <AppConfigContext.Provider value={appConfigContext}>
-              <SearchContext.Provider value={params}>
-                <SearchView
-                  {...params}
-                  appName={appName}
-                  appConfig={appConfig}
-                  mode={mode}
-                />
-              </SearchContext.Provider>
-            </AppConfigContext.Provider>
-          );
-        }}
-      </WithSearch>
+      <MapDriver>
+        {({ driver }) => (
+          <WithSearch
+            mapContextToProps={(searchContext) => ({
+              ...searchContext,
+              driver,
+              isLoading,
+              resetFilters: resetFilters.bind({ appConfig, searchContext }),
+              resetSearch: resetSearch.bind({ searchContext, appConfig }),
+              facetOptions,
+            })}
+          >
+            {(params) => (
+              <SearchWrappers
+                params={params}
+                appConfigContext={appConfigContext}
+                appName={appName}
+                appConfig={appConfig}
+                mode={mode}
+              />
+            )}
+          </WithSearch>
+        )}
+      </MapDriver>
     </SearchProvider>
   );
 }

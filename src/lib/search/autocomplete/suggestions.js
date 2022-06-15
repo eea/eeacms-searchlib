@@ -10,7 +10,7 @@ export async function getDidYouMeanTerms(props, config) {
   const didYouMeanRequestBody = buildDidYouMeanRequest(props, config);
   const didYouMeanJson = await runRequest(didYouMeanRequestBody, config);
 
-  const keys = Object.keys(didYouMeanJson.body.suggest).sort();
+  const keys = Object.keys(didYouMeanJson.body?.suggest || []).sort();
 
   let terms = [];
   keys.forEach((key) => {

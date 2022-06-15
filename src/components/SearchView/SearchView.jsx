@@ -1,34 +1,26 @@
 import React from 'react';
 import { useAtom } from 'jotai';
-import { SearchContext } from '@elastic/react-search-ui';
 
 import { withAppConfig } from '@eeacms/search/lib/hocs';
 import { FacetsList, SearchBox, AppInfo } from '@eeacms/search/components';
 import registry from '@eeacms/search/registry';
 
 import { checkInteracted } from './utils';
-import { getDefaultFilterValues } from '@eeacms/search/lib/utils';
 import { BodyContent } from './BodyContent';
 import { isLandingPageAtom } from './state';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 
 export const SearchView = (props) => {
   const {
-    addFilter,
     appConfig,
     appName,
-    setCurrent,
-    setSearchTerm,
-    setSort,
     wasSearched,
     filters,
-    // searchTerm,
     mode = 'view',
+    // searchTerm,
   } = props;
-  const { defaultSearchText = '' } = appConfig;
 
   const [isLandingPage, setIsLandingPageAtom] = useAtom(isLandingPageAtom);
-  const { driver } = React.useContext(SearchContext);
 
   const InitialViewComponent =
     appConfig.initialView?.factory &&
@@ -41,15 +33,9 @@ export const SearchView = (props) => {
   // const itemViewProps = listingViewDef.params;
   const Layout = registry.resolve[appConfig.layoutComponent].component;
 
-  const { facets } = appConfig;
-
-  const defaultFilterValues = React.useMemo(
-    () => getDefaultFilterValues(facets),
-    [facets],
-  );
-
   // const searchedTerm = driver.URLManager.getStateFromURL().searchTerm;
   const searchContext = useSearchContext();
+
   const { resultSearchTerm } = searchContext;
 
   const wasInteracted = checkInteracted({
@@ -70,6 +56,7 @@ export const SearchView = (props) => {
     if (!wasSearched && !InitialViewComponent) {
       searchContext.resetSearch();
     }
+    window.searchContext = searchContext;
   }, [searchContext, InitialViewComponent, wasSearched]);
 
   return (
