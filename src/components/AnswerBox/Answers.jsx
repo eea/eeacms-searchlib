@@ -1,5 +1,5 @@
 import React from 'react';
-import { Segment, Rating, Popup, Button, Message } from 'semantic-ui-react'; //, Accordion
+import { Segment, Button, Message, Icon } from 'semantic-ui-react'; //, Accordion, Rating, Popup,
 
 // import { Icon } from '@eeacms/search/components'; //, StringList//, Toast
 import { useAppConfig } from '@eeacms/search/lib/hocs';
@@ -20,22 +20,26 @@ const Answers = (props) => {
 
   const ExtractMessageWarning = React.useMemo(() => {
     return () => (
-      <Message warning>
-        This answer is extracted from documents matching the active filters. You
-        can{' '}
-        <Button
-          size="mini"
-          compact
-          primary
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            resetFilters();
-          }}
-        >
-          reset
-        </Button>{' '}
-        the filters to improve the quality of results.
+      <Message icon warning size="small">
+        <Icon name="exclamation circle" />
+        <Message.Content>
+          <p>
+            This answer is extracted from documents matching the active filters.
+            You can{' '}
+            <Button
+              size="mini"
+              compact
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                resetFilters();
+              }}
+            >
+              reset
+            </Button>{' '}
+            the filters to improve the quality of results.
+          </p>
+        </Message.Content>
       </Message>
     );
   }, [resetFilters]);
@@ -78,6 +82,11 @@ const Answers = (props) => {
               <Segment className="answers-wrapper">
                 <div className="answerCard">
                   {/* <h3 className="answers__directAnswer">{filtered[0].answer}</h3> */}
+                  <div className="answer-header">
+                    <div className="answer-header-title">Direct answers</div>
+                    <AnswerBoxDetails basic />
+                  </div>
+                  {hasActiveFilters && <ExtractMessageWarning />}
                   <AnswerContext
                     item={primaryResult}
                     answerItem={primaryAnswer}
@@ -91,7 +100,14 @@ const Answers = (props) => {
                     />
                   </div>
                 </div>
-                <div className="answers__bottom">
+                <div className="answers-feedback">
+                  <AnswerFeedback
+                    basic
+                    answer={primaryAnswer}
+                    query={searchedTerm}
+                  />
+                </div>
+                {/*<div className="answers__bottom">
                   <Popup
                     trigger={
                       <Rating
@@ -112,16 +128,7 @@ const Answers = (props) => {
                     </p>
                   </Popup>
                   <div className="answers__bottom__spacer"></div>
-                  <div className="right">
-                    <AnswerBoxDetails basic />
-                    <AnswerFeedback
-                      basic
-                      answer={primaryAnswer}
-                      query={searchedTerm}
-                    />
-                  </div>
-                </div>
-                {hasActiveFilters && <ExtractMessageWarning />}
+                </div>*/}
               </Segment>
             </div>
           );

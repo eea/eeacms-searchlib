@@ -17,7 +17,7 @@ const SortedOptions = (props) => {
         field={field}
       />
 
-      <h5 class="modal-section-title">Add more filters</h5>
+      <h5 className="modal-section-title">Add more filters</h5>
       <Card.Group itemsPerRow={5}>
         {sortedOptions.map((option, i) => {
           const checked = option.selected;

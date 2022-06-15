@@ -1,12 +1,26 @@
 import React from 'react';
-import PagingPrevNext from './../PagingInfo/PagingPrevNext';
-import { PagingInfo as SUIPagingInfo } from '@elastic/react-search-ui';
-import { Button, Icon } from 'semantic-ui-react';
+import { usePaging } from './usePaging';
+import { Button } from 'semantic-ui-react';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
+import cx from 'classnames';
+// import PagingPrevNext from './../PagingInfo/PagingPrevNext';
+// import { PagingInfo as SUIPagingInfo } from '@elastic/react-search-ui';
 
-function Paging({ className, resultsPerPage, onChange, ...rest }) {
+function Paging({ className, onChange, ...rest }) {
   const searchContext = useSearchContext();
-  const { current, setCurrent, totalPages } = searchContext;
+  const {
+    current,
+    setCurrent,
+    totalPages,
+    totalResults,
+    resultsPerPage,
+  } = searchContext;
+
+  const paginationRange = usePaging({
+    current,
+    totalResults,
+    resultsPerPage,
+  });
 
   const goToNext = () => {
     setCurrent(current + 1);
@@ -17,23 +31,53 @@ function Paging({ className, resultsPerPage, onChange, ...rest }) {
   };
 
   return (
-    <>
-      <div>
-        {current > 1 ? (
-          <Button onClick={() => goToPrev()} className="prev" color="green">
-            <Icon name="angle double left" />
-            back
+    <div className="paging-wrapper">
+      {current > 1 ? (
+        <>
+          <Button
+            onClick={() => setCurrent(1)}
+            className="prev double-angle"
+            title="First page"
+          />
+          <Button
+            onClick={() => goToPrev()}
+            className="prev single-angle"
+            title="Previous page"
+          />
+        </>
+      ) : null}
+
+      {/*<SUIPagingInfo view={PagingPrevNext} />*/}
+
+      {paginationRange.map((pageNumber, index) => {
+        return (
+          <Button
+            key={index}
+            className={cx('pagination-item', {
+              active: pageNumber === current,
+            })}
+            onClick={() => setCurrent(pageNumber)}
+          >
+            {pageNumber}
           </Button>
-        ) : null}
-        <SUIPagingInfo view={PagingPrevNext} />
-        {current < totalPages ? (
-          <Button onClick={() => goToNext()} className="next" color="green">
-            next
-            <Icon name="angle double right" />
-          </Button>
-        ) : null}
-      </div>
-    </>
+        );
+      })}
+
+      {current < totalPages ? (
+        <>
+          <Button
+            onClick={() => goToNext()}
+            className="next single-angle"
+            title="Next page"
+          />
+          <Button
+            onClick={() => setCurrent(totalPages)}
+            className="next double-angle"
+            title="Last page"
+          />
+        </>
+      ) : null}
+    </div>
   );
 }
 

@@ -86,9 +86,7 @@ const FacetWrapperComponent = (props) => {
 
                 {filters.map((filter, index) => {
                   return filter.field === field ? (
-                    <>
-                      <span key={index}> ({filter.values.length})</span>
-                    </>
+                    <span key={index}> ({filter.values.length})</span>
                   ) : null;
                 })}
 

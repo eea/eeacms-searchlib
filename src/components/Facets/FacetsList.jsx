@@ -82,11 +82,12 @@ const FacetsList = ({ view, defaultWrapper }) => {
           className="clear-btn"
           content="clear all filters"
           onClick={() => {
-            const exclude = facets
-              .filter((f) => f.isFilter)
-              .map((f) => f.field);
-            clearFilters(exclude);
-            setVisibleFacets(alwaysVisibleFacets);
+            searchContext.resetFilters();
+            // const exclude = facets
+            //   .filter((f) => f.isFilter)
+            //   .map((f) => f.field);
+            // clearFilters(exclude);
+            // setVisibleFacets(alwaysVisibleFacets);
           }}
         />
       </div>
@@ -111,7 +112,7 @@ const FacetsList = ({ view, defaultWrapper }) => {
           onClose={() => setIsOpened(false)}
           onOpen={() => setIsOpened(true)}
           open={isOpened}
-          trigger={<Button className="facet">+ Add filters</Button>}
+          trigger={<Button className="add-facet-btn">+ Add filters</Button>}
         >
           <Modal.Header>
             <h4>Add filters</h4>

@@ -78,7 +78,7 @@ export default function SampleQueryPrompt() {
         {queries[index]}
       </Button>*/}
 
-      <List>
+      <List className="search-list">
         {queries
           .filter((i, index) => index < 3)
           .map((text, i) => (
@@ -120,7 +120,7 @@ export default function SampleQueryPrompt() {
       >
         <Modal.Header>Pick one of our sample questions</Modal.Header>
         <Modal.Content scrolling>
-          <List>
+          <List className="search-list">
             {queries
               .filter((i, index) => index > 3)
               .map((text, i) => (

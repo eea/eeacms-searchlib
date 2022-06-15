@@ -29,7 +29,7 @@ const ActiveFilters = (props) => {
   return activeFilter.length > 0 ? (
     <>
       <div className="facet-list-header">
-        <h5 class="modal-section-title">
+        <h5 className="modal-section-title">
           Active filters ({activeFilter.length})
         </h5>
 
