@@ -49,10 +49,9 @@ export async function getAutocompleteSuggestions(props, config) {
   );
   const faqJson = await runRequest(faqRequestBody, config);
   const faqState = buildState(faqJson.body, props, config, false, true);
-
   return {
-    didYouMean: didYouMeanState.state,
-    faq: faqState.state,
+    didYouMean: didYouMeanState.state.slice(0,3),
+    faq: faqState.state.slice(0,3),
   };
 }
 
