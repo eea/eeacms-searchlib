@@ -23,7 +23,7 @@ export default function SampleQueryPrompt() {
   const {
     defaultPromptQueries = [],
     promptQueries,
-    // promptQueryInterval = 10000,
+    promptQueryInterval = 10000,
   } = appConfig;
 
   const pqa = toArray(promptQueries);
@@ -31,23 +31,23 @@ export default function SampleQueryPrompt() {
 
   const queries = pqa.length ? pqa : dpqa.length ? dpqa : [];
 
-  // const nrQueries = queries.length;
+  const nrQueries = queries.length;
 
-  // const randomizer = React.useCallback(
-  //   () => Math.max(Math.ceil(Math.random() * nrQueries) - 1, 0),
-  //   [nrQueries],
-  // );
-  // const [index, setIndex] = React.useState(randomizer());
-  // const [paused, setPaused] = React.useState(false);
-  // const timerRef = React.useRef();
+  const randomizer = React.useCallback(
+    () => Math.max(Math.ceil(Math.random() * nrQueries) - 1, 0),
+    [nrQueries],
+  );
+  const [index, setIndex] = React.useState(randomizer());
+  const [paused, setPaused] = React.useState(false);
+  const timerRef = React.useRef();
 
-  // React.useEffect(() => {
-  //   timerRef.current = setInterval(() => {
-  //     const next = randomizer();
-  //     if (!paused) setIndex(next);
-  //   }, promptQueryInterval);
-  //   return () => clearInterval(timerRef.current);
-  // }, [paused, promptQueryInterval, randomizer]);
+  React.useEffect(() => {
+    timerRef.current = setInterval(() => {
+      const next = randomizer();
+      if (!paused) setIndex(next);
+    }, promptQueryInterval);
+    return () => clearInterval(timerRef.current);
+  }, [paused, promptQueryInterval, randomizer]);
 
   const applyQuery = React.useCallback(
     (text) => {
@@ -79,6 +79,22 @@ export default function SampleQueryPrompt() {
       </Button>*/}
 
       <List className="search-list">
+        <List.Item
+          as="a"
+          onMouseOver={() => setPaused(true)}
+          onMouseOut={() => setPaused(false)}
+          onFocus={() => setPaused(true)}
+          onBlur={() => setPaused(false)}
+          onClick={() => {
+            applyQuery(queries[index]);
+          }}
+          onKeyDown={() => {
+            applyQuery(queries[index]);
+          }}
+        >
+          {queries[index]}
+        </List.Item>
+
         {queries
           .filter((i, index) => index < 3)
           .map((text, i) => (
@@ -140,9 +156,7 @@ export default function SampleQueryPrompt() {
           </List>
         </Modal.Content>
         <Modal.Actions>
-          <Button color="black" onClick={() => setShowModal(false)}>
-            Close
-          </Button>
+          <Button onClick={() => setShowModal(false)}>Close</Button>
         </Modal.Actions>
       </Modal>
     </div>
