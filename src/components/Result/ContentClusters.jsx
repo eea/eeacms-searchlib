@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  // Icon,
-  StringList,
-} from '@eeacms/search/components';
+import { StringList } from '@eeacms/search/components'; // Icon
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 
 const ContentClusters = ({ clusters, item }) => {
@@ -26,6 +23,7 @@ const ContentClusters = ({ clusters, item }) => {
           </span>*/}
           <span className="tags">
             <StringList value={clusterName} />
+            {index < Object.keys(displayClusters).length - 1 ? ', ' : ''}
             {/*{clusterName !== cluster.content_types?.[0] && (
               <>
                 <Icon name="angle right" />

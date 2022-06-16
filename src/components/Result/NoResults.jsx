@@ -58,7 +58,8 @@ export const NoResults = (props) => {
                 <Button
                   as="a"
                   className="suggestions-button"
-                  basic
+                  primary
+                  size="mini"
                   onClick={(evt) => {
                     evt.preventDefault();
                     applyQuery(suggestions);
@@ -86,8 +87,8 @@ export const NoResults = (props) => {
       )}
       {!isQuestion && (
         <div className="answers-list">
-          <Message warning>
-            <Icon name="warning sign" />
+          <Message icon warning size="small">
+            <Icon name="exclamation circle" />
             No results found, but you have active filters. You may try to{' '}
             <Button
               size="mini"

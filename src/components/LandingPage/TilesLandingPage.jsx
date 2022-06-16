@@ -137,7 +137,7 @@ const LandingPage = (props) => {
       render: () => {
         return (
           <Tab.Pane>
-            <div className="search-cards">
+            <div className="landing-page-cards">
               <Card.Group itemsPerRow={5}>
                 {sortedTiles(tiles, activeSectionConfig, appConfig).map(
                   (topic, index) => {
@@ -201,7 +201,7 @@ const LandingPage = (props) => {
           />
         </div>
         {hasOverflow ? (
-          <div className="info">
+          <div className="tab-info">
             <p>Only first {maxPerSection} items are displayed.</p>
           </div>
         ) : null}
