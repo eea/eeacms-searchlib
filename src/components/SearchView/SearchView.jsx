@@ -4,6 +4,7 @@ import { useAtom } from 'jotai';
 import { withAppConfig } from '@eeacms/search/lib/hocs';
 import { FacetsList, SearchBox, AppInfo } from '@eeacms/search/components';
 import registry from '@eeacms/search/registry';
+import { SearchContext as SUISearchContext } from '@elastic/react-search-ui';
 
 import { checkInteracted } from './utils';
 import { BodyContent } from './BodyContent';
@@ -20,6 +21,8 @@ export const SearchView = (props) => {
     // searchTerm,
   } = props;
 
+  const { driver } = React.useContext(SUISearchContext);
+
   const [isLandingPage, setIsLandingPageAtom] = useAtom(isLandingPageAtom);
 
   const InitialViewComponent =
@@ -33,7 +36,8 @@ export const SearchView = (props) => {
   // const itemViewProps = listingViewDef.params;
   const Layout = registry.resolve[appConfig.layoutComponent].component;
 
-  // const searchedTerm = driver.URLManager.getStateFromURL().searchTerm;
+  const searchedTerm = driver.URLManager.getStateFromURL().searchTerm;
+  console.log('searchedTerm', searchedTerm);
   const searchContext = useSearchContext();
 
   const { resultSearchTerm } = searchContext;
@@ -54,6 +58,7 @@ export const SearchView = (props) => {
   React.useEffect(() => {
     // TODO: use searchui alwaysSearchOnInitialLoad ?
     if (!wasSearched && !InitialViewComponent) {
+      console.log('call resetSearch');
       searchContext.resetSearch();
     }
     window.searchContext = searchContext;

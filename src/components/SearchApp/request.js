@@ -18,6 +18,7 @@ export function resetSearch(resetState) {
   } = searchContext;
 
   const state = resetState || driver.URLManager.getStateFromURL();
+  console.log('state', state);
   const { defaultSearchText = '' } = appConfig;
   setSearchTerm(state.searchTerm || defaultSearchText);
 

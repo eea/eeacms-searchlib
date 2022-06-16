@@ -3,13 +3,13 @@ import { Sorting } from '@elastic/react-search-ui'; // Paging
 import Paging from './../Paging/Paging';
 import ResultsPerPageSelector from './../ResultsPerPageSelector/ResultsPerPageSelector';
 import {
-  // ViewSelector,
   ViewSelectorWithLabel,
   FilterList,
-  // SortingDropdown,
   SortingDropdownWithLabel,
   AnswerBox,
   DownloadButton,
+  // ViewSelector,
+  // SortingDropdown,
 } from '@eeacms/search/components';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { useViews } from '@eeacms/search/lib/hocs';
@@ -57,11 +57,7 @@ export const DefaultContentView = (props) => {
       <div className="row">
         <div className="search-body-footer">
           <div className="prev-next-paging">
-            {wasInteracted ? (
-              <>
-                <Paging />
-              </>
-            ) : null}
+            {wasInteracted ? <Paging /> : null}
           </div>
           <ResultsPerPageSelector />
           <div>
