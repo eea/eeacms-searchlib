@@ -5,11 +5,7 @@ import {
   WithSearch,
   SearchContext as SUISearchContext,
 } from '@elastic/react-search-ui'; // ErrorBoundary,
-import {
-  AppConfigContext,
-  SearchContext,
-  useIsMounted,
-} from '@eeacms/search/lib/hocs';
+import { AppConfigContext, SearchContext } from '@eeacms/search/lib/hocs';
 import { SearchView } from '@eeacms/search/components/SearchView/SearchView';
 import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
 import {
@@ -18,9 +14,8 @@ import {
   bindOnAutocomplete,
   bindOnSearch,
 } from '@eeacms/search/lib/request';
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import { getFacetOptions } from './request';
 import { resetFilters, resetSearch } from './request';
+import useFacetsWithAllOptions from './useFacetsWithAllOptions';
 
 // import '@elastic/react-search-ui-views/lib/styles/styles.css';
 
@@ -65,8 +60,8 @@ function SearchApp(props) {
     [appName, registry],
   );
 
-  const isMountedRef = useIsMounted();
-  const [facetOptions, setFacetOptions] = React.useState(); // cache for all facet values, for some facets;
+  // const isMountedRef = useIsMounted();
+  // const [facetOptions, setFacetOptions] = React.useState(); // cache for all facet values, for some facets;
 
   const appConfigContext = React.useMemo(() => ({ appConfig, registry }), [
     appConfig,
@@ -119,24 +114,7 @@ function SearchApp(props) {
     [appConfig, onAutocomplete, onSearch],
   );
 
-  // construct a data structure of all available options for all the facets
-  const fetchFacetOptions = React.useCallback(
-    async (facetFieldNames) => {
-      const facetNames = appConfig.facets
-        .filter((f) => f.showAllOptions)
-        .map((f) => f.field);
-      const facetOptions = await getFacetOptions(appConfig, facetNames);
-      isMountedRef.current && setFacetOptions(facetOptions);
-    },
-    [appConfig, isMountedRef],
-  );
-
-  const facetsWithAllOptions =
-    appConfig.facets?.filter((f) => f.showAllOptions) || [];
-
-  useDeepCompareEffect(() => {
-    fetchFacetOptions(facetsWithAllOptions);
-  }, [facetsWithAllOptions, fetchFacetOptions]);
+  const { facetOptions } = useFacetsWithAllOptions(appConfig);
 
   return (
     <SearchProvider config={config}>
