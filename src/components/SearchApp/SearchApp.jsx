@@ -17,8 +17,6 @@ import {
 import { resetFilters, resetSearch } from './request';
 import useFacetsWithAllOptions from './useFacetsWithAllOptions';
 
-// import '@elastic/react-search-ui-views/lib/styles/styles.css';
-
 function MapDriver({ children }) {
   const { driver } = React.useContext(SUISearchContext);
   return children({ driver });
@@ -31,7 +29,6 @@ function SearchWrappers({
   appConfig,
   mode,
 }) {
-  // const { driver } = React.useContext(SUISearchContext);
   return (
     <AppConfigContext.Provider value={appConfigContext}>
       <SearchContext.Provider value={params}>
@@ -60,39 +57,23 @@ function SearchApp(props) {
     [appName, registry],
   );
 
-  // const isMountedRef = useIsMounted();
-  // const [facetOptions, setFacetOptions] = React.useState(); // cache for all facet values, for some facets;
-
   const appConfigContext = React.useMemo(() => ({ appConfig, registry }), [
     appConfig,
     registry,
   ]);
 
-  // <ErrorBoundary>
-  // </ErrorBoundary>
-  // const searchFuncs = {
-  //   // TODO: these needs to be read from the registry
-  //   onResultClick: onResultClick.bind(appConfig),
-  //   onAutocompleteResultClick: onAutocompleteResultClick.bind(appConfig),
-  //   onAutocomplete: onAutocomplete.bind(appConfig),
-  //   onSearch: onSearch.bind(appConfig),
-  // };
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const boundOnSearch = React.useMemo(() => paramOnSearch(appConfig), [
-    appConfig,
-    paramOnSearch,
-  ]);
   const onSearch = React.useCallback(
     async (state) => {
       setIsLoading(true);
       console.log('searching');
-      const res = await boundOnSearch(state);
+      const res = await paramOnSearch(appConfig)(state);
       console.log('search done', res);
       setIsLoading(false);
       return res;
     },
-    [boundOnSearch],
+    [appConfig, paramOnSearch],
   );
 
   const onAutocomplete = React.useMemo(() => paramOnAutocomplete(appConfig), [
