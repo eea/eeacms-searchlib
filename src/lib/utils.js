@@ -101,31 +101,22 @@ export function getRangeStartEnd(ranges) {
   return { start, end };
 }
 
-export const normalizeDefaultFilters = (filters) => {
-  let normalized = {};
-  Object.keys(filters).forEach((key) => {
-    normalized[key] = {
-      type: filters[key].type,
-      values: Array.isArray(filters[key].value)
-        ? filters[key].value.sort()
-        : [filters[key].value],
-    };
-  });
-  return normalized;
-};
-
-export const normalizeFilters = (filters) => {
-  let normalized = {};
-  filters.forEach((filter) => {
-    normalized[filter.field] = {
-      type: filter.type,
-      values: Array.isArray(filter.values)
-        ? filter.values.sort()
-        : [filter.values],
-    };
-  });
-  return normalized;
-};
+/**
+ * Given an array of filters, it returns a mapping of filter -> type+values
+ */
+export const normalizeFilters = (filters) =>
+  filters.reduce(
+    (acc, filter) => ({
+      ...acc,
+      [filter.field]: {
+        type: filter.type,
+        values: Array.isArray(filter.values)
+          ? filter.values.sort()
+          : [filter.values],
+      },
+    }),
+    {},
+  );
 
 export const getDefaultFilterValues = (facets) => {
   const defaultFilterValues = facets.reduce(
@@ -133,7 +124,8 @@ export const getDefaultFilterValues = (facets) => {
       facet.default ? [...acc, { field: facet.field, ...facet.default }] : acc,
     [],
   );
-  return normalizeDefaultFilters(defaultFilterValues);
+  // console.log('defaultFilterValues', defaultFilterValues);
+  return normalizeFilters(defaultFilterValues);
 };
 
 function _isObject(object) {
@@ -231,10 +223,12 @@ export const hasAppliedCustomFilters = (filters, appConfig) => {
   const mainFacets = appConfig.facets.filter((f) =>
     mainFacetFields.includes(f.field),
   );
+  const normDefaultFilters = getDefaultFilterValues(mainFacets);
+
   const mainFilters = filters.filter((f) => mainFacetFields.includes(f.field));
-  const normalizedDefaultFilters = getDefaultFilterValues(mainFacets);
-  const normalizedFilters = normalizeDefaultFilters(mainFilters);
-  const filtersEqual = deepEqual(normalizedDefaultFilters, normalizedFilters);
+  const normMainFilters = normalizeFilters(mainFilters);
+
+  const filtersEqual = deepEqual(normDefaultFilters, normMainFilters);
 
   return !filtersEqual;
 };

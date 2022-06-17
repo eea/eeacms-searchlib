@@ -37,7 +37,6 @@ export const SearchView = (props) => {
   const Layout = registry.resolve[appConfig.layoutComponent].component;
 
   const searchedTerm = driver.URLManager.getStateFromURL().searchTerm;
-  console.log('searchedTerm', searchedTerm);
   const searchContext = useSearchContext();
 
   const { resultSearchTerm } = searchContext;
@@ -48,6 +47,8 @@ export const SearchView = (props) => {
     searchTerm: resultSearchTerm, //: searchedTerm,
     appConfig,
   });
+
+  console.log('searchedTerm', { searchedTerm, wasInteracted });
 
   React.useEffect(() => {
     setIsLandingPageAtom(!wasInteracted);
