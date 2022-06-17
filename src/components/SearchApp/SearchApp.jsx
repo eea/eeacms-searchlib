@@ -1,10 +1,6 @@
 import React from 'react';
 
-import {
-  SearchProvider,
-  WithSearch,
-  SearchContext as SUISearchContext,
-} from '@elastic/react-search-ui'; // ErrorBoundary,
+import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
 import { AppConfigContext, SearchContext } from '@eeacms/search/lib/hocs';
 import { SearchView } from '@eeacms/search/components/SearchView/SearchView';
 import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
@@ -16,11 +12,7 @@ import {
 } from '@eeacms/search/lib/request';
 import { resetFilters, resetSearch } from './request';
 import useFacetsWithAllOptions from './useFacetsWithAllOptions';
-
-function MapDriver({ children }) {
-  const { driver } = React.useContext(SUISearchContext);
-  return children({ driver });
-}
+import { SearchDriver } from '@elastic/search-ui';
 
 function SearchWrappers({
   params,
@@ -42,6 +34,14 @@ function SearchWrappers({
     </AppConfigContext.Provider>
   );
 }
+
+const defaultMessages = {
+  moreFilters: ({ visibleOptionsCount, showingAll }) => {
+    let message = showingAll ? 'All ' : '';
+    message += `${visibleOptionsCount} options shown.`;
+    return message;
+  },
+};
 
 function SearchApp(props) {
   const {
@@ -97,36 +97,51 @@ function SearchApp(props) {
 
   const { facetOptions } = useFacetsWithAllOptions(appConfig);
 
+  const [driverInstance, setDriverInstance] = React.useState(null);
+  React.useEffect(() => {
+    // This initialization is done inside of useEffect, because initializing the SearchDriver server side
+    // will error out, since the driver depends on window. Placing the initialization inside of useEffect
+    // assures that it won't attempt to initialize server side.
+    const currentDriver = new SearchDriver(
+      Object.assign(Object.assign({}, config), {
+        a11yNotificationMessages: Object.assign(
+          Object.assign({}, defaultMessages),
+          config.a11yNotificationMessages,
+        ),
+      }),
+    );
+    setDriverInstance(currentDriver);
+    return () => {
+      currentDriver.tearDown();
+    };
+  }, [config]);
+
   return (
-    <SearchProvider config={config}>
-      <MapDriver>
-        {({ driver }) => (
-          <WithSearch
-            mapContextToProps={(searchContext) => ({
-              ...searchContext,
-              driver,
-              isLoading,
-              resetFilters: resetFilters.bind({ appConfig, searchContext }),
-              resetSearch: resetSearch.bind({
-                searchContext,
-                appConfig,
-                driver,
-              }),
-              facetOptions,
-            })}
-          >
-            {(params) => (
-              <SearchWrappers
-                params={params}
-                appConfigContext={appConfigContext}
-                appName={appName}
-                appConfig={appConfig}
-                mode={mode}
-              />
-            )}
-          </WithSearch>
+    <SearchProvider config={config} driver={driverInstance}>
+      <WithSearch
+        mapContextToProps={(searchContext) => ({
+          ...searchContext,
+          driver: driverInstance,
+          isLoading,
+          resetFilters: resetFilters.bind({ appConfig, searchContext }),
+          resetSearch: resetSearch.bind({
+            searchContext,
+            appConfig,
+            driver: driverInstance,
+          }),
+          facetOptions,
+        })}
+      >
+        {(params) => (
+          <SearchWrappers
+            params={params}
+            appConfigContext={appConfigContext}
+            appName={appName}
+            appConfig={appConfig}
+            mode={mode}
+          />
         )}
-      </MapDriver>
+      </WithSearch>
     </SearchProvider>
   );
 }
