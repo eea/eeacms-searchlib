@@ -10,17 +10,29 @@ export const checkInteracted = ({
   appConfig,
   wasSearched,
 }) => {
-  console.log('configured facets', appConfig.facets);
+  // console.log('configured facets', appConfig.facets);
   const normalizedDefaultFilters = getDefaultFilterValues(appConfig.facets);
 
   const normalizedFilters = normalizeFilters(filters);
+
+  const filtersAreDefault = deepEqual(
+    normalizedDefaultFilters,
+    normalizedFilters,
+  );
+  const filtersAreNotDefault = !filtersAreDefault;
+
+  const hasFilters = filters.length === 0;
+
   console.log('normalizedFilters', {
     normalizedFilters,
     normalizedDefaultFilters,
+    filtersAreDefault,
+    filters,
   });
-  const filtersEqual = deepEqual(normalizedDefaultFilters, normalizedFilters);
 
-  return wasSearched
-    ? searchTerm || !filtersEqual
-    : searchTerm || !(filters.length === 0 || filtersEqual);
+  return wasSearched;
+
+  // return wasSearched
+  //   ? searchTerm || filtersAreNotDefault
+  //   : searchTerm || !(hasFilters || filtersAreDefault);
 };

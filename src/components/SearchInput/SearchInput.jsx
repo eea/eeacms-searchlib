@@ -4,6 +4,7 @@
  * - voice input
  * - search phrases
  */
+
 import React from 'react';
 import { Icon } from 'semantic-ui-react';
 

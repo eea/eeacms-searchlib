@@ -52,6 +52,7 @@ export const DefaultContentView = (props) => {
           view={SortingDropdownWithLabel}
         />
       </div>
+
       <ResultViewComponent>{children}</ResultViewComponent>
 
       <div className="row">
