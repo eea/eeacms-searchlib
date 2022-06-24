@@ -22,7 +22,7 @@ function SearchInput({
   mode,
 }) {
   const { appConfig } = useAppConfig();
-  const { sortOptions } = appConfig;
+  const { sortOptions, showPromptQueries } = appConfig;
 
   const inputProps = getInputProps();
   const { setSearchTerm, setSort } = useSearchContext();
@@ -157,7 +157,7 @@ function SearchInput({
         </div>
       </div>
 
-      <SampleQueryPrompt />
+      {showPromptQueries ? <SampleQueryPrompt /> : ''}
     </>
   );
 }
