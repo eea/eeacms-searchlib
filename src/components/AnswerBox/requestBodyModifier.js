@@ -1,6 +1,7 @@
 export default function addQAParams(body, config) {
   const { from, size } = body;
-  if (!config.enableNLP || (size ?? 0) === 0 || (from ?? 0) !== 0) return body;
+
+  if (Object.keys(body.aggs).length !== 0) return body;
   body.params = {
     ...(body.params || {}),
 
