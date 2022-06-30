@@ -261,6 +261,7 @@ const config = {
       // Custom placeholder text for search input
       searchInputPlaceholder: '',
 
+      showPromptQueries: true,
       defaultPromptQueries: [], // offered as possible queries, in a prompt below text input. One per line
       promptQueryInterval: 20000,
 

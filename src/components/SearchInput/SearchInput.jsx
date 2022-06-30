@@ -5,12 +5,13 @@
  * - search phrases
  */
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
+import { Image, Icon } from 'semantic-ui-react';
 
 import { useAtom } from 'jotai';
 import { showExtraFacetsAtom } from './state';
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
 import SampleQueryPrompt from './SampleQueryPrompt';
+import searchSVG from './search.svg';
 
 function SearchInput({
   getAutocomplete,
@@ -21,7 +22,7 @@ function SearchInput({
   mode,
 }) {
   const { appConfig } = useAppConfig();
-  const { sortOptions } = appConfig;
+  const { sortOptions, showPromptQueries } = appConfig;
 
   const inputProps = getInputProps();
   const { setSearchTerm, setSort } = useSearchContext();
@@ -137,14 +138,26 @@ function SearchInput({
           </div>
 
           <div className="terms-box-left">
-            <Icon name="search" color="grey" />
+            <div
+              className="search-icon"
+              role="button"
+              tabIndex={0}
+              onKeyDown={() => {
+                setSearchTerm(currentTerm, { shouldClearFilters: false });
+              }}
+              onClick={() => {
+                setSearchTerm(currentTerm, { shouldClearFilters: false });
+              }}
+            >
+              <Image src={searchSVG} alt="Search" />
+            </div>
           </div>
 
           {getAutocomplete()}
         </div>
       </div>
 
-      <SampleQueryPrompt />
+      {showPromptQueries ? <SampleQueryPrompt /> : ''}
     </>
   );
 }

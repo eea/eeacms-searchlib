@@ -106,7 +106,12 @@ export const buildQuestionRequest = (state, config) => {
     track_total_hits: false,
     ...(config.debugQuery ? { explain: true } : {}),
     params: {
-      use_dp: config.nlp.qa.use_dp || false,
+      DPRequestClassifier: {
+        use_dp: config.nlp.qa.use_dp || false,
+      },
+      QADPRequestClassifier: {
+        use_dp: config.nlp.qa.qa_use_dp || false,
+      },
       config: filterNLPConfig(config),
       DensePassageRetriever: {
         top_k: parseInt(config.nlp.qa.topk_retriever || 10),
