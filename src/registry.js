@@ -14,6 +14,7 @@ import HistogramFacet from '@eeacms/search/components/Facets/Unconnected/Histogr
 import BooleanFacet from '@eeacms/search/components/Facets/Unconnected/BooleanFacet';
 import DropdownFixedRangeFilter from '@eeacms/search/components/Filters/DropdownFixedRangeFilter';
 // import FilterWrapper from '@eeacms/search/components/Filters/FilterWrapper';
+import DropdownFacetWrapper from '@eeacms/search/components/Facets/Wrappers/DropdownFacetWrapper';
 import FixedRangeFacet from '@eeacms/search/components/Facets/Unconnected/FixedRangeFacet';
 import ModalFixedRangeFacet from '@eeacms/search/components/Facets/Unconnected/ModalFixedRangeFacet';
 import {
@@ -27,7 +28,6 @@ import {
   ModalFacetWrapper,
   FilterAsideLayout,
   TopFilterLayout,
-  DropdownFacetWrapper,
 } from '@eeacms/search/components';
 
 import SimpleSearchInput from '@eeacms/search/components/SearchInput/SimpleSearchInput';
@@ -455,6 +455,6 @@ if (typeof window !== 'undefined') {
   window.searchUiConfig = config;
 }
 
-// console.log('whole config', config);
+console.log('whole config', config);
 
 export default config;

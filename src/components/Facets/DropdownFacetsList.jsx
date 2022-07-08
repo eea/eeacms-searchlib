@@ -64,7 +64,6 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
         visible={showSidebar}
         animation="overlay"
         icon="labeled"
-        inverted
         width="wide"
         direction="right"
       >

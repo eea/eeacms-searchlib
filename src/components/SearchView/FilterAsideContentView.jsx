@@ -46,7 +46,7 @@ export const FilterAsideContentView = (props) => {
 
       <div className={`results-layout ${layoutMode}`}>
         <div className="above-results">
-          {/* <DropdownFacetsList /> */}
+          <DropdownFacetsList />
           <Component factoryName="SecondaryFacetsList" {...props} />
           <Sorting
             label={'Sort by '}
