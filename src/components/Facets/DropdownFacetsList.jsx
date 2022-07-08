@@ -52,7 +52,11 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
         {facets
           .filter((f) => f.showInFacetsList)
           .map((facetInfo, i) => (
-            <WrappedFacet {...facetInfo} wrapper="AccordionFacetWrapper" />
+            <WrappedFacet
+              key={i}
+              {...facetInfo}
+              wrapper="DropdownFacetWrapper"
+            />
           ))}
       </div>
       <button onClick={() => setShowSidebar(true)}>More filters</button>

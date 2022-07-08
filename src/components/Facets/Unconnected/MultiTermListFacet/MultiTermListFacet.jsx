@@ -33,13 +33,7 @@ const MultiTermListFacet = (props) => {
   } = props;
 
   const { appConfig } = useAppConfig();
-  console.log('appconfigfacets', appConfig.facets);
   const facetConfig = appConfig.facets.find((f) => f.field === field);
-
-  if (!facetConfig) {
-    console.log('field not found', field);
-    return null;
-  }
   const defaultSortOn = facetConfig?.sortOn || 'count';
 
   const secondToggleSortConfig = {

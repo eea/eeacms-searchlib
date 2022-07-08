@@ -42,6 +42,7 @@ import { ResultHeader } from './Result/ResultModal';
 import DefaultContentView from './SearchView/DefaultContentView';
 import SegmentedBreadcrumb from './SegmentedBreadcrumb/Breadcrumb';
 import DropdownFacetsList from './Facets/DropdownFacetsList';
+import DropdownFacetWrapper from './Facets/Wrappers/DropdownFacetWrapper';
 
 export {
   Component,
@@ -88,4 +89,5 @@ export {
   MoreLikeThisTrigger,
   ResultContext,
   DropdownFacetsList,
+  DropdownFacetWrapper,
 };

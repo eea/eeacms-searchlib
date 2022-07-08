@@ -1,7 +1,6 @@
 import React from 'react';
 import { withSearch, Facet as SUIFacet } from '@elastic/react-search-ui';
 import { Accordion, Icon } from 'semantic-ui-react';
-// import MultiCheckboxFacet from './MultiCheckboxFacet';
 import { useAtom } from 'jotai';
 import { openFacetsAtom } from '../state';
 import { useUpdateAtom } from 'jotai/utils';

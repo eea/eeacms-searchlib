@@ -27,6 +27,7 @@ import {
   ModalFacetWrapper,
   FilterAsideLayout,
   TopFilterLayout,
+  DropdownFacetWrapper,
 } from '@eeacms/search/components';
 
 import SimpleSearchInput from '@eeacms/search/components/SearchInput/SimpleSearchInput';
@@ -229,6 +230,10 @@ const config = {
       component: ({ view: ViewComponent, ...rest }) => (
         <ViewComponent {...rest} />
       ),
+    },
+
+    DropdownFacetWrapper: {
+      component: DropdownFacetWrapper,
     },
 
     ResultModel,

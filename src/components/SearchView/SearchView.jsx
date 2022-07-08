@@ -29,9 +29,9 @@ export const SearchView = (props) => {
     appConfig.initialView?.factory &&
     registry.resolve[appConfig.initialView.factory].component;
 
-  const FacetsListComponent = appConfig.facetsListComponent
-    ? registry.resolve[appConfig.facetsListComponent].component
-    : FacetsList;
+  // const FacetsListComponent = appConfig.facetsListComponent
+  //   ? registry.resolve[appConfig.facetsListComponent].component
+  //   : FacetsList;
 
   // const itemViewProps = listingViewDef.params;
   const Layout = registry.resolve[appConfig.layoutComponent].component;
@@ -91,7 +91,7 @@ export const SearchView = (props) => {
             mode={mode}
           />
         }
-        sideContent={<FacetsListComponent />}
+        sideContent={null}
         bodyHeader={null}
         bodyContent={<BodyContent {...props} wasInteracted={wasInteracted} />}
         bodyFooter={<AppInfo appConfig={appConfig} />}
