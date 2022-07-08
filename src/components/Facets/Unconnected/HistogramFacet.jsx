@@ -1,7 +1,7 @@
 import React from 'react';
 import { getRangeStartEnd } from '@eeacms/search/lib/utils';
 import { Input } from 'semantic-ui-react';
-import { useAppConfig } from '@eeacms/search/lib/hocs';
+// import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { HistogramSlider } from '@eeacms/search/components/Vis';
 
 const visualStyle = {
@@ -82,7 +82,7 @@ const ModalHistogramFacet = (props) => {
 };
 
 const HistogramFacet = (props) => {
-  const { facets, filters, field, onSelect, state } = props; // , filters
+  const { facets, filters, field, onSelect, state, title, label } = props; // , filters
   const filterValue = filters.find((f) => f.field === field);
 
   // copied from react-search-ui/Facet.jsx
@@ -98,15 +98,15 @@ const HistogramFacet = (props) => {
     ? [filterValue.values?.[0]?.from, filterValue.values?.[0]?.to]
     : null;
 
-  const { appConfig } = useAppConfig();
-  const facetConfig = appConfig.facets.find((f) => f.field === field);
+  // const { appConfig } = useAppConfig();
+  // const facetConfig = appConfig.facets.find((f) => f.field === field);
 
   return props.active && facet?.data ? (
     <ModalHistogramFacet
       {...props}
       data={facet?.data}
       selection={value}
-      title={facetConfig?.title || props.label}
+      title={title || label}
       onChange={({ to, from }) => {
         // onSelect([], true);
         if (to || from) {

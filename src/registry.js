@@ -205,6 +205,7 @@ const config = {
     TopFilterLayout: {
       component: TopFilterLayout,
     },
+    DropdownFilterLayout: {},
     DefaultContentView: {
       component: DefaultContentView,
     },

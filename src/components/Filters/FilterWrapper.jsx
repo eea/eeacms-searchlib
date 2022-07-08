@@ -24,7 +24,6 @@ const FilterContainer = (props) => {
     ...rest
   } = props;
   const searchContext = useSearchContext();
-  console.log('s', field);
 
   const { filters, facets, addFilter, removeFilter, setFilter } = searchContext;
 

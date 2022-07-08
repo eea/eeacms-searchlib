@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from 'semantic-ui-react'; // , Header, Image
-import { useAppConfig } from '@eeacms/search/lib/hocs';
+// import { useAppConfig } from '@eeacms/search/lib/hocs';
 
 import cx from 'classnames';
 
@@ -55,18 +55,19 @@ const ViewComponent = (props) => {
     onSelect,
     options,
     facets,
-    field,
+    // field,
     HeaderWrapper = 'div',
     ContentWrapper = 'div',
+    title,
   } = props;
-  const { appConfig } = useAppConfig();
-  const facetConfig = appConfig.facets.find((f) => (f.id || f.field) === field);
+  // const { appConfig } = useAppConfig();
+  // const facetConfig = appConfig.facets.find((f) => (f.id || f.field) === field);
   return (
     <>
       <HeaderWrapper>
         <div className="fixedrange__facet__header">
           <div className="facet-title">
-            <h3>{facetConfig?.title || label}</h3>
+            <h3>{title || label}</h3>
           </div>
         </div>
       </HeaderWrapper>

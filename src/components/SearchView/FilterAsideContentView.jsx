@@ -7,6 +7,7 @@ import {
   ViewSelectorWithLabel,
   SortingDropdownWithLabel,
   DownloadButton,
+  DropdownFacetsList,
 } from '@eeacms/search/components';
 import { SectionTabs } from '@eeacms/search/components';
 import { checkInteracted } from './utils';
@@ -41,55 +42,54 @@ export const FilterAsideContentView = (props) => {
   const { isLoading, wasSearched } = useSearchContext();
   return (
     <>
-      <>
-        <SectionTabs />
+      <SectionTabs />
 
-        <div className={`results-layout ${layoutMode}`}>
-          <div className="above-results">
-            <Component factoryName="SecondaryFacetsList" {...props} />
-            <Sorting
-              label={'Sort by '}
-              sortOptions={sortOptions}
-              view={SortingDropdownWithLabel}
-            />
-            <ViewSelectorWithLabel
-              views={availableResultViews}
-              active={activeViewId}
-              onSetView={setActiveViewId}
-            />
-          </div>
-
-          {children.length === 0 && !isLoading && wasSearched && <NoResults />}
-
-          {current === 1 ? <AnswerBox /> : ''}
-
-          {<ResultViewComponent>{children}</ResultViewComponent>}
-
-          {children.length > 0 && (
-            <div className="search-body-footer">
-              <Grid columns={2}>
-                <Grid.Column>
-                  <ResultsPerPageSelector />
-                </Grid.Column>
-                <Grid.Column textAlign="right">
-                  <DownloadButton appConfig={appConfig} />
-                </Grid.Column>
-              </Grid>
-              <Grid centered>
-                <Grid.Column textAlign="center">
-                  <div className="prev-next-paging">
-                    {wasInteracted ? (
-                      <>
-                        <Paging />
-                      </>
-                    ) : null}
-                  </div>
-                </Grid.Column>
-              </Grid>
-            </div>
-          )}
+      <div className={`results-layout ${layoutMode}`}>
+        <div className="above-results">
+          <DropdownFacetsList />
+          <Component factoryName="SecondaryFacetsList" {...props} />
+          <Sorting
+            label={'Sort by '}
+            sortOptions={sortOptions}
+            view={SortingDropdownWithLabel}
+          />
+          <ViewSelectorWithLabel
+            views={availableResultViews}
+            active={activeViewId}
+            onSetView={setActiveViewId}
+          />
         </div>
-      </>
+
+        {children.length === 0 && !isLoading && wasSearched && <NoResults />}
+
+        {current === 1 ? <AnswerBox /> : ''}
+
+        {<ResultViewComponent>{children}</ResultViewComponent>}
+
+        {children.length > 0 && (
+          <div className="search-body-footer">
+            <Grid columns={2}>
+              <Grid.Column>
+                <ResultsPerPageSelector />
+              </Grid.Column>
+              <Grid.Column textAlign="right">
+                <DownloadButton appConfig={appConfig} />
+              </Grid.Column>
+            </Grid>
+            <Grid centered>
+              <Grid.Column textAlign="center">
+                <div className="prev-next-paging">
+                  {wasInteracted ? (
+                    <>
+                      <Paging />
+                    </>
+                  ) : null}
+                </div>
+              </Grid.Column>
+            </Grid>
+          </div>
+        )}
+      </div>
     </>
   );
 };
