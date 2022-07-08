@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/search",
-  "version": "0.2.13",
+  "version": "0.2.15",
   "main": "dist/index.js",
   "browser": {
     "./dist/index.js": "./dist/index.js"
@@ -116,6 +116,7 @@
     "redux": "4.1.0",
     "semantic-ui-react": "2.0.3",
     "superagent": "3.8.2",
+    "svg-loader": "0.0.2",
     "use-deep-compare-effect": "1.8.1"
   },
   "devDependencies": {
