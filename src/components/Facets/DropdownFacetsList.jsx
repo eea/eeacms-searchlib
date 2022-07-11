@@ -1,7 +1,7 @@
 import React from 'react';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { Component } from '@eeacms/search/components';
-import { useSearchContext } from '@eeacms/search/lib/hocs';
+import { useSearchContext, useOutsideClick } from '@eeacms/search/lib/hocs';
 import { Button, Sidebar } from 'semantic-ui-react';
 import { isFilterValueDefaultValue } from '@eeacms/search/lib/search/helpers';
 
@@ -30,6 +30,11 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
   const { filters = [], clearFilters } = searchContext;
 
   const [showSidebar, setShowSidebar] = React.useState(false);
+  const nodeRef = React.useRef(null);
+
+  useOutsideClick(nodeRef, () => {
+    setShowSidebar(false);
+  });
 
   const filterableFacets = facets.filter(
     (f) => !f.isFilter && f.showInFacetsList,
@@ -83,23 +88,25 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
       <Button className="sui-button basic" onClick={() => setShowSidebar(true)}>
         More filters
       </Button>
-      <Sidebar
-        visible={showSidebar}
-        animation="overlay"
-        icon="labeled"
-        width="wide"
-        direction="right"
-      >
-        <div className="sidebar-content">
-          {sidebarFacets.map((facetInfo, i) => (
-            <WrappedFacet
-              key={i}
-              {...facetInfo}
-              wrapper="AccordionFacetWrapper"
-            />
-          ))}
-        </div>
-      </Sidebar>
+      <div ref={nodeRef}>
+        <Sidebar
+          visible={showSidebar}
+          animation="overlay"
+          icon="labeled"
+          width="wide"
+          direction="right"
+        >
+          <div className="sidebar-content">
+            {sidebarFacets.map((facetInfo, i) => (
+              <WrappedFacet
+                key={i}
+                {...facetInfo}
+                wrapper="AccordionFacetWrapper"
+              />
+            ))}
+          </div>
+        </Sidebar>
+      </div>
     </div>
   );
 };
