@@ -52,11 +52,11 @@ const FacetsList = ({ view, defaultWrapper }) => {
   const { facets = [] } = appConfig;
   const { filters = [], clearFilters } = searchContext;
 
-  const facetValues = facets
+  const facetNames = facets
     .filter((f) => !f.isFilter && f.showInFacetsList)
     .map((f) => f.field);
   const filterValues = filters
-    .filter((f) => facetValues.includes(f.field))
+    .filter((f) => facetNames.includes(f.field))
     .map((f) => f.field);
   const alwaysVisibleFacets = facets
     .filter((f) => f.alwaysVisible)

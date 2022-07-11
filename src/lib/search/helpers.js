@@ -181,3 +181,20 @@ export function hasNonDefaultFilters(filters, appConfig) {
 
   return !deepEqual(activeFilters, defaultFilters);
 }
+
+/**
+ * Returns true if the filter value object (like {field, type, value}) is default
+ */
+export function isFilterValueDefaultValue(filter, appConfig) {
+  const field = filter.field;
+  const defaultFiltersList = appConfig.facets
+    .filter((f) => f.field === field && !!(f.default ?? false))
+    .map((facet) => ({
+      field: facet.field,
+      values: facet.default.values.sort(),
+      type: facet.default.type || 'any',
+    }));
+  const defaultFilterValue = defaultFiltersList[0];
+
+  return deepEqual(filter, defaultFilterValue);
+}

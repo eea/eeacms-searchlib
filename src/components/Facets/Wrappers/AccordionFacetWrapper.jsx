@@ -1,12 +1,13 @@
 import React from 'react';
-import { withSearch, Facet as SUIFacet } from '@elastic/react-search-ui';
+import { withSearch } from '@elastic/react-search-ui'; // , Facet as SUIFacet
 import { Accordion, Icon } from 'semantic-ui-react';
 import { useAtom } from 'jotai';
 import { openFacetsAtom } from '../state';
 import { useUpdateAtom } from 'jotai/utils';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
+import Facet from '../Facet';
 
-const FacetWrapperComponent = (props) => {
+const AccordionFacetWrapperComponent = (props) => {
   const { collapsable = true, filters = [], field, label } = props;
   const hasFilter = !!filters.find((filter) => field === filter.field);
   const [openFacets] = useAtom(openFacetsAtom);
@@ -61,7 +62,7 @@ const FacetWrapperComponent = (props) => {
         {label}
       </Accordion.Title>
       <Accordion.Content active={isOpened}>
-        <SUIFacet
+        <Facet
           {...props}
           active={isOpened}
           filterType={localFilterType}
@@ -70,7 +71,7 @@ const FacetWrapperComponent = (props) => {
       </Accordion.Content>
     </Accordion>
   ) : (
-    <SUIFacet
+    <Facet
       {...props}
       filterType={localFilterType}
       onChangeFilterType={(v) => setLocalFilterType(v)}
@@ -78,7 +79,7 @@ const FacetWrapperComponent = (props) => {
   );
 };
 
-const FacetWrapper = withSearch(
+const AccordionFacetWrapper = withSearch(
   ({ filters, facets, addFilter, removeFilter, setFilter, a11yNotify }) => ({
     filters,
     facets,
@@ -87,6 +88,6 @@ const FacetWrapper = withSearch(
     setFilter,
     a11yNotify,
   }),
-)(FacetWrapperComponent);
+)(AccordionFacetWrapperComponent);
 
-export default FacetWrapper;
+export default AccordionFacetWrapper;

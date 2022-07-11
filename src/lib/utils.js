@@ -216,21 +216,25 @@ export const firstChars = (text, charsNumber) => {
   }
 };
 
+/**
+ * Returns true  if the state of the filters is different from the
+ * "default filter state". Useful in deciding if to show default landing page
+ * or result list.
+ */
 export const hasAppliedCustomFilters = (filters, appConfig) => {
-  const mainFacetFields = appConfig.facets
+  const { facets = [] } = appConfig;
+  const mainFacetFields = facets
     .filter((f) => f.showInFacetsList ?? true)
     .map((f) => f.field);
-  const mainFacets = appConfig.facets.filter((f) =>
-    mainFacetFields.includes(f.field),
-  );
-  const normDefaultFilters = getDefaultFilterValues(mainFacets);
-
+  const mainFacets = facets.filter((f) => mainFacetFields.includes(f.field));
   const mainFilters = filters.filter((f) => mainFacetFields.includes(f.field));
+
+  const normDefaultFilters = getDefaultFilterValues(mainFacets);
   const normMainFilters = normalizeFilters(mainFilters);
 
-  const filtersEqual = deepEqual(normDefaultFilters, normMainFilters);
+  const filtersAreEqual = deepEqual(normDefaultFilters, normMainFilters);
 
-  return !filtersEqual;
+  return !filtersAreEqual;
 };
 
 export const customOrder = (values, facetValues, sortOrder = 'ascending') => {
