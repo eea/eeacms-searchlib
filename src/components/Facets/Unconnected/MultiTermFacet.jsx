@@ -108,7 +108,7 @@ const ViewComponent = (props) => {
 
   return (
     <fieldset className={cx('sui-facet searchlib-multiterm-facet', className)}>
-      <legend className="sui-facet__title">{label}</legend>
+      {/*<legend className="sui-facet__title">{label}</legend>*/}
 
       {showSearch && (
         <div className="sui-facet-search">

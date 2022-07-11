@@ -14,7 +14,9 @@ const FacetOptions = (props) => {
   const { options, onSelect, onRemove } = props;
   return (
     <div className="sui-multi-checkbox-facet">
-      <Card.Group itemsPerRow={5}>
+      <Card.Group
+      // itemsPerRow={5}
+      >
         {options.map((option) => {
           const checked = option.selected;
           return (
@@ -58,7 +60,7 @@ const ViewComponent = (props) => {
     // field,
     HeaderWrapper = 'div',
     ContentWrapper = 'div',
-    title,
+    // title,
   } = props;
   // const { appConfig } = useAppConfig();
   // const facetConfig = appConfig.facets.find((f) => (f.id || f.field) === field);
@@ -66,9 +68,9 @@ const ViewComponent = (props) => {
     <>
       <HeaderWrapper>
         <div className="fixedrange__facet__header">
-          <div className="facet-title">
+          {/*<div className="facet-title">
             <h3>{title || label}</h3>
-          </div>
+          </div>*/}
         </div>
       </HeaderWrapper>
       <ContentWrapper>

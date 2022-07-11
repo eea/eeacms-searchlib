@@ -46,7 +46,6 @@ export const FilterAsideContentView = (props) => {
 
       <div className={`results-layout ${layoutMode}`}>
         <div className="above-results">
-          <DropdownFacetsList />
           <Component factoryName="SecondaryFacetsList" {...props} />
           <Sorting
             label={'Sort by '}
@@ -59,6 +58,7 @@ export const FilterAsideContentView = (props) => {
             onSetView={setActiveViewId}
           />
         </div>
+        <DropdownFacetsList />
 
         {children.length === 0 && !isLoading && wasSearched && <NoResults />}
 

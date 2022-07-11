@@ -2,7 +2,7 @@ import React from 'react';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { Component } from '@eeacms/search/components';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
-import { Sidebar } from 'semantic-ui-react';
+import { Button, Sidebar } from 'semantic-ui-react';
 import { isFilterValueDefaultValue } from '@eeacms/search/lib/search/helpers';
 
 const WrappedFacet = (props) => {
@@ -80,7 +80,9 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
           <WrappedFacet key={i} {...facetInfo} wrapper="DropdownFacetWrapper" />
         ))}
       </div>
-      <button onClick={() => setShowSidebar(true)}>More filters</button>
+      <Button className="sui-button basic" onClick={() => setShowSidebar(true)}>
+        More filters
+      </Button>
       <Sidebar
         visible={showSidebar}
         animation="overlay"

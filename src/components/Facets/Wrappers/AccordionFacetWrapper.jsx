@@ -58,8 +58,8 @@ const AccordionFacetWrapperComponent = (props) => {
           updateOpenFacets(temp);
         }}
       >
-        <Icon name="dropdown" />
         {label}
+        <Icon className="ri-arrow-down-s-line" />
       </Accordion.Title>
       <Accordion.Content active={isOpened}>
         <Facet
