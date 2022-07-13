@@ -23,7 +23,7 @@ const DropdownFacetWrapperComponent = (props) => {
 
   return (
     <div className="dropdown-facet">
-      <Dropdown text={label || title}>
+      <Dropdown text={label || title} icon="chevron down">
         <Dropdown.Menu>
           <SUIFacet
             {...props}

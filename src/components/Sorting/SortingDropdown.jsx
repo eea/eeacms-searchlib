@@ -9,6 +9,7 @@ const SortingView = (props) => {
       <span>
         {label || 'Sort by'}
         <Dropdown
+          icon="chevron down"
           selection
           floating
           options={options.map(({ label, value }) => ({ text: label, value }))}

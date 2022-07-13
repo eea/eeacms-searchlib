@@ -29,9 +29,10 @@ const SortingViewComponent = (props) => {
     <div className="sorting">
       <span>
         <Dropdown
+          icon="chevron down"
           trigger={
             <>
-              {label} <span>{`${activeLabel}`}</span>
+              {label}: <span>{`${activeLabel}`}</span>
             </>
           }
           inline

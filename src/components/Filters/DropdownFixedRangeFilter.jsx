@@ -36,6 +36,7 @@ const ViewComponent = (props) => {
     <div className={cx(className, 'sorting')}>
       <span>
         <Dropdown
+          icon="chevron down"
           trigger={
             <>
               {labelText} <span>{value}</span>
