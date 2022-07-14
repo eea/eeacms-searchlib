@@ -18,21 +18,22 @@ export function resetSearch(resetState) {
   } = searchContext;
 
   const state = resetState || driver.URLManager.getStateFromURL();
-  console.log('state', state);
   const { defaultSearchText = '' } = appConfig;
-  setSearchTerm(state.searchTerm || defaultSearchText);
+  const text = state.searchTerm || defaultSearchText;
+  if (text && text !== state.searchTerm) setSearchTerm(text);
 
   // eslint-disable-next-line
-  state.filters?.forEach((f) => addFilter(f.field, f.values, f.type));
+  // state.filters?.forEach((f) => addFilter(f.field, f.values, f.type));
 
-  if (state.current) {
-    setCurrent(state.current);
-  }
-  if (state.sortField) {
-    setSort(state.sortField, state.sortDirection);
-  }
+  // if (state.current) {
+  //   setCurrent(state.current);
+  // }
+  // if (state.sortField) {
+  //   setSort(state.sortField, state.sortDirection);
+  // }
 
-  resetFiltersToDefault(searchContext, appConfig);
+  // resetFiltersToDefault(searchContext, appConfig);
+  console.log('state', state);
 
   // const defaultFilterValues = getDefaultFilterValues(facets);
   //

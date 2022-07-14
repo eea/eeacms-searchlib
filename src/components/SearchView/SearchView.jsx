@@ -48,7 +48,7 @@ export const SearchView = (props) => {
     appConfig,
   });
 
-  console.log('searchedTerm', { searchedTerm, wasInteracted });
+  // console.log('searchedTerm', { searchedTerm, wasInteracted });
 
   React.useEffect(() => {
     setIsLandingPageAtom(!wasInteracted);
@@ -56,9 +56,13 @@ export const SearchView = (props) => {
 
   const customClassName = isLandingPage ? 'landing-page' : 'simple-page';
 
+  console.log('was searched', searchedTerm, wasSearched);
+
   React.useEffect(() => {
-    // TODO: use searchui alwaysSearchOnInitialLoad ?
-    if (!wasSearched && !InitialViewComponent) {
+    // TODO: use searchui SearchDriver's alwaysSearchOnInitialLoad ?
+    // The search driver will always search if there's a search term
+    if (!wasSearched) {
+      //  && !InitialViewComponent
       console.log('call resetSearch');
       searchContext.resetSearch();
     }

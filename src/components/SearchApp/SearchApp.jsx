@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { SearchProvider, WithSearch } from '@elastic/react-search-ui'; // ErrorBoundary,
+import { SearchProvider, withSearch } from '@elastic/react-search-ui'; // ErrorBoundary,    WithSearch,
 import { AppConfigContext, SearchContext } from '@eeacms/search/lib/hocs';
 import { SearchView } from '@eeacms/search/components/SearchView/SearchView';
 import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
@@ -14,18 +14,24 @@ import { resetFilters, resetSearch } from './request';
 import useFacetsWithAllOptions from './useFacetsWithAllOptions';
 import { SearchDriver } from '@elastic/search-ui';
 
-function SearchWrappers({
-  params,
-  appConfigContext,
-  appName,
-  appConfig,
-  mode,
-}) {
+function SearchWrappers(props) {
+  console.log('searchWrappers', props);
+  const {
+    appConfig,
+    appConfigContext,
+    appName,
+    driver,
+    facetOptions,
+    isLoading,
+    mode,
+    ...searchContext
+  } = props;
+
   return (
     <AppConfigContext.Provider value={appConfigContext}>
-      <SearchContext.Provider value={params}>
+      <SearchContext.Provider value={searchContext}>
         <SearchView
-          {...params}
+          {...searchContext}
           appName={appName}
           appConfig={appConfig}
           mode={mode}
@@ -116,34 +122,83 @@ function SearchApp(props) {
     };
   }, [config]);
 
+  const mapContextToProps = React.useCallback(
+    (params) => {
+      const driver = driverInstance;
+      const searchContext = {
+        ...params,
+        driver,
+        isLoading,
+        facetOptions,
+      };
+      searchContext.resetFilters = resetFilters.bind({
+        appConfig,
+        searchContext,
+      });
+      searchContext.resetSearch = resetSearch.bind({
+        appConfig,
+        searchContext,
+        driver,
+      });
+
+      return searchContext;
+    },
+    [appConfig, driverInstance, facetOptions, isLoading],
+  );
+
+  const WrappedSearchView = React.useMemo(
+    () => withSearch(mapContextToProps)(SearchWrappers),
+    [mapContextToProps],
+  );
+
   return (
     <SearchProvider config={config} driver={driverInstance}>
-      <WithSearch
-        mapContextToProps={(searchContext) => ({
-          ...searchContext,
-          driver: driverInstance,
-          isLoading,
-          resetFilters: resetFilters.bind({ appConfig, searchContext }),
-          resetSearch: resetSearch.bind({
-            searchContext,
-            appConfig,
-            driver: driverInstance,
-          }),
-          facetOptions,
-        })}
-      >
-        {(params) => (
-          <SearchWrappers
-            params={params}
-            appConfigContext={appConfigContext}
-            appName={appName}
-            appConfig={appConfig}
-            mode={mode}
-          />
-        )}
-      </WithSearch>
+      <WrappedSearchView
+        appConfig={appConfig}
+        appConfigContext={appConfigContext}
+        appName={appName}
+        driver={driverInstance}
+        facetOptions={facetOptions}
+        isLoading={isLoading}
+        mode={mode}
+      />
     </SearchProvider>
   );
 }
 
 export default React.memo(SearchApp, () => true);
+
+// const {
+//   appConfig,
+//   appConfigContext,
+//   appName,
+//   driver,
+//   facetOptions,
+//   isLoading,
+//   mode,
+// } = props;
+
+//    <WithSearch
+//      mapContextToProps={(searchContext) => ({
+//        ...searchContext,
+//        driver: driverInstance,
+//        isLoading,
+//        resetFilters: resetFilters.bind({ appConfig, searchContext }),
+//        resetSearch: resetSearch.bind({
+//          searchContext,
+//          appConfig,
+//          driver: driverInstance,
+//        }),
+//        facetOptions,
+//      })}
+//    >
+//      {(params) => (
+//        <SearchWrappers
+//          params={params}
+//          appConfigContext={appConfigContext}
+//          appName={appName}
+//          appConfig={appConfig}
+//          mode={mode}
+//        />
+//      )}
+//    </WithSearch>
