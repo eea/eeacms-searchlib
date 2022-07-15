@@ -122,17 +122,19 @@ const LandingPage = (props) => {
 
     return {
       id: section,
-      menuItem: () => {
-        return (
-          <React.Fragment key={`tab-${tabIndex}`}>
-            <Menu.Item
-              active={activeSection === section.facetField}
-              onClick={() => setActiveSection(section.facetField)}
-            >
-              {section.title}
-            </Menu.Item>
-          </React.Fragment>
-        );
+      menuItem: {
+        children: () => {
+          return (
+            <React.Fragment key={`tab-${tabIndex}`}>
+              <Menu.Item
+                active={activeSection === section.facetField}
+                onClick={() => setActiveSection(section.facetField)}
+              >
+                {section.title}
+              </Menu.Item>
+            </React.Fragment>
+          );
+        },
       },
       render: () => {
         return (
