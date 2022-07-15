@@ -147,14 +147,7 @@ export function resetFiltersToDefault(searchContext, appConfig) {
 export function hasNonDefaultFilters(filters, appConfig) {
   if (!filters?.length) return false;
 
-  const defaultFiltersList = appConfig.facets
-    .filter((f) => !!f.default)
-    .map((facet) => ({
-      field: facet.field,
-      values: facet.default.values.sort(),
-      type: facet.default.type || 'any',
-    }));
-
+  const defaultFiltersList = getDefaultFilters(appConfig);
   const defaultFilterFields = defaultFiltersList.map((f) => f.field);
   const activeFilterFields = filters.map((f) => f.field);
 
@@ -183,10 +176,25 @@ export function hasNonDefaultFilters(filters, appConfig) {
 }
 
 /**
+ * Compute the default filters, to be used as initial empty state
+ */
+export function getDefaultFilters(appConfig) {
+  const defaultFiltersList = appConfig.facets
+    .filter((f) => !!f.default)
+    .map((facet) => ({
+      field: facet.field,
+      values: facet.default.values.sort(),
+      type: facet.default.type || 'any',
+    }));
+  return defaultFiltersList;
+}
+
+/**
  * Returns true if the filter value object (like {field, type, value}) is default
  */
 export function isFilterValueDefaultValue(filter, appConfig) {
   const field = filter.field;
+
   const defaultFiltersList = appConfig.facets
     .filter((f) => f.field === field && !!(f.default ?? false))
     .map((facet) => ({
