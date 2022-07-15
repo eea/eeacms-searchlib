@@ -10,7 +10,7 @@ import {
   bindOnAutocomplete,
   bindOnSearch,
 } from '@eeacms/search/lib/request';
-import { getDefaultFilters } from '@eeacms/search/lib/search/helpers';
+import { getDefaultFilters } from '@eeacms/search/lib/utils';
 import { resetFilters, resetSearch } from './request';
 import useFacetsWithAllOptions from './useFacetsWithAllOptions';
 import { SearchDriver } from '@elastic/search-ui';
@@ -40,14 +40,6 @@ function SearchWrappers(props) {
     </AppConfigContext.Provider>
   );
 }
-
-// const defaultMessages = {
-//   moreFilters: ({ visibleOptionsCount, showingAll }) => {
-//     let message = showingAll ? 'All ' : '';
-//     message += `${visibleOptionsCount} options shown.`;
-//     return message;
-//   },
-// };
 
 function SearchApp(props) {
   const {
