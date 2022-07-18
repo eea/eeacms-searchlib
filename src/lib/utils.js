@@ -109,7 +109,7 @@ export const normalizeFilters = (filters) =>
     (acc, filter) => ({
       ...acc,
       [filter.field]: {
-        type: filter.type,
+        type: filter.type || 'any',
         values: Array.isArray(filter.values)
           ? filter.values.sort()
           : [filter.values],
@@ -117,6 +117,25 @@ export const normalizeFilters = (filters) =>
     }),
     {},
   );
+
+/**
+ * Compute the default filters, to be used as initial empty state
+ */
+export function getDefaultFilters(appConfig) {
+  const valueObj = getDefaultFilterValues(appConfig.facets);
+  return Object.keys(valueObj).map((field) => ({ field, ...valueObj[field] }));
+  // //
+  // //   Array.from((valueObj || {}).values());
+  // const defaultFiltersList = appConfig.facets
+  //   .filter((f) => !!f.default)
+  //   .map((facet) => ({
+  //     field: facet.field,
+  //     values: facet.default.values.sort(),
+  //     type: facet.default.type || 'any',
+  //   }));
+  // console.log(defaultFiltersList);
+  // return defaultFiltersList;
+}
 
 export const getDefaultFilterValues = (facets) => {
   const defaultFilterValues = facets.reduce(

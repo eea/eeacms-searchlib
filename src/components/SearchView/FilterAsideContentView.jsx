@@ -10,7 +10,6 @@ import {
   DropdownFacetsList,
 } from '@eeacms/search/components';
 import { SectionTabs } from '@eeacms/search/components';
-import { checkInteracted } from './utils';
 import { useViews } from '@eeacms/search/lib/hocs';
 
 import registry from '@eeacms/search/registry';
@@ -19,7 +18,7 @@ import { NoResults } from '@eeacms/search/components/Result/NoResults';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 
 export const FilterAsideContentView = (props) => {
-  const { appConfig, children, filters, searchTerm, current } = props;
+  const { appConfig, children, current, wasInteracted } = props;
   const { sortOptions, resultViews } = appConfig;
   const { activeViewId, setActiveViewId } = useViews();
 
@@ -36,7 +35,6 @@ export const FilterAsideContentView = (props) => {
     }),
   ];
 
-  const wasInteracted = checkInteracted({ filters, searchTerm, appConfig });
   const layoutMode = activeViewId === 'horizontalCard' ? 'fixed' : 'fullwidth';
 
   const { isLoading, wasSearched } = useSearchContext();
@@ -79,11 +77,7 @@ export const FilterAsideContentView = (props) => {
             <Grid centered>
               <Grid.Column textAlign="center">
                 <div className="prev-next-paging">
-                  {wasInteracted ? (
-                    <>
-                      <Paging />
-                    </>
-                  ) : null}
+                  {!!wasInteracted && <Paging />}
                 </div>
               </Grid.Column>
             </Grid>
