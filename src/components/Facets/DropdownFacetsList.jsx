@@ -84,10 +84,13 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
         {dropdownFacets.map((facetInfo, i) => (
           <WrappedFacet key={i} {...facetInfo} wrapper="DropdownFacetWrapper" />
         ))}
+        <Button
+          className="sui-button basic"
+          onClick={() => setShowSidebar(true)}
+        >
+          + Add filters
+        </Button>
       </div>
-      <Button className="sui-button basic" onClick={() => setShowSidebar(true)}>
-        More filters
-      </Button>
       <div ref={nodeRef}>
         <Sidebar
           visible={showSidebar}
