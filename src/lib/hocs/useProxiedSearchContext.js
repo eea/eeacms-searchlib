@@ -27,15 +27,8 @@ const buildDriver = (searchContext, onSearchTrigger) => {
         // copy the state filters to the driver filters
         driver.filters = driver.state.filters;
         onSearchTrigger();
-        console.log('onsearch fake', driver);
       }),
   });
-
-  // Object.entries(searchContext).forEach(([k, v]) => {
-  //   driver[k] = isFunction(v) ? driver[k] : v; // debug(k, v)
-  // });
-
-  // driver.debug = true;
   driver.isReplacementSearchContext = true;
 
   return driver;

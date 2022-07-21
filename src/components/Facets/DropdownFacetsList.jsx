@@ -10,6 +10,8 @@ import { isFilterValueDefaultValue } from '@eeacms/search/lib/search/helpers';
 
 import FacetResolver from './FacetResolver';
 import SidebarFacetsList from './SidebarFacetsList';
+import { sidebarState } from './state';
+import { useAtom } from 'jotai';
 
 const DropdownFacetsList = ({ defaultWrapper }) => {
   const { appConfig } = useAppConfig();
@@ -21,7 +23,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
   } = useProxiedSearchContext(rawSearchContext);
   const { facets = [] } = appConfig;
 
-  const [showSidebar, setShowSidebar] = React.useState(false);
+  const [showSidebar, setShowSidebar] = useAtom(sidebarState);
 
   const filterableFacets = facets.filter(
     (f) => !f.isFilter && f.showInFacetsList,
@@ -54,6 +56,8 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
     (f) => !dropdownFacetFields.includes(f.field),
   );
 
+  const liveSidebar = true;
+
   return (
     <div className="dropdown-facets-list">
       <div className="horizontal-dropdown-facets">
@@ -72,14 +76,22 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
           + Add filters
         </Button>
       </div>
-      <SearchContext.Provider value={sidebarSearchContext}>
+      {!liveSidebar ? (
+        <SearchContext.Provider value={sidebarSearchContext}>
+          <SidebarFacetsList
+            open={showSidebar}
+            onClose={() => setShowSidebar(false)}
+            facets={sidebarFacets}
+            applySearch={applySearch}
+          />
+        </SearchContext.Provider>
+      ) : (
         <SidebarFacetsList
           open={showSidebar}
           onClose={() => setShowSidebar(false)}
           facets={sidebarFacets}
         />
-      </SearchContext.Provider>
-      <button onClick={applySearch}>Do search</button>
+      )}
     </div>
   );
 };

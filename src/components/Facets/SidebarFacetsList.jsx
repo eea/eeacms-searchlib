@@ -4,7 +4,7 @@ import { useSearchContext, useOutsideClick } from '@eeacms/search/lib/hocs';
 import FacetResolver from './FacetResolver';
 
 export default function SidebarFacetsList(props) {
-  const { onClose, open, facets } = props;
+  const { onClose, open, facets, applySearch } = props;
   const nodeRef = React.useRef(null);
 
   useOutsideClick(nodeRef, onClose);
@@ -28,6 +28,7 @@ export default function SidebarFacetsList(props) {
               wrapper="AccordionFacetWrapper"
             />
           ))}
+          <button onClick={applySearch}>Do search</button>
         </div>
       </Sidebar>
     </div>
