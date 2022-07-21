@@ -1,5 +1,4 @@
 import React from 'react';
-import isFunction from 'lodash.isfunction';
 import { SearchDriver } from '@elastic/search-ui';
 import { atom, useAtom } from 'jotai';
 
@@ -13,7 +12,7 @@ const stateFields = [
   'sortList',
 ];
 
-const buildDriver = (searchContext) => {
+const buildDriver = (searchContext, onSearchTrigger) => {
   const initialState = Object.assign(
     {},
     stateFields.map((k) => ({ [k]: searchContext[k] })),
@@ -27,6 +26,7 @@ const buildDriver = (searchContext) => {
       new Promise(() => {
         // copy the state filters to the driver filters
         driver.filters = driver.state.filters;
+        onSearchTrigger();
         console.log('onsearch fake', driver);
       }),
   });
@@ -46,7 +46,6 @@ const getSearchContext = (driver) => {
     ...driver.state,
     ...driver,
   };
-  console.log('search context', searchContext);
   return searchContext;
 };
 
@@ -54,9 +53,10 @@ const driverAtom = atom();
 
 export default function useProxiedSearchContext(searchContext) {
   const [driver, setDriver] = useAtom(driverAtom);
+  const [, setSerial] = React.useState();
 
   React.useEffect(() => {
-    setDriver(buildDriver(searchContext));
+    setDriver(buildDriver(searchContext, () => setSerial(new Date())));
   }, [searchContext, setDriver]);
 
   const applySearch = React.useCallback(() => {
@@ -65,7 +65,10 @@ export default function useProxiedSearchContext(searchContext) {
     // searchContext.setSort(driver.state.sortField, driver.state.sortDirection);
     // searchContext.setResultsPerPage(driver.state.resultsPerPage);
     // searchContext.setSearchTerm(driver.state.searchTerm);
-    driver.state.filters.forEach((f) => searchContext.setFilter(f));
+    driver.state.filters.forEach((f) =>
+      // searchContext.addFilter.apply(searchContext, f),
+      searchContext.addFilter(f.field, f.values, f.type),
+    );
   }, [searchContext, driver]);
 
   const sc = driver ? getSearchContext(driver) : searchContext;
@@ -77,8 +80,6 @@ export default function useProxiedSearchContext(searchContext) {
     searchContext: sc,
     applySearch,
   };
-  console.log('use', res, driver);
+
   return res;
 }
-
-// const [driver] = React.useState(buildDriver(initialState, searchContext));
