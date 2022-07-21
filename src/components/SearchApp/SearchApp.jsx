@@ -141,10 +141,9 @@ function SearchApp(props) {
     [appConfig, driverInstance, facetOptions, isLoading],
   );
 
-  const WrappedSearchView = React.useMemo(
-    () => withSearch(mapContextToProps)(SearchWrappers),
-    [mapContextToProps],
-  );
+  const WrappedSearchView = React.useMemo(() => {
+    return withSearch(mapContextToProps)(SearchWrappers);
+  }, [mapContextToProps]);
 
   return (
     !!driverInstance && (

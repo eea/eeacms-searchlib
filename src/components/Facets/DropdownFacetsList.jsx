@@ -2,7 +2,6 @@ import React from 'react';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 import {
   useSearchContext,
-  useOutsideClick,
   useProxiedSearchContext,
   SearchContext,
 } from '@eeacms/search/lib/hocs';
@@ -15,10 +14,10 @@ import SidebarFacetsList from './SidebarFacetsList';
 const DropdownFacetsList = ({ defaultWrapper }) => {
   const { appConfig } = useAppConfig();
   const rawSearchContext = useSearchContext();
+  const { filters } = rawSearchContext;
   const {
     searchContext: sidebarSearchContext,
-    filters,
-    doSearch,
+    applySearch,
   } = useProxiedSearchContext(rawSearchContext);
   const { facets = [] } = appConfig;
 
@@ -55,8 +54,6 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
     (f) => !dropdownFacetFields.includes(f.field),
   );
 
-  // console.log('searchContext', searchContext);
-
   return (
     <div className="dropdown-facets-list">
       <div className="horizontal-dropdown-facets">
@@ -82,7 +79,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
           facets={sidebarFacets}
         />
       </SearchContext.Provider>
-      <button onClick={doSearch}>Do search</button>
+      <button onClick={applySearch}>Do search</button>
     </div>
   );
 };
