@@ -1,12 +1,12 @@
 import React from 'react';
 
-import { withSearch } from '@elastic/react-search-ui';
-import { useAppConfig } from '@eeacms/search/lib/hocs';
+import { useAppConfig, useSearchContext } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet } from '@eeacms/search/components';
 import { Dropdown } from 'semantic-ui-react';
 
-const DropdownFacetWrapperComponent = (props) => {
-  const { filters = [], field, label, title } = props;
+const DropdownFacetWrapper = (props) => {
+  const { field, label, title } = props;
+  const { filters } = useSearchContext();
 
   const { appConfig } = useAppConfig();
   const facet = appConfig.facets?.find((f) => f.field === field);
@@ -35,16 +35,5 @@ const DropdownFacetWrapperComponent = (props) => {
     </div>
   );
 };
-
-const DropdownFacetWrapper = withSearch(
-  ({ filters, facets, addFilter, removeFilter, setFilter, a11yNotify }) => ({
-    filters,
-    facets,
-    addFilter,
-    removeFilter,
-    setFilter,
-    a11yNotify,
-  }),
-)(DropdownFacetWrapperComponent);
 
 export default DropdownFacetWrapper;

@@ -80,7 +80,7 @@ const ViewComponent = (props) => {
     onMoreClick,
     onRemove,
     onSelect,
-    options,
+    options, // options is the actual value
     showMore,
     showSearch,
     onSearch,

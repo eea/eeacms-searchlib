@@ -1,14 +1,16 @@
 import React from 'react';
-import { withSearch } from '@elastic/react-search-ui'; // , Facet as SUIFacet
 import { Accordion, Icon } from 'semantic-ui-react';
 import { useAtom } from 'jotai';
 import { openFacetsAtom } from '../state';
 import { useUpdateAtom } from 'jotai/utils';
-import { useAppConfig } from '@eeacms/search/lib/hocs';
+import { useAppConfig, useSearchContext } from '@eeacms/search/lib/hocs';
 import Facet from '../Facet';
 
-const AccordionFacetWrapperComponent = (props) => {
-  const { collapsable = true, filters = [], field, label } = props;
+const AccordionFacetWrapper = (props) => {
+  const { collapsable = true, field, label } = props;
+  const searchContext = useSearchContext();
+  const { filters } = searchContext;
+
   const hasFilter = !!filters.find((filter) => field === filter.field);
   const [openFacets] = useAtom(openFacetsAtom);
   const updateOpenFacets = useUpdateAtom(openFacetsAtom);
@@ -78,16 +80,5 @@ const AccordionFacetWrapperComponent = (props) => {
     />
   );
 };
-
-const AccordionFacetWrapper = withSearch(
-  ({ filters, facets, addFilter, removeFilter, setFilter, a11yNotify }) => ({
-    filters,
-    facets,
-    addFilter,
-    removeFilter,
-    setFilter,
-    a11yNotify,
-  }),
-)(AccordionFacetWrapperComponent);
 
 export default AccordionFacetWrapper;
