@@ -10,7 +10,7 @@ import { isFilterValueDefaultValue } from '@eeacms/search/lib/search/helpers';
 
 import FacetResolver from './FacetResolver';
 import SidebarFacetsList from './SidebarFacetsList';
-import { sidebarState } from './state';
+import { sidebarState, liveSearchState } from './state';
 import { useAtom } from 'jotai';
 
 const DropdownFacetsList = ({ defaultWrapper }) => {
@@ -51,12 +51,16 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
 
   const dropdownFacets = [...alwaysVisibleFacets, ...activeFacets];
 
-  const dropdownFacetFields = dropdownFacets.map((f) => f.field);
   const sidebarFacets = filterableFacets.filter(
-    (f) => !dropdownFacetFields.includes(f.field),
+    (f) => !alwaysVisibleFacetNames.includes(f.field),
   );
 
-  const liveSidebar = true;
+  // const dropdownFacetFields = dropdownFacets.map((f) => f.field);
+  // const sidebarFacets = filterableFacets.filter(
+  //   (f) => !dropdownFacetFields.includes(f.field),
+  // );
+
+  const [isLiveSearch, setIsLiveSearch] = useAtom(liveSearchState);
 
   return (
     <div className="dropdown-facets-list">
@@ -72,17 +76,20 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
         <Button
           className="sui-button basic"
           onClick={() => setShowSidebar(true)}
+          disabled={isLiveSearch}
         >
           + More filters
         </Button>
       </div>
-      {!liveSidebar ? (
+      {!isLiveSearch ? (
         <SearchContext.Provider value={sidebarSearchContext}>
           <SidebarFacetsList
             open={showSidebar}
             onClose={() => setShowSidebar(false)}
             facets={sidebarFacets}
             applySearch={applySearch}
+            isLiveSearch={isLiveSearch}
+            setIsLiveSearch={setIsLiveSearch}
           />
         </SearchContext.Provider>
       ) : (
@@ -90,6 +97,8 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
           open={showSidebar}
           onClose={() => setShowSidebar(false)}
           facets={sidebarFacets}
+          isLiveSearch={isLiveSearch}
+          setIsLiveSearch={setIsLiveSearch}
         />
       )}
     </div>
