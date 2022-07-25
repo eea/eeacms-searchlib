@@ -80,6 +80,7 @@ const FacetContainer = (props) => {
         setSearchTerm(v);
       }}
       searchPlaceholder={`Filter ${label}`}
+      field={field}
       {...rest}
     />
   );

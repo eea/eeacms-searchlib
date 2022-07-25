@@ -53,7 +53,8 @@ export default function useProxiedSearchContext(searchContext) {
 
   React.useEffect(() => {
     const driver = buildDriver(searchContext, () => setSerial(new Date()));
-    Object.entries(driver.actions).forEach(([name, action]) => {
+    filterActions.forEach((name) => {
+      const action = driver.actions[name];
       const func_name = `handle_${name}`;
       const wrapper = {
         // a dynamic function name, for better debugging
@@ -76,11 +77,9 @@ export default function useProxiedSearchContext(searchContext) {
     // searchContext.setSearchTerm(driver.state.searchTerm);
     // console.log(driver.state.filters, driver.filters);
     dirtyFilters.forEach(({ field, type }) => {
-      // console.log('remove filter', field, type);
       searchContext.removeFilter(field, null, type);
     });
     driver.state.filters.forEach((f) => {
-      // searchContext.setFilter(f.field, f.values[0], f.type),
       searchContext.removeFilter(f.field, null, f.type);
       searchContext.addFilter(f.field, f.values, f.type);
     });

@@ -1,6 +1,5 @@
 import React from 'react';
-import ModalHistogramFacet from './ModalHistogramFacet';
-// import { useAppConfig } from '@eeacms/search/lib/hocs';
+import HistogramFacetComponent from './HistogramFacetComponent';
 
 const HistogramFacet = (props) => {
   const { facets, filters, field, onSelect, state, title, label } = props; // , filters
@@ -19,17 +18,13 @@ const HistogramFacet = (props) => {
     ? [filterValue.values?.[0]?.from, filterValue.values?.[0]?.to]
     : null;
 
-  // const { appConfig } = useAppConfig();
-  // const facetConfig = appConfig.facets.find((f) => f.field === field);
-
   return props.active && facet?.data ? (
-    <ModalHistogramFacet
+    <HistogramFacetComponent
       {...props}
       data={facet?.data}
       selection={value}
       title={title || label}
       onChange={({ to, from }) => {
-        // onSelect([], true);
         if (to || from) {
           onSelect([{ to, from, type: 'range' }], true);
         } else {
