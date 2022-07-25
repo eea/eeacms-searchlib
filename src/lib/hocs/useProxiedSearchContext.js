@@ -12,7 +12,9 @@ const stateFields = [
   'sortList',
 ];
 
-const buildDriver = (searchContext, onSearchTrigger) => {
+const filterActions = ['removeFilter', 'setFilter', 'addFilter'];
+
+const buildDriver = (searchContext, onSearchTrigger, onTouchFilter) => {
   const initialState = Object.assign(
     {},
     ...stateFields.map((k) => ({ [k]: searchContext[k] })),
@@ -43,6 +45,7 @@ const getSearchContext = (driver) => {
 };
 
 const driverAtom = atom();
+let dirtyFilters = [];
 
 export default function useProxiedSearchContext(searchContext) {
   const [driver, setDriver] = useAtom(driverAtom);
@@ -50,8 +53,20 @@ export default function useProxiedSearchContext(searchContext) {
 
   React.useEffect(() => {
     const driver = buildDriver(searchContext, () => setSerial(new Date()));
+    Object.entries(driver.actions).forEach(([name, action]) => {
+      const func_name = `handle_${name}`;
+      const wrapper = {
+        // a dynamic function name, for better debugging
+        [func_name]: function () {
+          const filter = { field: arguments[0], type: arguments[2] };
+          dirtyFilters = Array.from(new Set([...dirtyFilters, filter]));
+          return action.apply(driver, arguments);
+        },
+      };
+      driver[name] = wrapper[func_name];
+    });
     setDriver(driver);
-  }, [searchContext, setDriver]);
+  }, [searchContext, setDriver]); // dirtyFilters, setDirtyFilters
 
   const applySearch = React.useCallback(() => {
     // searchContext.reset();
@@ -59,7 +74,11 @@ export default function useProxiedSearchContext(searchContext) {
     // searchContext.setSort(driver.state.sortField, driver.state.sortDirection);
     // searchContext.setResultsPerPage(driver.state.resultsPerPage);
     // searchContext.setSearchTerm(driver.state.searchTerm);
-    console.log(driver.state.filters);
+    // console.log(driver.state.filters, driver.filters);
+    dirtyFilters.forEach(({ field, type }) => {
+      // console.log('remove filter', field, type);
+      searchContext.removeFilter(field, null, type);
+    });
     driver.state.filters.forEach((f) => {
       // searchContext.setFilter(f.field, f.values[0], f.type),
       searchContext.removeFilter(f.field, null, f.type);
