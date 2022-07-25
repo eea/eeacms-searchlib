@@ -15,7 +15,7 @@ const stateFields = [
 const buildDriver = (searchContext, onSearchTrigger) => {
   const initialState = Object.assign(
     {},
-    stateFields.map((k) => ({ [k]: searchContext[k] })),
+    ...stateFields.map((k) => ({ [k]: searchContext[k] })),
   );
 
   const driver = new SearchDriver({
@@ -49,7 +49,8 @@ export default function useProxiedSearchContext(searchContext) {
   const [, setSerial] = React.useState();
 
   React.useEffect(() => {
-    setDriver(buildDriver(searchContext, () => setSerial(new Date())));
+    const driver = buildDriver(searchContext, () => setSerial(new Date()));
+    setDriver(driver);
   }, [searchContext, setDriver]);
 
   const applySearch = React.useCallback(() => {
@@ -59,14 +60,14 @@ export default function useProxiedSearchContext(searchContext) {
     // searchContext.setResultsPerPage(driver.state.resultsPerPage);
     // searchContext.setSearchTerm(driver.state.searchTerm);
     driver.state.filters.forEach((f) =>
-      // searchContext.addFilter.apply(searchContext, f),
       searchContext.addFilter(f.field, f.values, f.type),
     );
   }, [searchContext, driver]);
 
   const sc = driver ? getSearchContext(driver) : searchContext;
   if (driver) {
-    sc.facets = searchContext.facets; // this is updated async
+    // this is updated async. The state update with Date is used to force refresh
+    sc.facets = searchContext.facets;
   }
 
   const res = {

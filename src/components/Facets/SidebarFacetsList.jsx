@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Radio, Sidebar } from 'semantic-ui-react';
+import { Button, Sidebar } from 'semantic-ui-react'; // Radio,
 import { useSearchContext, useOutsideClick } from '@eeacms/search/lib/hocs';
 import FacetResolver from './FacetResolver';
 
@@ -10,7 +10,7 @@ export default function SidebarFacetsList(props) {
     facets,
     applySearch,
     isLiveSearch,
-    setIsLiveSearch,
+    // setIsLiveSearch,
   } = props;
   const nodeRef = React.useRef(null);
 
@@ -39,12 +39,12 @@ export default function SidebarFacetsList(props) {
           </div>
           <div className="sidebar-footer">
             {!isLiveSearch && <Button onClick={applySearch}>Apply</Button>}
-            <Radio
-              toggle
-              label="Live search"
-              checked={isLiveSearch}
-              onChange={(e, { checked }) => setIsLiveSearch(checked)}
-            />
+            {/* <Radio */}
+            {/*   toggle */}
+            {/*   label="Live search" */}
+            {/*   checked={isLiveSearch} */}
+            {/*   onChange={(e, { checked }) => setIsLiveSearch(checked)} */}
+            {/* /> */}
           </div>
         </div>
       </Sidebar>
