@@ -18,21 +18,25 @@ const HistogramFacet = (props) => {
     ? [filterValue.values?.[0]?.from, filterValue.values?.[0]?.to]
     : null;
 
-  return props.active && facet?.data ? (
-    <HistogramFacetComponent
-      {...props}
-      data={facet?.data}
-      selection={value}
-      title={title || label}
-      onChange={({ to, from }) => {
-        if (to || from) {
-          onSelect([{ to, from, type: 'range' }], true);
-        } else {
-          onSelect([], true);
-        }
-      }}
-    />
-  ) : null;
+  // console.log('rendering', field, facet?.data);
+
+  return (
+    !!facet?.data && (
+      <HistogramFacetComponent
+        {...props}
+        data={facet?.data}
+        selection={value}
+        title={title || label}
+        onChange={({ to, from }) => {
+          if (to || from) {
+            onSelect([{ to, from, type: 'range' }], true);
+          } else {
+            onSelect([], true);
+          }
+        }}
+      />
+    )
+  );
 };
 
 export default HistogramFacet;

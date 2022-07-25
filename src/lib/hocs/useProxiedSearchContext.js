@@ -14,7 +14,7 @@ const stateFields = [
 
 const filterActions = ['removeFilter', 'setFilter', 'addFilter'];
 
-const buildDriver = (searchContext, onSearchTrigger, onTouchFilter) => {
+const buildDriver = (searchContext, onSearchTrigger) => {
   const initialState = Object.assign(
     {},
     ...stateFields.map((k) => ({ [k]: searchContext[k] })),
@@ -28,7 +28,7 @@ const buildDriver = (searchContext, onSearchTrigger, onTouchFilter) => {
       new Promise(() => {
         // copy the state filters to the driver filters
         driver.filters = driver.state.filters;
-        onSearchTrigger();
+        onSearchTrigger && onSearchTrigger();
       }),
   });
   driver.isReplacementSearchContext = true;
@@ -45,9 +45,12 @@ const getSearchContext = (driver) => {
 };
 
 const driverAtom = atom();
-let dirtyFilters = [];
+const dirtyFiltersMap = {}; // namespaced local state
 
-export default function useProxiedSearchContext(searchContext) {
+export default function useProxiedSearchContext(
+  searchContext,
+  searchContextId = 'default',
+) {
   const [driver, setDriver] = useAtom(driverAtom);
   const [, setSerial] = React.useState();
 
@@ -60,14 +63,17 @@ export default function useProxiedSearchContext(searchContext) {
         // a dynamic function name, for better debugging
         [func_name]: function () {
           const filter = { field: arguments[0], type: arguments[2] };
-          dirtyFilters = Array.from(new Set([...dirtyFilters, filter]));
+          const dirtyFilters = Array.from(
+            new Set([...(dirtyFiltersMap[searchContextId] || []), filter]),
+          );
+          dirtyFiltersMap[searchContextId] = dirtyFilters;
           return action.apply(driver, arguments);
         },
       };
       driver[name] = wrapper[func_name];
     });
     setDriver(driver);
-  }, [searchContext, setDriver]); // dirtyFilters, setDirtyFilters
+  }, [searchContext, setDriver, searchContextId]); // dirtyFilters, setDirtyFilters
 
   const applySearch = React.useCallback(() => {
     // searchContext.reset();
@@ -76,6 +82,7 @@ export default function useProxiedSearchContext(searchContext) {
     // searchContext.setResultsPerPage(driver.state.resultsPerPage);
     // searchContext.setSearchTerm(driver.state.searchTerm);
     // console.log(driver.state.filters, driver.filters);
+    const dirtyFilters = dirtyFiltersMap[searchContextId] || [];
     dirtyFilters.forEach(({ field, type }) => {
       searchContext.removeFilter(field, null, type);
     });
@@ -83,7 +90,7 @@ export default function useProxiedSearchContext(searchContext) {
       searchContext.removeFilter(f.field, null, f.type);
       searchContext.addFilter(f.field, f.values, f.type);
     });
-  }, [searchContext, driver]);
+  }, [searchContext, driver, searchContextId]);
 
   const sc = driver ? getSearchContext(driver) : searchContext;
   if (driver) {

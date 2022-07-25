@@ -1,12 +1,23 @@
 import React from 'react';
 
-import { useAppConfig, useSearchContext } from '@eeacms/search/lib/hocs';
+import {
+  useAppConfig,
+  useProxiedSearchContext,
+  SearchContext,
+  useSearchContext,
+} from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet } from '@eeacms/search/components';
-import { Dropdown } from 'semantic-ui-react';
+import { Button, Dropdown } from 'semantic-ui-react';
 
 const DropdownFacetWrapper = (props) => {
   const { field, label, title } = props;
-  const { filters } = useSearchContext();
+  console.log('redraw dropdown facet', field);
+  const rawSearchContext = useSearchContext();
+  const {
+    searchContext: facetSearchContext,
+    applySearch,
+  } = useProxiedSearchContext(rawSearchContext);
+  const { filters } = facetSearchContext;
 
   const { appConfig } = useAppConfig();
   const facet = appConfig.facets?.find((f) => f.field === field);
@@ -25,11 +36,17 @@ const DropdownFacetWrapper = (props) => {
     <div className="dropdown-facet">
       <Dropdown text={label || title} icon="chevron down">
         <Dropdown.Menu>
-          <SUIFacet
-            {...props}
-            filterType={localFilterType}
-            onChangeFilterType={(v) => setLocalFilterType(v)}
-          />
+          <SearchContext.Provider value={facetSearchContext}>
+            <SUIFacet
+              {...props}
+              active={true}
+              filterType={localFilterType}
+              onChangeFilterType={setLocalFilterType}
+            />
+            <div>
+              <Button onClick={applySearch}>Apply</Button>
+            </div>
+          </SearchContext.Provider>
         </Dropdown.Menu>
       </Dropdown>
     </div>

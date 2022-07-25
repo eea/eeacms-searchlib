@@ -70,6 +70,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
             key={i}
             {...facetInfo}
             {...rawSearchContext}
+            applySearch={applySearch}
             wrapper="DropdownFacetWrapper"
           />
         ))}
