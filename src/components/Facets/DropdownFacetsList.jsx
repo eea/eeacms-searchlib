@@ -73,7 +73,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
           className="sui-button basic"
           onClick={() => setShowSidebar(true)}
         >
-          + Add filters
+          + More filters
         </Button>
       </div>
       {!liveSidebar ? (

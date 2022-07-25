@@ -5,6 +5,7 @@ import { useSearchContext, useWindowDimensions } from '@eeacms/search/lib/hocs';
 
 const SortingViewComponent = (props) => {
   const { options, onChange } = props;
+  let { label } = props;
   const searchContext = useSearchContext();
   const { sortField, sortDirection } = searchContext;
   const sortOptions = options.map(({ label, value }) => {
@@ -20,7 +21,7 @@ const SortingViewComponent = (props) => {
   const { width } = useWindowDimensions();
   const isSmallScreen = width < 1000;
 
-  let label = 'Sort by';
+  // let label = 'Sort by';
   if (isSmallScreen) {
     label = '';
   }
@@ -32,7 +33,8 @@ const SortingViewComponent = (props) => {
           icon="chevron down"
           trigger={
             <>
-              {label}: <span>{`${activeLabel}`}</span>
+              {label ? `${label}: ` : ''}
+              <span>{`${activeLabel}`}</span>
             </>
           }
           inline

@@ -50,15 +50,15 @@ export const FilterAsideContentView = (props) => {
           <div className="above-right">
             <Component factoryName="SecondaryFacetsList" {...props} />
             <Sorting
-              label={'Sort by '}
+              label={''}
               sortOptions={sortOptions}
               view={SortingDropdownWithLabel}
             />
-            <ViewSelectorWithLabel
-              views={availableResultViews}
-              active={activeViewId}
-              onSetView={setActiveViewId}
-            />
+            {/* <ViewSelectorWithLabel */}
+            {/*   views={availableResultViews} */}
+            {/*   active={activeViewId} */}
+            {/*   onSetView={setActiveViewId} */}
+            {/* /> */}
           </div>
         </div>
 
