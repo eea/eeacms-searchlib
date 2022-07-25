@@ -59,9 +59,12 @@ export default function useProxiedSearchContext(searchContext) {
     // searchContext.setSort(driver.state.sortField, driver.state.sortDirection);
     // searchContext.setResultsPerPage(driver.state.resultsPerPage);
     // searchContext.setSearchTerm(driver.state.searchTerm);
-    driver.state.filters.forEach((f) =>
-      searchContext.addFilter(f.field, f.values, f.type),
-    );
+    console.log(driver.state.filters);
+    driver.state.filters.forEach((f) => {
+      // searchContext.setFilter(f.field, f.values[0], f.type),
+      searchContext.removeFilter(f.field, null, f.type);
+      searchContext.addFilter(f.field, f.values, f.type);
+    });
   }, [searchContext, driver]);
 
   const sc = driver ? getSearchContext(driver) : searchContext;
