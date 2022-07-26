@@ -25,6 +25,11 @@ const HistogramSlider = ({
   onChange,
 }) => {
   const [width, setWidth] = React.useState(defaultWidth);
+  const nodeRef = React.useRef();
+  React.useEffect(() => {
+    console.log('update width', nodeRef.current?.clientWidth);
+    nodeRef.current && setWidth(nodeRef.current.clientWidth);
+  }, []);
 
   const innerHeight = height - padding * 2;
   const innerWidth = width - padding * 2;
@@ -53,10 +58,7 @@ const HistogramSlider = ({
         padding: `${padding}px`,
         marginBottom: '20px',
       }}
-      ref={(node) => {
-        // console.log('update width', node?.clientWidth);
-        node && setWidth(node.clientWidth);
-      }}
+      ref={nodeRef}
     >
       <Histogram
         height={histogramHeight}

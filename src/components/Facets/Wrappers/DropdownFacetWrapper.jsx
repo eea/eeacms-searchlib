@@ -9,13 +9,13 @@ import {
 } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet } from '@eeacms/search/components';
 import { Button, Dropdown } from 'semantic-ui-react';
-import { atomFamily } from 'jotai/utils';
-import { useAtom, atom } from 'jotai';
-
-const dropdownOpenFamily = atomFamily(
-  (name) => atom(false),
-  (a, b) => a === b,
-);
+// import { atomFamily } from 'jotai/utils';
+// import { useAtom, atom } from 'jotai';
+//
+// const dropdownOpenFamily = atomFamily(
+//   (name) => atom(false),
+//   (a, b) => a === b,
+// );
 
 const DropdownFacetWrapper = (props) => {
   const { field, label, title } = props;
@@ -40,8 +40,9 @@ const DropdownFacetWrapper = (props) => {
   const [localFilterType, setLocalFilterType] = React.useState(
     defaultTypeValue,
   );
-  const dropdownAtom = dropdownOpenFamily(field);
-  const [isOpen, setIsOpen] = useAtom(dropdownAtom);
+  // const dropdownAtom = dropdownOpenFamily(field);
+  // const [isOpen, setIsOpen] = useAtom(dropdownAtom);
+  const [isOpen, setIsOpen] = React.useState();
   const nodeRef = React.useRef();
 
   useOutsideClick(nodeRef, () => setIsOpen(false));
@@ -55,14 +56,16 @@ const DropdownFacetWrapper = (props) => {
         onClick={() => setIsOpen(true)}
       >
         <Dropdown.Menu>
-          <SearchContext.Provider value={facetSearchContext}>
-            <SUIFacet
-              {...props}
-              active={true}
-              filterType={localFilterType}
-              onChangeFilterType={setLocalFilterType}
-            />
-          </SearchContext.Provider>
+          {isOpen && (
+            <SearchContext.Provider value={facetSearchContext}>
+              <SUIFacet
+                {...props}
+                active={true}
+                filterType={localFilterType}
+                onChangeFilterType={setLocalFilterType}
+              />
+            </SearchContext.Provider>
+          )}
           <div>
             <Button
               onClick={() => {
