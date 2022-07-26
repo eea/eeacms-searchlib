@@ -2,7 +2,12 @@ import React from 'react';
 import { useAtom } from 'jotai';
 
 import { withAppConfig } from '@eeacms/search/lib/hocs';
-import { FacetsList, SearchBox, AppInfo } from '@eeacms/search/components';
+import {
+  FacetsList,
+  SearchBox,
+  AppInfo,
+  SampleQueryPrompt,
+} from '@eeacms/search/components';
 import registry from '@eeacms/search/registry';
 
 import { checkInteracted } from './utils';
@@ -86,7 +91,7 @@ export const SearchView = (props) => {
           />
         }
         sideContent={<FacetsListComponent />}
-        bodyHeader={null}
+        bodyHeader={<SampleQueryPrompt />}
         bodyContent={<BodyContent {...props} wasInteracted={wasInteracted} />}
         bodyFooter={<AppInfo appConfig={appConfig} />}
       />

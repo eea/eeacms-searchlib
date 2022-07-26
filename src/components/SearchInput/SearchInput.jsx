@@ -10,7 +10,6 @@ import { Image, Icon } from 'semantic-ui-react';
 import { useAtom } from 'jotai';
 import { showExtraFacetsAtom } from './state';
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
-import SampleQueryPrompt from './SampleQueryPrompt';
 import searchSVG from './search.svg';
 
 function SearchInput({
@@ -22,7 +21,7 @@ function SearchInput({
   mode,
 }) {
   const { appConfig } = useAppConfig();
-  const { sortOptions, showPromptQueries } = appConfig;
+  const { sortOptions } = appConfig;
 
   const inputProps = getInputProps();
   const { setSearchTerm, setSort } = useSearchContext();
@@ -156,8 +155,6 @@ function SearchInput({
           {getAutocomplete()}
         </div>
       </div>
-
-      {showPromptQueries ? <SampleQueryPrompt /> : ''}
     </>
   );
 }

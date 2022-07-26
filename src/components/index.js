@@ -25,6 +25,7 @@ import ToggleSort from './ToggleSort/ToggleSort';
 import AccordionFacetWrapper from './Facets/Wrappers/AccordionFacetWrapper';
 import ModalFacetWrapper from './Facets/Wrappers/ModalFacetWrapper';
 import SearchBox from './SearchBox/SearchBox';
+import SampleQueryPrompt from './SampleQueryPrompt/SampleQueryPrompt';
 import RangeSlider from './UI/RangeSlider';
 import PagingInfo from './PagingInfo/PagingInfo';
 import SortingDropdown from './Sorting/SortingDropdown';
@@ -69,6 +70,7 @@ export {
   AccordionFacetWrapper,
   ModalFacetWrapper,
   SearchBox,
+  SampleQueryPrompt,
   RangeSlider,
   PagingInfo,
   SortingDropdown,
