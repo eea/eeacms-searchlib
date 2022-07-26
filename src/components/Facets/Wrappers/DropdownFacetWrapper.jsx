@@ -60,7 +60,7 @@ const DropdownFacetWrapper = (props) => {
             <SearchContext.Provider value={facetSearchContext}>
               <SUIFacet
                 {...props}
-                active={true}
+                active={isOpen}
                 filterType={localFilterType}
                 onChangeFilterType={setLocalFilterType}
               />

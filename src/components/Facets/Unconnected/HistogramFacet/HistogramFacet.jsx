@@ -19,8 +19,8 @@ const HistogramFacet = (props) => {
     : null;
 
   // console.log('rendering', field, facet?.data);
-
   return (
+    props.active &&
     !!facet?.data && (
       <HistogramFacetComponent
         {...props}
