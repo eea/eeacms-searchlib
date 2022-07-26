@@ -1,7 +1,16 @@
 import React from 'react';
 
 import { withAppConfig } from '@eeacms/search/lib/hocs';
+<<<<<<< HEAD
 import { SearchBox, AppInfo } from '@eeacms/search/components';
+=======
+import {
+  FacetsList,
+  SearchBox,
+  AppInfo,
+  SampleQueryPrompt,
+} from '@eeacms/search/components';
+>>>>>>> develop
 import registry from '@eeacms/search/registry';
 import { SearchContext as SUISearchContext } from '@elastic/react-search-ui';
 
@@ -55,8 +64,13 @@ export const SearchView = (props) => {
             mode={mode}
           />
         }
+<<<<<<< HEAD
         sideContent={null}
         bodyHeader={null}
+=======
+        sideContent={<FacetsListComponent />}
+        bodyHeader={<SampleQueryPrompt />}
+>>>>>>> develop
         bodyContent={<BodyContent {...props} wasInteracted={wasInteracted} />}
         bodyFooter={<AppInfo appConfig={appConfig} />}
       />
