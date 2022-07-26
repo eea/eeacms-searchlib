@@ -1,27 +1,25 @@
 import React from 'react';
 
 import { withAppConfig } from '@eeacms/search/lib/hocs';
-<<<<<<< HEAD
-import { SearchBox, AppInfo } from '@eeacms/search/components';
-=======
 import {
-  FacetsList,
   SearchBox,
   AppInfo,
   SampleQueryPrompt,
 } from '@eeacms/search/components';
->>>>>>> develop
 import registry from '@eeacms/search/registry';
 import { SearchContext as SUISearchContext } from '@elastic/react-search-ui';
 
 import { checkInteracted } from '@eeacms/search/lib/search/helpers';
 import { BodyContent } from './BodyContent';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
+import { useAtom } from 'jotai';
+import { isLandingPageAtom } from './state';
 
 export const SearchView = (props) => {
   const { appConfig, appName, mode = 'view' } = props;
 
   const { driver } = React.useContext(SUISearchContext);
+  const [, setIsLandingPageAtom] = useAtom(isLandingPageAtom);
 
   const Layout = registry.resolve[appConfig.layoutComponent].component;
 
@@ -35,6 +33,10 @@ export const SearchView = (props) => {
       appConfig,
     })
   );
+
+  React.useEffect(() => {
+    setIsLandingPageAtom(!wasInteracted);
+  });
 
   const customClassName = !wasInteracted ? 'landing-page' : 'simple-page';
 
@@ -64,13 +66,8 @@ export const SearchView = (props) => {
             mode={mode}
           />
         }
-<<<<<<< HEAD
         sideContent={null}
-        bodyHeader={null}
-=======
-        sideContent={<FacetsListComponent />}
         bodyHeader={<SampleQueryPrompt />}
->>>>>>> develop
         bodyContent={<BodyContent {...props} wasInteracted={wasInteracted} />}
         bodyFooter={<AppInfo appConfig={appConfig} />}
       />
