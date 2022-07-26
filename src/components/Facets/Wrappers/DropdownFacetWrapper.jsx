@@ -5,12 +5,21 @@ import {
   useProxiedSearchContext,
   SearchContext,
   useSearchContext,
+  useOutsideClick,
 } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet } from '@eeacms/search/components';
 import { Button, Dropdown } from 'semantic-ui-react';
+import { atomFamily } from 'jotai/utils';
+import { useAtom, atom } from 'jotai';
+
+const dropdownOpenFamily = atomFamily(
+  (name) => atom(false),
+  (a, b) => a === b,
+);
 
 const DropdownFacetWrapper = (props) => {
   const { field, label, title } = props;
+
   console.log('redraw dropdown facet', field);
   const rawSearchContext = useSearchContext();
   const {
@@ -31,10 +40,20 @@ const DropdownFacetWrapper = (props) => {
   const [localFilterType, setLocalFilterType] = React.useState(
     defaultTypeValue,
   );
+  const dropdownAtom = dropdownOpenFamily(field);
+  const [isOpen, setIsOpen] = useAtom(dropdownAtom);
+  const nodeRef = React.useRef();
+
+  useOutsideClick(nodeRef, () => setIsOpen(false));
 
   return (
-    <div className="dropdown-facet">
-      <Dropdown text={label || title} icon="chevron down">
+    <div className="dropdown-facet" ref={nodeRef}>
+      <Dropdown
+        text={label || title}
+        icon="chevron down"
+        open={isOpen}
+        onClick={() => setIsOpen(true)}
+      >
         <Dropdown.Menu>
           <SearchContext.Provider value={facetSearchContext}>
             <SUIFacet
@@ -43,10 +62,17 @@ const DropdownFacetWrapper = (props) => {
               filterType={localFilterType}
               onChangeFilterType={setLocalFilterType}
             />
-            <div>
-              <Button onClick={applySearch}>Apply</Button>
-            </div>
           </SearchContext.Provider>
+          <div>
+            <Button
+              onClick={() => {
+                applySearch();
+                setIsOpen(false);
+              }}
+            >
+              Apply
+            </Button>
+          </div>
         </Dropdown.Menu>
       </Dropdown>
     </div>

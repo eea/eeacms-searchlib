@@ -54,7 +54,7 @@ const HistogramSlider = ({
         marginBottom: '20px',
       }}
       ref={(node) => {
-        console.log('update width', node?.clientWidth);
+        // console.log('update width', node?.clientWidth);
         node && setWidth(node.clientWidth);
       }}
     >
