@@ -22,7 +22,6 @@ function SearchWrappers(props) {
     appName,
     driver,
     facetOptions,
-    isLoading,
     mode,
     ...searchContext
   } = props;
@@ -135,7 +134,6 @@ function SearchApp(props) {
         searchContext,
         driver,
       });
-
       return searchContext;
     },
     [appConfig, driverInstance, facetOptions, isLoading],
