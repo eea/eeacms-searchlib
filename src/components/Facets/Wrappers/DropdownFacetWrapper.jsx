@@ -20,7 +20,7 @@ import { Button, Dropdown } from 'semantic-ui-react';
 const DropdownFacetWrapper = (props) => {
   const { field, label, title } = props;
 
-  console.log('redraw dropdown facet', field);
+  // console.log('redraw dropdown facet', field);
   const rawSearchContext = useSearchContext();
   const {
     searchContext: facetSearchContext,

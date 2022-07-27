@@ -2,7 +2,10 @@ import React from 'react';
 import HistogramFacetComponent from './HistogramFacetComponent';
 
 const HistogramFacet = (props) => {
-  const { facets, filters, field, onSelect, state, title, label } = props; // , filters
+  // We're using the facet information to get the available values for the
+  // filter. This is a type of range filter
+
+  const { facets, filters, field, state, title, label, onChange } = props; // , filters
   const filterValue = filters.find((f) => f.field === field);
 
   // copied from react-search-ui/Facet.jsx
@@ -29,9 +32,12 @@ const HistogramFacet = (props) => {
         title={title || label}
         onChange={({ to, from }) => {
           if (to || from) {
-            onSelect([{ to, from, type: 'range' }], true);
+            // removeFilter(field, null, 'range');
+            // console.log('onselect', field);
+            // onSelect([{ to, from, type: 'range' }], true);
+            onChange({ to, from, type: 'range' });
           } else {
-            onSelect([], true);
+            onChange({});
           }
         }}
       />

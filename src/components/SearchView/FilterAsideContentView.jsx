@@ -18,7 +18,7 @@ import { NoResults } from '@eeacms/search/components/Result/NoResults';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 
 export const FilterAsideContentView = (props) => {
-  console.log('redraw FilterAsideContentView');
+  // console.log('redraw FilterAsideContentView');
   const { appConfig, children, current, wasInteracted } = props;
   const { sortOptions, resultViews } = appConfig;
   const { activeViewId, setActiveViewId } = useViews();
