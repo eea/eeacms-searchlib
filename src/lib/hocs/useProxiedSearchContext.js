@@ -67,6 +67,7 @@ export default function useProxiedSearchContext(
             new Set([...(dirtyFiltersMap[searchContextId] || []), filter]),
           );
           dirtyFiltersMap[searchContextId] = dirtyFilters;
+          // console.log('call', func_name, arguments);
           return action.apply(driver, arguments);
         },
       };
