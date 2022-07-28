@@ -25,6 +25,7 @@ import ToggleSort from './ToggleSort/ToggleSort';
 import AccordionFacetWrapper from './Facets/Wrappers/AccordionFacetWrapper';
 import ModalFacetWrapper from './Facets/Wrappers/ModalFacetWrapper';
 import SearchBox from './SearchBox/SearchBox';
+import SampleQueryPrompt from './SampleQueryPrompt/SampleQueryPrompt';
 import RangeSlider from './UI/RangeSlider';
 import PagingInfo from './PagingInfo/PagingInfo';
 import SortingDropdown from './Sorting/SortingDropdown';
@@ -41,6 +42,8 @@ import MoreLikeThisTrigger from './Result/MoreLikeThisTrigger';
 import { ResultHeader } from './Result/ResultModal';
 import DefaultContentView from './SearchView/DefaultContentView';
 import SegmentedBreadcrumb from './SegmentedBreadcrumb/Breadcrumb';
+import DropdownFacetsList from './Facets/DropdownFacetsList';
+import DropdownFacetWrapper from './Facets/Wrappers/DropdownFacetWrapper';
 
 export {
   Component,
@@ -69,6 +72,7 @@ export {
   AccordionFacetWrapper,
   ModalFacetWrapper,
   SearchBox,
+  SampleQueryPrompt,
   RangeSlider,
   PagingInfo,
   SortingDropdown,
@@ -86,10 +90,6 @@ export {
   ContentClusters,
   MoreLikeThisTrigger,
   ResultContext,
+  DropdownFacetsList,
+  DropdownFacetWrapper,
 };
-
-// SimpleSearchInput,
-// SearchInput,
-// import SimpleSearchInput from './SearchInput/SimpleSearchInput';
-// import SearchInput from './SearchInput/SearchInput';
-// export { default as DebugConfig } from './DebugConfig/DebugConfig';

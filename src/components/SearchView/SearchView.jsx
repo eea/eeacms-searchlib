@@ -1,63 +1,44 @@
 import React from 'react';
-import { useAtom } from 'jotai';
 
 import { withAppConfig } from '@eeacms/search/lib/hocs';
-import { FacetsList, SearchBox, AppInfo } from '@eeacms/search/components';
+import {
+  SearchBox,
+  AppInfo,
+  SampleQueryPrompt,
+} from '@eeacms/search/components';
 import registry from '@eeacms/search/registry';
+import { SearchContext as SUISearchContext } from '@elastic/react-search-ui';
 
-import { checkInteracted } from './utils';
+import { checkInteracted } from '@eeacms/search/lib/search/helpers';
 import { BodyContent } from './BodyContent';
-import { isLandingPageAtom } from './state';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
+import { useAtom } from 'jotai';
+import { isLandingPageAtom } from './state';
 
 export const SearchView = (props) => {
-  const {
-    appConfig,
-    appName,
-    wasSearched,
-    filters,
-    mode = 'view',
-    // searchTerm,
-  } = props;
+  const { appConfig, appName, mode = 'view' } = props;
 
-  const [isLandingPage, setIsLandingPageAtom] = useAtom(isLandingPageAtom);
+  const { driver } = React.useContext(SUISearchContext);
+  const [, setIsLandingPageAtom] = useAtom(isLandingPageAtom);
 
-  const InitialViewComponent =
-    appConfig.initialView?.factory &&
-    registry.resolve[appConfig.initialView.factory].component;
-
-  const FacetsListComponent = appConfig.facetsListComponent
-    ? registry.resolve[appConfig.facetsListComponent].component
-    : FacetsList;
-
-  // const itemViewProps = listingViewDef.params;
   const Layout = registry.resolve[appConfig.layoutComponent].component;
 
-  // const searchedTerm = driver.URLManager.getStateFromURL().searchTerm;
+  const searchedTerm = driver.URLManager.getStateFromURL().searchTerm;
   const searchContext = useSearchContext();
 
-  const { resultSearchTerm } = searchContext;
-
-  const wasInteracted = checkInteracted({
-    wasSearched,
-    filters,
-    searchTerm: resultSearchTerm, //: searchedTerm,
-    appConfig,
-  });
+  const wasInteracted = !!(
+    searchedTerm ||
+    checkInteracted({
+      searchContext,
+      appConfig,
+    })
+  );
 
   React.useEffect(() => {
     setIsLandingPageAtom(!wasInteracted);
   });
 
-  const customClassName = isLandingPage ? 'landing-page' : 'simple-page';
-
-  React.useEffect(() => {
-    // TODO: use searchui alwaysSearchOnInitialLoad ?
-    if (!wasSearched && !InitialViewComponent) {
-      searchContext.resetSearch();
-    }
-    window.searchContext = searchContext;
-  }, [searchContext, InitialViewComponent, wasSearched]);
+  const customClassName = !wasInteracted ? 'landing-page' : 'simple-page';
 
   return (
     <div className={`searchapp searchapp-${appName} ${customClassName}`}>
@@ -66,7 +47,7 @@ export const SearchView = (props) => {
         header={
           <SearchBox
             searchContext={searchContext}
-            isLandingPage={isLandingPage}
+            isLandingPage={!wasInteracted}
             autocompleteMinimumCharacters={3}
             autocompleteResults={appConfig.autocomplete.results}
             autocompleteSuggestions={appConfig.autocomplete.suggestions}
@@ -85,8 +66,8 @@ export const SearchView = (props) => {
             mode={mode}
           />
         }
-        sideContent={<FacetsListComponent />}
-        bodyHeader={null}
+        sideContent={null}
+        bodyHeader={<SampleQueryPrompt />}
         bodyContent={<BodyContent {...props} wasInteracted={wasInteracted} />}
         bodyFooter={<AppInfo appConfig={appConfig} />}
       />

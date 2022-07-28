@@ -4,6 +4,7 @@
  */
 
 import deepEqual from 'deep-equal';
+import { getDefaultFilters } from '@eeacms/search/lib/utils';
 
 /**
  * Given a list of applied Filters, find FilterValues based on
@@ -147,14 +148,7 @@ export function resetFiltersToDefault(searchContext, appConfig) {
 export function hasNonDefaultFilters(filters, appConfig) {
   if (!filters?.length) return false;
 
-  const defaultFiltersList = appConfig.facets
-    .filter((f) => !!f.default)
-    .map((facet) => ({
-      field: facet.field,
-      values: facet.default.values.sort(),
-      type: facet.default.type || 'any',
-    }));
-
+  const defaultFiltersList = getDefaultFilters(appConfig);
   const defaultFilterFields = defaultFiltersList.map((f) => f.field);
   const activeFilterFields = filters.map((f) => f.field);
 
@@ -181,3 +175,46 @@ export function hasNonDefaultFilters(filters, appConfig) {
 
   return !deepEqual(activeFilters, defaultFilters);
 }
+
+/**
+ * Returns true if the filter value object (like {field, type, value}) is default
+ */
+export function isFilterValueDefaultValue(filter, appConfig) {
+  const field = filter.field;
+
+  const defaultFiltersList = appConfig.facets
+    .filter((f) => f.field === field && !!(f.default ?? false))
+    .map((facet) => ({
+      field: facet.field,
+      values: facet.default.values.sort(),
+      type: facet.default.type || 'any',
+    }));
+  const defaultFilterValue = defaultFiltersList[0];
+
+  return deepEqual(filter, defaultFilterValue);
+}
+
+/**
+ * Determine if the user has "interacted" with the search engine.
+ *
+ * The "interaction" state is used to determine if the user sees the default
+ * landing page, or the results page.
+ *
+ * The landing page is shown:
+ *
+ * - if there are no filters
+ *   - or the filters are default
+ * - if there is no search term
+ */
+export const checkInteracted = ({ searchContext, appConfig }) => {
+  const { wasSearched, resultSearchTerm, filters } = searchContext;
+
+  const filtersAreNotDefault = hasNonDefaultFilters(filters, appConfig);
+  const hasFilters = filters.length === 0;
+
+  const wasInteracted = wasSearched
+    ? resultSearchTerm || filtersAreNotDefault
+    : resultSearchTerm || !(hasFilters || !filtersAreNotDefault);
+
+  return wasInteracted;
+};
