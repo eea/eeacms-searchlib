@@ -42,6 +42,8 @@ import MoreLikeThisTrigger from './Result/MoreLikeThisTrigger';
 import { ResultHeader } from './Result/ResultModal';
 import DefaultContentView from './SearchView/DefaultContentView';
 import SegmentedBreadcrumb from './SegmentedBreadcrumb/Breadcrumb';
+import DropdownFacetsList from './Facets/DropdownFacetsList';
+import DropdownFacetWrapper from './Facets/Wrappers/DropdownFacetWrapper';
 
 export {
   Component,
@@ -88,10 +90,6 @@ export {
   ContentClusters,
   MoreLikeThisTrigger,
   ResultContext,
+  DropdownFacetsList,
+  DropdownFacetWrapper,
 };
-
-// SimpleSearchInput,
-// SearchInput,
-// import SimpleSearchInput from './SearchInput/SimpleSearchInput';
-// import SearchInput from './SearchInput/SearchInput';
-// export { default as DebugConfig } from './DebugConfig/DebugConfig';

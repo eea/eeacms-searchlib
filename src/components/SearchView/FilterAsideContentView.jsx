@@ -7,9 +7,9 @@ import {
   ViewSelectorWithLabel,
   SortingDropdownWithLabel,
   DownloadButton,
+  DropdownFacetsList,
 } from '@eeacms/search/components';
 import { SectionTabs } from '@eeacms/search/components';
-import { checkInteracted } from './utils';
 import { useViews } from '@eeacms/search/lib/hocs';
 
 import registry from '@eeacms/search/registry';
@@ -18,7 +18,8 @@ import { NoResults } from '@eeacms/search/components/Result/NoResults';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
 
 export const FilterAsideContentView = (props) => {
-  const { appConfig, children, filters, searchTerm, current } = props;
+  // console.log('redraw FilterAsideContentView');
+  const { appConfig, children, current, wasInteracted } = props;
   const { sortOptions, resultViews } = appConfig;
   const { activeViewId, setActiveViewId } = useViews();
 
@@ -35,61 +36,59 @@ export const FilterAsideContentView = (props) => {
     }),
   ];
 
-  const wasInteracted = checkInteracted({ filters, searchTerm, appConfig });
   const layoutMode = activeViewId === 'horizontalCard' ? 'fixed' : 'fullwidth';
 
   const { isLoading, wasSearched } = useSearchContext();
   return (
     <>
-      <>
-        <SectionTabs />
+      <SectionTabs />
 
-        <div className={`results-layout ${layoutMode}`}>
-          <div className="above-results">
+      <div className={`results-layout ${layoutMode}`}>
+        <div className="above-results">
+          <div className="above-left">
+            <DropdownFacetsList />
+          </div>
+          <div className="above-right">
             <Component factoryName="SecondaryFacetsList" {...props} />
             <Sorting
-              label={'Sort by '}
+              label={''}
               sortOptions={sortOptions}
               view={SortingDropdownWithLabel}
             />
-            <ViewSelectorWithLabel
-              views={availableResultViews}
-              active={activeViewId}
-              onSetView={setActiveViewId}
-            />
+            {/* <ViewSelectorWithLabel */}
+            {/*   views={availableResultViews} */}
+            {/*   active={activeViewId} */}
+            {/*   onSetView={setActiveViewId} */}
+            {/* /> */}
           </div>
-
-          {children.length === 0 && !isLoading && wasSearched && <NoResults />}
-
-          {current === 1 ? <AnswerBox /> : ''}
-
-          {<ResultViewComponent>{children}</ResultViewComponent>}
-
-          {children.length > 0 && (
-            <div className="search-body-footer">
-              <Grid columns={2}>
-                <Grid.Column>
-                  <ResultsPerPageSelector />
-                </Grid.Column>
-                <Grid.Column textAlign="right">
-                  <DownloadButton appConfig={appConfig} />
-                </Grid.Column>
-              </Grid>
-              <Grid centered>
-                <Grid.Column textAlign="center">
-                  <div className="prev-next-paging">
-                    {wasInteracted ? (
-                      <>
-                        <Paging />
-                      </>
-                    ) : null}
-                  </div>
-                </Grid.Column>
-              </Grid>
-            </div>
-          )}
         </div>
-      </>
+
+        {children.length === 0 && !isLoading && wasSearched && <NoResults />}
+
+        {current === 1 ? <AnswerBox /> : ''}
+
+        {<ResultViewComponent>{children}</ResultViewComponent>}
+
+        {children.length > 0 && (
+          <div className="search-body-footer">
+            <Grid columns={2}>
+              <Grid.Column>
+                <ResultsPerPageSelector />
+              </Grid.Column>
+              <Grid.Column textAlign="right">
+                <DownloadButton appConfig={appConfig} />
+              </Grid.Column>
+            </Grid>
+            <Grid centered>
+              <Grid.Column textAlign="center">
+                <div className="prev-next-paging">
+                  {!!wasInteracted && <Paging />}
+                </div>
+              </Grid.Column>
+            </Grid>
+          </div>
+        )}
+      </div>
     </>
   );
 };

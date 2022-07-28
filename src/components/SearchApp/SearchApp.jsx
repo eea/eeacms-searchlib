@@ -1,15 +1,7 @@
 import React from 'react';
 
-import {
-  SearchProvider,
-  WithSearch,
-  SearchContext as SUISearchContext,
-} from '@elastic/react-search-ui'; // ErrorBoundary,
-import {
-  AppConfigContext,
-  SearchContext,
-  useIsMounted,
-} from '@eeacms/search/lib/hocs';
+import { SearchProvider, withSearch } from '@elastic/react-search-ui'; // ErrorBoundary,    WithSearch,
+import { AppConfigContext, SearchContext } from '@eeacms/search/lib/hocs';
 import { SearchView } from '@eeacms/search/components/SearchView/SearchView';
 import { rebind, applyConfigurationSchema } from '@eeacms/search/lib/utils';
 import {
@@ -18,30 +10,27 @@ import {
   bindOnAutocomplete,
   bindOnSearch,
 } from '@eeacms/search/lib/request';
-import useDeepCompareEffect from 'use-deep-compare-effect';
-import { getFacetOptions } from './request';
+import { getDefaultFilters } from '@eeacms/search/lib/utils';
 import { resetFilters, resetSearch } from './request';
+import useFacetsWithAllOptions from './useFacetsWithAllOptions';
+import { SearchDriver } from '@elastic/search-ui';
 
-// import '@elastic/react-search-ui-views/lib/styles/styles.css';
+function SearchWrappers(props) {
+  const {
+    appConfig,
+    appConfigContext,
+    appName,
+    driver,
+    facetOptions,
+    mode,
+    ...searchContext
+  } = props;
 
-function MapDriver({ children }) {
-  const { driver } = React.useContext(SUISearchContext);
-  return children({ driver });
-}
-
-function SearchWrappers({
-  params,
-  appConfigContext,
-  appName,
-  appConfig,
-  mode,
-}) {
-  // const { driver } = React.useContext(SUISearchContext);
   return (
     <AppConfigContext.Provider value={appConfigContext}>
-      <SearchContext.Provider value={params}>
+      <SearchContext.Provider value={searchContext}>
         <SearchView
-          {...params}
+          {...searchContext}
           appName={appName}
           appConfig={appConfig}
           mode={mode}
@@ -60,50 +49,41 @@ function SearchApp(props) {
     paramOnAutocomplete = bindOnAutocomplete,
   } = props;
 
-  const appConfig = React.useMemo(
-    () => applyConfigurationSchema(rebind(registry.searchui[appName])),
-    [appName, registry],
-  );
-
-  const isMountedRef = useIsMounted();
-  const [facetOptions, setFacetOptions] = React.useState(); // cache for all facet values, for some facets;
+  const appConfig = React.useMemo(() => {
+    return applyConfigurationSchema(rebind(registry.searchui[appName]));
+  }, [appName, registry]);
 
   const appConfigContext = React.useMemo(() => ({ appConfig, registry }), [
     appConfig,
     registry,
   ]);
 
-  // <ErrorBoundary>
-  // </ErrorBoundary>
-  // const searchFuncs = {
-  //   // TODO: these needs to be read from the registry
-  //   onResultClick: onResultClick.bind(appConfig),
-  //   onAutocompleteResultClick: onAutocompleteResultClick.bind(appConfig),
-  //   onAutocomplete: onAutocomplete.bind(appConfig),
-  //   onSearch: onSearch.bind(appConfig),
-  // };
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const boundOnSearch = React.useMemo(() => paramOnSearch(appConfig), [
-    appConfig,
-    paramOnSearch,
-  ]);
   const onSearch = React.useCallback(
     async (state) => {
       setIsLoading(true);
       console.log('searching');
-      const res = await boundOnSearch(state);
+      const res = await paramOnSearch(appConfig)(state);
       console.log('search done', res);
       setIsLoading(false);
       return res;
     },
-    [boundOnSearch],
+    [appConfig, paramOnSearch],
   );
 
   const onAutocomplete = React.useMemo(() => paramOnAutocomplete(appConfig), [
     appConfig,
     paramOnAutocomplete,
   ]);
+
+  const locationSearchTerm = React.useMemo(
+    () =>
+      typeof window !== 'undefined'
+        ? new URLSearchParams(window.location.search).get('q')
+        : null,
+    [],
+  );
 
   const config = React.useMemo(
     () => ({
@@ -114,61 +94,69 @@ function SearchApp(props) {
       onSearch,
       initialState: {
         resultsPerPage: appConfig.resultsPerPage || 20,
+        ...(locationSearchTerm
+          ? { filters: getDefaultFilters(appConfig) }
+          : {}),
       },
     }),
-    [appConfig, onAutocomplete, onSearch],
+    [appConfig, onAutocomplete, onSearch, locationSearchTerm],
   );
 
-  // construct a data structure of all available options for all the facets
-  const fetchFacetOptions = React.useCallback(
-    async (facetFieldNames) => {
-      const facetNames = appConfig.facets
-        .filter((f) => f.showAllOptions)
-        .map((f) => f.field);
-      const facetOptions = await getFacetOptions(appConfig, facetNames);
-      isMountedRef.current && setFacetOptions(facetOptions);
+  const { facetOptions } = useFacetsWithAllOptions(appConfig);
+
+  const [driverInstance, setDriverInstance] = React.useState(null);
+  React.useEffect(() => {
+    // This initialization is done inside of useEffect, because initializing the SearchDriver server side
+    // will error out, since the driver depends on window. Placing the initialization inside of useEffect
+    // assures that it won't attempt to initialize server side.
+    const currentDriver = new SearchDriver(config);
+    setDriverInstance(currentDriver);
+    return () => {
+      currentDriver.tearDown();
+    };
+  }, [config]);
+
+  const mapContextToProps = React.useCallback(
+    (params) => {
+      const driver = driverInstance;
+      const searchContext = {
+        ...params,
+        driver,
+        isLoading,
+        facetOptions,
+      };
+      searchContext.resetFilters = resetFilters.bind({
+        appConfig,
+        searchContext,
+      });
+      searchContext.resetSearch = resetSearch.bind({
+        appConfig,
+        searchContext,
+        driver,
+      });
+      return searchContext;
     },
-    [appConfig, isMountedRef],
+    [appConfig, driverInstance, facetOptions, isLoading],
   );
 
-  const facetsWithAllOptions =
-    appConfig.facets?.filter((f) => f.showAllOptions) || [];
-
-  useDeepCompareEffect(() => {
-    fetchFacetOptions(facetsWithAllOptions);
-  }, [facetsWithAllOptions, fetchFacetOptions]);
+  const WrappedSearchView = React.useMemo(() => {
+    return withSearch(mapContextToProps)(SearchWrappers);
+  }, [mapContextToProps]);
 
   return (
-    <SearchProvider config={config}>
-      <MapDriver>
-        {({ driver }) => (
-          <WithSearch
-            mapContextToProps={(searchContext) => ({
-              ...searchContext,
-              driver,
-              isLoading,
-              resetFilters: resetFilters.bind({ appConfig, searchContext }),
-              resetSearch: resetSearch.bind({
-                searchContext,
-                appConfig,
-                driver,
-              }),
-              facetOptions,
-            })}
-          >
-            {(params) => (
-              <SearchWrappers
-                params={params}
-                appConfigContext={appConfigContext}
-                appName={appName}
-                appConfig={appConfig}
-                mode={mode}
-              />
-            )}
-          </WithSearch>
-        )}
-      </MapDriver>
-    </SearchProvider>
+    !!driverInstance && (
+      <SearchProvider config={config} driver={driverInstance}>
+        <WrappedSearchView
+          appConfig={appConfig}
+          appConfigContext={appConfigContext}
+          appName={appName}
+          driver={driverInstance}
+          facetOptions={facetOptions}
+          isLoading={isLoading}
+          mode={mode}
+        />
+      </SearchProvider>
+    )
   );
 }
 

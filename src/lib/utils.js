@@ -101,31 +101,41 @@ export function getRangeStartEnd(ranges) {
   return { start, end };
 }
 
-export const normalizeDefaultFilters = (filters) => {
-  let normalized = {};
-  Object.keys(filters).forEach((key) => {
-    normalized[key] = {
-      type: filters[key].type,
-      values: Array.isArray(filters[key].value)
-        ? filters[key].value.sort()
-        : [filters[key].value],
-    };
-  });
-  return normalized;
-};
+/**
+ * Given an array of filters, it returns a mapping of filter -> type+values
+ */
+export const normalizeFilters = (filters) =>
+  filters.reduce(
+    (acc, filter) => ({
+      ...acc,
+      [filter.field]: {
+        type: filter.type || 'any',
+        values: Array.isArray(filter.values)
+          ? filter.values.sort()
+          : [filter.values],
+      },
+    }),
+    {},
+  );
 
-export const normalizeFilters = (filters) => {
-  let normalized = {};
-  filters.forEach((filter) => {
-    normalized[filter.field] = {
-      type: filter.type,
-      values: Array.isArray(filter.values)
-        ? filter.values.sort()
-        : [filter.values],
-    };
-  });
-  return normalized;
-};
+/**
+ * Compute the default filters, to be used as initial empty state
+ */
+export function getDefaultFilters(appConfig) {
+  const valueObj = getDefaultFilterValues(appConfig.facets);
+  return Object.keys(valueObj).map((field) => ({ field, ...valueObj[field] }));
+  // //
+  // //   Array.from((valueObj || {}).values());
+  // const defaultFiltersList = appConfig.facets
+  //   .filter((f) => !!f.default)
+  //   .map((facet) => ({
+  //     field: facet.field,
+  //     values: facet.default.values.sort(),
+  //     type: facet.default.type || 'any',
+  //   }));
+  // console.log(defaultFiltersList);
+  // return defaultFiltersList;
+}
 
 export const getDefaultFilterValues = (facets) => {
   const defaultFilterValues = facets.reduce(
@@ -133,7 +143,8 @@ export const getDefaultFilterValues = (facets) => {
       facet.default ? [...acc, { field: facet.field, ...facet.default }] : acc,
     [],
   );
-  return normalizeDefaultFilters(defaultFilterValues);
+  // console.log('defaultFilterValues', defaultFilterValues);
+  return normalizeFilters(defaultFilterValues);
 };
 
 function _isObject(object) {
@@ -224,19 +235,25 @@ export const firstChars = (text, charsNumber) => {
   }
 };
 
+/**
+ * Returns true  if the state of the filters is different from the
+ * "default filter state". Useful in deciding if to show default landing page
+ * or result list.
+ */
 export const hasAppliedCustomFilters = (filters, appConfig) => {
-  const mainFacetFields = appConfig.facets
+  const { facets = [] } = appConfig;
+  const mainFacetFields = facets
     .filter((f) => f.showInFacetsList ?? true)
     .map((f) => f.field);
-  const mainFacets = appConfig.facets.filter((f) =>
-    mainFacetFields.includes(f.field),
-  );
+  const mainFacets = facets.filter((f) => mainFacetFields.includes(f.field));
   const mainFilters = filters.filter((f) => mainFacetFields.includes(f.field));
-  const normalizedDefaultFilters = getDefaultFilterValues(mainFacets);
-  const normalizedFilters = normalizeDefaultFilters(mainFilters);
-  const filtersEqual = deepEqual(normalizedDefaultFilters, normalizedFilters);
 
-  return !filtersEqual;
+  const normDefaultFilters = getDefaultFilterValues(mainFacets);
+  const normMainFilters = normalizeFilters(mainFilters);
+
+  const filtersAreEqual = deepEqual(normDefaultFilters, normMainFilters);
+
+  return !filtersAreEqual;
 };
 
 export const customOrder = (values, facetValues, sortOrder = 'ascending') => {
@@ -257,3 +274,36 @@ export const customOrder = (values, facetValues, sortOrder = 'ascending') => {
 
   return result;
 };
+
+export function getBuckets({
+  aggregations,
+  fieldName,
+  whitelist = [],
+  blacklist = [],
+}) {
+  if (aggregations?.[fieldName]?.buckets?.length > 0) {
+    const unfiltered_data = aggregations[fieldName].buckets.map((bucket) => ({
+      // Boolean values and date values require using `key_as_string`
+      value: bucket.key_as_string || bucket.key,
+      count: bucket.doc_count,
+    }));
+
+    let filtered_data = blacklist.length
+      ? unfiltered_data.filter(
+          (bucket) => blacklist.indexOf(bucket.value) === -1,
+        )
+      : unfiltered_data;
+
+    filtered_data = whitelist.length
+      ? filtered_data.filter((bucket) => whitelist.indexOf(bucket.value) !== -1)
+      : filtered_data;
+
+    return [
+      {
+        field: fieldName,
+        type: 'value',
+        data: filtered_data,
+      },
+    ];
+  }
+}

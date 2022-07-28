@@ -19,6 +19,7 @@ const ResultsPerPageSelector = (props) => {
     <div className="results-selector">
       <span>
         <Dropdown
+          icon="chevron down"
           text={`${resultsPerPage} results / page`}
           key={resultsPerPage}
           inline
