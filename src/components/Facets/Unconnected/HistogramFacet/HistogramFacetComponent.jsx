@@ -1,3 +1,4 @@
+import React from 'react';
 import { getRangeStartEnd } from '@eeacms/search/lib/utils';
 import { Input } from 'semantic-ui-react';
 import { HistogramSlider } from '@eeacms/search/components/Vis';
