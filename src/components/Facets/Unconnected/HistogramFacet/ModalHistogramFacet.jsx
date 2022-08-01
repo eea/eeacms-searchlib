@@ -1,3 +1,4 @@
+import React from 'react';
 import HistogramFacetComponent from './HistogramFacetComponent';
 
 const ModalHistogramFacet = (props) => {
