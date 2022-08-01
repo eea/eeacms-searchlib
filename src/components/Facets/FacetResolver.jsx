@@ -1,3 +1,4 @@
+import React from 'react';
 import { Component } from '@eeacms/search/components';
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 
