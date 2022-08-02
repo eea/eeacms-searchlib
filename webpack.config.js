@@ -63,14 +63,14 @@ module.exports = {
           },
         ],
       },
-      // {
-      //   test: /\.svg$/i,
-      //   use: [
-      //     {
-      //       loader: 'svg-loader',
-      //     },
-      //   ],
-      // },
+      {
+        test: /\.svg$/i,
+        use: [
+          {
+            loader: 'svg-loader',
+          },
+        ],
+      },
     ],
   },
   externals: [
