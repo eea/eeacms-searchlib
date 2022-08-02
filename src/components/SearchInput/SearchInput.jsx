@@ -11,23 +11,23 @@ import { Icon, Image } from 'semantic-ui-react';
 import { useAtom } from 'jotai';
 import { showExtraFacetsAtom } from './state';
 import { useSearchContext, useAppConfig } from '@eeacms/search/lib/hocs';
-import searchSVG from './search.svg';
+import searchSVG from './icons/search.svg';
 
-const SVGIcon = ({ name, size, color, className, title, onClick }) =>
-  typeof name === 'string' ? (
-    <Image src={name} />
-  ) : (
-    <svg
-      xmlns={name.attributes && name.attributes.xmlns}
-      viewBox={name.attributes && name.attributes.viewBox}
-      style={{ height: size, width: 'auto', fill: color || 'currentColor' }}
-      className={className ? `icon ${className}` : 'icon'}
-      onClick={onClick}
-      dangerouslySetInnerHTML={{
-        __html: title ? `<title>${title}</title>${name.content}` : name.content,
-      }}
-    />
-  );
+// const SVGIcon = ({ name, size, color, className, title, onClick }) =>
+//   typeof name === 'string' ? (
+//     <Image src={name} />
+//   ) : (
+//     <svg
+//       xmlns={name.attributes && name.attributes.xmlns}
+//       viewBox={name.attributes && name.attributes.viewBox}
+//       style={{ height: size, width: 'auto', fill: color || 'currentColor' }}
+//       className={className ? `icon ${className}` : 'icon'}
+//       onClick={onClick}
+//       dangerouslySetInnerHTML={{
+//         __html: title ? `<title>${title}</title>${name.content}` : name.content,
+//       }}
+//     />
+//   );
 
 function SearchInput({
   getAutocomplete,
@@ -165,7 +165,7 @@ function SearchInput({
                 setSearchTerm(currentTerm, { shouldClearFilters: false });
               }}
             >
-              <SVGIcon name={searchSVG} alt="Search" />
+              <Image src={searchSVG} alt="Search" />
             </div>
           </div>
 

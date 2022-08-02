@@ -14,7 +14,7 @@ if (process.env.BUNDLE_ANALYZE) {
   plugins.push(new BundleAnalyzerPlugin());
 }
 
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 plugins.push(new MiniCssExtractPlugin());
 
@@ -53,10 +53,7 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: [
-          MiniCssExtractPlugin.loader,
-          "css-loader"
-        ],
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
@@ -74,7 +71,6 @@ module.exports = {
           },
         ],
       },
-
     ],
   },
   externals: [
@@ -95,7 +91,7 @@ module.exports = {
     'react-compound-slider',
     'redux',
     'd3-scale',
-    nodeExternals()
+    nodeExternals(),
   ], //nodeExternals()    // , 'semantic-ui-react'
 };
 
