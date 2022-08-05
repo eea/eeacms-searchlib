@@ -5,14 +5,18 @@ import {
   useAppConfig,
   // useWindowDimensions
 } from '@eeacms/search/lib/hocs';
-import { SegmentedBreadcrumb, TagsList } from '@eeacms/search/components';
+import {
+  SegmentedBreadcrumb,
+  // TagsList,
+  StringList,
+  DateTime,
+} from '@eeacms/search/components';
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
 // import MoreLikeThisTrigger from './MoreLikeThisTrigger';
 import ExternalLink from './ExternalLink';
 import ResultContext from './ResultContext';
 import ContentClusters from './ContentClusters';
-import { DateTime } from '@eeacms/search/components';
 
 const HorizontalCardItem = (props) => {
   const {
@@ -44,10 +48,10 @@ const HorizontalCardItem = (props) => {
     >
       <div className="col-full">
         <div className="meta">
-          <span className="date">
-            <DateTime format="DATE_MED" value={result.issued} />
-          </span>
-          <ContentClusters clusters={clusters} item={result} />
+          <div className="result-info">
+            {/* <span className="result-info-title">Author: </span> */}
+            <ContentClusters clusters={clusters} item={result} />
+          </div>
         </div>
       </div>
       <div className={classColLeft}>
@@ -69,14 +73,21 @@ const HorizontalCardItem = (props) => {
             )}
           </h3>
 
-          <div className="result-description">
-            {props.children ? props.children : <ResultContext {...props} />}
+          {props.children ? props.children : <ResultContext {...props} />}
+
+          <div className="result-bottom">
+            <div className="result-info">
+              <span className="result-info-title">Topics: </span>
+              <StringList value={result.tags} />
+            </div>
+            <div className="result-info">
+              <span className="result-info-title">Published: </span>
+              <DateTime format="DATE_MED" value={result.issued} />
+            </div>
           </div>
-          <div className="tags-list">
-            <TagsList value={result.tags} />
-          </div>
+
           <div className="source">
-            <span>Source: </span>
+            <span className="result-info-title">Source: </span>
             <ExternalLink href={result.href}>
               <strong title={result.source} className="source">
                 {firstWords(
@@ -94,28 +105,6 @@ const HorizontalCardItem = (props) => {
                 maxChars={40}
               />
             </ExternalLink>
-
-            {/*{showControls && !isSmallScreen && (
-              <MoreLikeThisTrigger
-                view={Button}
-                className="mlt"
-                compact
-                color="green"
-                size="mini"
-                result={result}
-              >
-                more like this
-              </MoreLikeThisTrigger>
-            )}*/}
-            {/*{showControls && isSmallScreen && (
-              <Dropdown icon="ellipsis vertical">
-                <Dropdown.Menu className="mlt">
-                  <MoreLikeThisTrigger result={result} view={Dropdown.Item}>
-                    More like this
-                  </MoreLikeThisTrigger>
-                </Dropdown.Menu>
-              </Dropdown>
-            )}*/}
           </div>
         </div>
         {debugQuery && (
@@ -148,3 +137,25 @@ const HorizontalCardItem = (props) => {
 };
 
 export default HorizontalCardItem;
+
+// {/*{showControls && !isSmallScreen && (
+//               <MoreLikeThisTrigger
+//                 view={Button}
+//                 className="mlt"
+//                 compact
+//                 color="green"
+//                 size="mini"
+//                 result={result}
+//               >
+//                 more like this
+//               </MoreLikeThisTrigger>
+//             )}*/}
+//             {/*{showControls && isSmallScreen && (
+//               <Dropdown icon="ellipsis vertical">
+//                 <Dropdown.Menu className="mlt">
+//                   <MoreLikeThisTrigger result={result} view={Dropdown.Item}>
+//                     More like this
+//                   </MoreLikeThisTrigger>
+//                 </Dropdown.Menu>
+//               </Dropdown>
+//             )}*/}
