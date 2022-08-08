@@ -7,7 +7,7 @@ import {
   // SearchContext,
 } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet } from '@eeacms/search/components';
-import { Dropdown } from 'semantic-ui-react'; // Button
+import { Dropdown, Button } from 'semantic-ui-react'; // Button
 import { atomFamily } from 'jotai/utils';
 import { useAtom, atom } from 'jotai';
 
@@ -17,7 +17,7 @@ const dropdownOpenFamily = atomFamily(
 );
 
 const DropdownFacetWrapper = (props) => {
-  const { field, label, title } = props;
+  const { field, label, title, removeFilter } = props;
   // console.log('redraw dropdown facet', field);
   const rawSearchContext = useSearchContext();
   const {
@@ -32,6 +32,16 @@ const DropdownFacetWrapper = (props) => {
   const defaultValue = field
     ? filters?.find((f) => f.field === field)?.type || fallback
     : fallback;
+  const filtersCount = filters
+    .filter((filter) => filter.field === field)
+    .map((filter) => filter.values.length);
+  const filterConfig = appConfig.facets.find(
+    (f) => (f.id || f.field) === field,
+  );
+  const activeFilters =
+    (filters.find((f) => f.field === field) || {})?.values || [];
+
+  console.log('activeFilters', activeFilters);
 
   const [defaultTypeValue] = (defaultValue || '').split(':');
 
@@ -44,10 +54,6 @@ const DropdownFacetWrapper = (props) => {
   const nodeRef = React.useRef();
 
   useOutsideClick(nodeRef, () => setIsOpen(false));
-
-  const filtersCount = filters
-    .filter((filter) => filter.field === field)
-    .map((filter) => filter.values.length);
 
   return (
     <div className="dropdown-facet" ref={nodeRef}>
@@ -63,13 +69,38 @@ const DropdownFacetWrapper = (props) => {
           </span>
         }
       >
-        <Dropdown.Menu open={isOpen}>
-          <SUIFacet
-            {...props}
-            active={isOpen}
-            filterType={localFilterType}
-            onChangeFilterType={setLocalFilterType}
-          />
+        <Dropdown.Menu>
+          {isOpen && (
+            <SUIFacet
+              {...props}
+              active={isOpen}
+              filterType={localFilterType}
+              onChangeFilterType={setLocalFilterType}
+            />
+          )}
+
+          {activeFilters.length > 0 && (
+            <Button
+              className="clear-filters"
+              size="mini"
+              onClick={() => {
+                if (Array.isArray(activeFilters)) {
+                  (activeFilters || []).forEach((v) => {
+                    removeFilter(field, v, filterConfig.filterType);
+                  });
+                } else {
+                  removeFilter(
+                    field,
+                    [activeFilters || ''],
+                    filterConfig.filterType,
+                  );
+                }
+                setIsOpen(false);
+              }}
+            >
+              Clear
+            </Button>
+          )}
         </Dropdown.Menu>
       </Dropdown>
     </div>

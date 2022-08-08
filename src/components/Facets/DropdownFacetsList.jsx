@@ -18,7 +18,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
 
   const { appConfig } = useAppConfig();
   const rawSearchContext = useSearchContext();
-  const { filters } = rawSearchContext;
+  const { filters, clearFilters } = rawSearchContext;
   const {
     // searchContext: sidebarSearchContext,
     applySearch,
@@ -83,6 +83,21 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
         >
           + More filters
         </Button>
+
+        {filterNames.length > 0 && (
+          <Button
+            basic
+            className="clear-btn"
+            content="Clear all filters"
+            onClick={() => {
+              // rawSearchContext.resetFilters();
+              const exclude = facets
+                .filter((f) => f.isFilter)
+                .map((f) => f.field);
+              clearFilters(exclude);
+            }}
+          />
+        )}
       </div>
       <SidebarFacetsList
         open={showSidebar}
