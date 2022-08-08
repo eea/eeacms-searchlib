@@ -1,5 +1,4 @@
 import React from 'react';
-
 import {
   useAppConfig,
   useProxiedSearchContext,
@@ -11,15 +10,14 @@ import { Facet as SUIFacet } from '@eeacms/search/components';
 import { Dropdown } from 'semantic-ui-react'; // Button
 import { atomFamily } from 'jotai/utils';
 import { useAtom, atom } from 'jotai';
-//
+
 const dropdownOpenFamily = atomFamily(
   (name) => atom(false),
   (a, b) => a === b,
 );
 
 const DropdownFacetWrapper = (props) => {
-  const { field, label } = props; // title
-
+  const { field, label, title } = props;
   // console.log('redraw dropdown facet', field);
   const rawSearchContext = useSearchContext();
   const {
@@ -50,15 +48,20 @@ const DropdownFacetWrapper = (props) => {
   const filtersCount = filters
     .filter((filter) => filter.field === field)
     .map((filter) => filter.values.length);
-  const title = `${filtersCount.length ? `${label} (${filtersCount})` : label}`;
 
   return (
     <div className="dropdown-facet" ref={nodeRef}>
       <Dropdown
-        text={title}
-        icon="chevron down"
         open={isOpen}
         onClick={() => setIsOpen(true)}
+        trigger={
+          <span>
+            {label ? <>{label} </> : <>{title} </>}
+            {filtersCount.length > 0 && (
+              <span className="count">({filtersCount})</span>
+            )}
+          </span>
+        }
       >
         <Dropdown.Menu open={isOpen}>
           <SUIFacet
