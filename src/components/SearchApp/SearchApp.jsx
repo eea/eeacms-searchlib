@@ -106,9 +106,10 @@ function SearchApp(props) {
 
   const [driverInstance, setDriverInstance] = React.useState(null);
   React.useEffect(() => {
-    // This initialization is done inside of useEffect, because initializing the SearchDriver server side
-    // will error out, since the driver depends on window. Placing the initialization inside of useEffect
-    // assures that it won't attempt to initialize server side.
+    // This initialization is done inside of useEffect, because initializing
+    // the SearchDriver server side will error out, since the driver depends on
+    // window. Placing the initialization inside of useEffect assures that it
+    // won't attempt to initialize server side.
     const currentDriver = new SearchDriver(config);
     setDriverInstance(currentDriver);
     return () => {
