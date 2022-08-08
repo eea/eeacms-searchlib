@@ -27,7 +27,7 @@ function getTodayWithTime() {
   ].join('');
   return output;
 }
-const zeroPad = (num, places) => String(num).padStart(places, '0')
+const zeroPad = (num, places) => String(num).padStart(places, '0');
 
 export function buildDidYouMeanRequest({ searchTerm }, config) {
   const cleanSearchTerms = searchTerm;
@@ -65,7 +65,7 @@ export function buildDidYouMeanRequest({ searchTerm }, config) {
       },
     },
   };*/
-  console.log(query);
+  // console.log(query);
   return query;
 }
 

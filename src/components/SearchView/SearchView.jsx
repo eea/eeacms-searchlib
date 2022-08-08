@@ -35,6 +35,11 @@ export const SearchView = (props) => {
   );
 
   React.useEffect(() => {
+    // console.log('rewrite');
+    window.searchContext = searchContext;
+  }, [searchContext]);
+
+  React.useEffect(() => {
     setIsLandingPageAtom(!wasInteracted);
   });
 
