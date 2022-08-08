@@ -4,7 +4,7 @@ import { Grid } from 'semantic-ui-react';
 import ResultsPerPageSelector from './../ResultsPerPageSelector/ResultsPerPageSelector';
 import Paging from './../Paging/Paging';
 import {
-  ViewSelectorWithLabel,
+  // ViewSelectorWithLabel,
   SortingDropdownWithLabel,
   DownloadButton,
   DropdownFacetsList,
@@ -27,18 +27,19 @@ export const FilterAsideContentView = (props) => {
   const ResultViewComponent =
     registry.resolve[listingViewDef.factories.view].component;
 
-  const availableResultViews = [
-    ...resultViews.filter(({ id }) => {
-      const paramsPropId = `${id}ViewParams`;
-      return Object.keys(appConfig).includes(paramsPropId)
-        ? appConfig[paramsPropId].enabled
-        : true;
-    }),
-  ];
+  // const availableResultViews = [
+  //   ...resultViews.filter(({ id }) => {
+  //     const paramsPropId = `${id}ViewParams`;
+  //     return Object.keys(appConfig).includes(paramsPropId)
+  //       ? appConfig[paramsPropId].enabled
+  //       : true;
+  //   }),
+  // ];
 
   const layoutMode = activeViewId === 'horizontalCard' ? 'fixed' : 'fullwidth';
 
   const { isLoading, wasSearched } = useSearchContext();
+
   return (
     <>
       <SectionTabs />

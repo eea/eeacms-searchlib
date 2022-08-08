@@ -3,28 +3,28 @@ import React from 'react';
 import {
   useAppConfig,
   useProxiedSearchContext,
-  SearchContext,
   useSearchContext,
   useOutsideClick,
+  // SearchContext,
 } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet } from '@eeacms/search/components';
-import { Button, Dropdown } from 'semantic-ui-react';
-// import { atomFamily } from 'jotai/utils';
-// import { useAtom, atom } from 'jotai';
+import { Dropdown } from 'semantic-ui-react'; // Button
+import { atomFamily } from 'jotai/utils';
+import { useAtom, atom } from 'jotai';
 //
-// const dropdownOpenFamily = atomFamily(
-//   (name) => atom(false),
-//   (a, b) => a === b,
-// );
+const dropdownOpenFamily = atomFamily(
+  (name) => atom(false),
+  (a, b) => a === b,
+);
 
 const DropdownFacetWrapper = (props) => {
-  const { field, label, title } = props;
+  const { field, label } = props; // title
 
   // console.log('redraw dropdown facet', field);
   const rawSearchContext = useSearchContext();
   const {
     searchContext: facetSearchContext,
-    applySearch,
+    // applySearch,
   } = useProxiedSearchContext(rawSearchContext);
   const { filters } = facetSearchContext;
 
@@ -40,42 +40,33 @@ const DropdownFacetWrapper = (props) => {
   const [localFilterType, setLocalFilterType] = React.useState(
     defaultTypeValue,
   );
-  // const dropdownAtom = dropdownOpenFamily(field);
-  // const [isOpen, setIsOpen] = useAtom(dropdownAtom);
-  const [isOpen, setIsOpen] = React.useState();
+  const dropdownAtom = dropdownOpenFamily(field);
+  const [isOpen, setIsOpen] = useAtom(dropdownAtom);
+  // const [isOpen, setIsOpen] = React.useState(false);
   const nodeRef = React.useRef();
 
   useOutsideClick(nodeRef, () => setIsOpen(false));
 
+  const filtersCount = filters
+    .filter((filter) => filter.field === field)
+    .map((filter) => filter.values.length);
+  const title = `${filtersCount.length ? `${label} (${filtersCount})` : label}`;
+
   return (
     <div className="dropdown-facet" ref={nodeRef}>
       <Dropdown
-        text={label || title}
+        text={title}
         icon="chevron down"
         open={isOpen}
         onClick={() => setIsOpen(true)}
       >
-        <Dropdown.Menu>
-          {isOpen && (
-            <SearchContext.Provider value={facetSearchContext}>
-              <SUIFacet
-                {...props}
-                active={isOpen}
-                filterType={localFilterType}
-                onChangeFilterType={setLocalFilterType}
-              />
-            </SearchContext.Provider>
-          )}
-          <div>
-            <Button
-              onClick={() => {
-                applySearch();
-                setIsOpen(false);
-              }}
-            >
-              Apply
-            </Button>
-          </div>
+        <Dropdown.Menu open={isOpen}>
+          <SUIFacet
+            {...props}
+            active={isOpen}
+            filterType={localFilterType}
+            onChangeFilterType={setLocalFilterType}
+          />
         </Dropdown.Menu>
       </Dropdown>
     </div>
@@ -83,3 +74,22 @@ const DropdownFacetWrapper = (props) => {
 };
 
 export default DropdownFacetWrapper;
+
+// {/* <SearchContext.Provider value={facetSearchContext}>
+//   <SUIFacet
+//     {...props}
+//     active={isOpen}
+//     filterType={localFilterType}
+//     onChangeFilterType={setLocalFilterType}
+//   />
+// </SearchContext.Provider>
+// <div>
+//   <Button
+//     onClick={() => {
+//       applySearch();
+//       setIsOpen(false);
+//     }}
+//   >
+//     Apply
+//   </Button>
+// </div>  */}
