@@ -41,8 +41,6 @@ const DropdownFacetWrapper = (props) => {
   const activeFilters =
     (filters.find((f) => f.field === field) || {})?.values || [];
 
-  console.log('activeFilters', activeFilters);
-
   const [defaultTypeValue] = (defaultValue || '').split(':');
 
   const [localFilterType, setLocalFilterType] = React.useState(
