@@ -72,6 +72,11 @@ const SectionTabs = (props) => {
     cmp(sectionOrder.indexOf(s1.value), sectionOrder.indexOf(s2.value)),
   );
 
+  if (activeValues.length > 0) {
+    const defaultResultView =
+      sectionMapping[activeValues[0]].defaultResultView || 'listing';
+    views.setActiveViewId(defaultResultView);
+  }
   return (
     <div>
       {showOverflow ? (
