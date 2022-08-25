@@ -3,6 +3,8 @@ import { getRangeStartEnd } from '@eeacms/search/lib/utils';
 import { Input } from 'semantic-ui-react';
 import { HistogramSlider } from '@eeacms/search/components/Vis';
 
+import debounce from 'lodash.debounce';
+
 const visualStyle = {
   selectedColor: '#55cee4',
   unselectedColor: '#e8e8e8',
@@ -17,6 +19,14 @@ const HistogramFacetComponent = (props) => {
     start = selection ? selection[0] : undefined ?? range.start,
     end = selection ? selection[1] : undefined ?? range.end,
   } = props;
+
+  const debouncedSliderChangeHandler = React.useMemo(
+    () =>
+      debounce((sliderRange) => {
+        onChange({ from: sliderRange[0], to: sliderRange[1] });
+      }, 300),
+    [onChange],
+  );
 
   return (
     <div className="histogram-facet">
@@ -53,7 +63,7 @@ const HistogramFacetComponent = (props) => {
         }))}
         {...visualStyle}
         selection={[start, end]}
-        onChange={(range) => onChange({ from: range[0], to: range[1] })}
+        onChange={debouncedSliderChangeHandler}
       />
     </div>
   );
