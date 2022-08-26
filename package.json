@@ -3,6 +3,10 @@
   "version": "0.2.21",
   "main": "dist/index.js",
   "homepage": "https://github.com/eea/eeacms-searchlib",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:eea/eeacms-searchlib.git"
+  },
   "browser": {
     "./dist/index.js": "./dist/index.js"
   },
