@@ -68,6 +68,7 @@ const AccordionFacetWrapper = (props) => {
           {...props}
           active={isOpened}
           filterType={localFilterType}
+          isInAccordion={true}
           onChangeFilterType={(v) => setLocalFilterType(v)}
         />
       </Accordion.Content>
@@ -75,6 +76,7 @@ const AccordionFacetWrapper = (props) => {
   ) : (
     <Facet
       {...props}
+      isInAccordion={true}
       filterType={localFilterType}
       onChangeFilterType={(v) => setLocalFilterType(v)}
     />

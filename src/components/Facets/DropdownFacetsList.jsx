@@ -3,7 +3,7 @@ import { useAppConfig } from '@eeacms/search/lib/hocs';
 import {
   useSearchContext,
   useProxiedSearchContext,
-  SearchContext,
+  // SearchContext,
 } from '@eeacms/search/lib/hocs';
 import { Button } from 'semantic-ui-react';
 import { isFilterValueDefaultValue } from '@eeacms/search/lib/search/helpers';
@@ -18,9 +18,9 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
 
   const { appConfig } = useAppConfig();
   const rawSearchContext = useSearchContext();
-  const { filters } = rawSearchContext;
+  const { filters, clearFilters } = rawSearchContext;
   const {
-    searchContext: sidebarSearchContext,
+    // searchContext: sidebarSearchContext,
     applySearch,
   } = useProxiedSearchContext(rawSearchContext);
   const { facets = [] } = appConfig;
@@ -79,12 +79,34 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
         <Button
           className="sui-button basic"
           onClick={() => setShowSidebar(true)}
-          disabled={isLiveSearch}
+          // disabled={isLiveSearch}
         >
           + More filters
         </Button>
+
+        {filterNames.length > 0 && (
+          <Button
+            basic
+            className="clear-btn"
+            content="Clear all filters"
+            onClick={() => {
+              // rawSearchContext.resetFilters();
+              const exclude = facets
+                .filter((f) => f.isFilter)
+                .map((f) => f.field);
+              clearFilters(exclude);
+            }}
+          />
+        )}
       </div>
-      {!isLiveSearch ? (
+      <SidebarFacetsList
+        open={showSidebar}
+        onClose={() => setShowSidebar(false)}
+        facets={sidebarFacets}
+        isLiveSearch={isLiveSearch}
+        setIsLiveSearch={setIsLiveSearch}
+      />
+      {/* {!isLiveSearch ? (
         <SearchContext.Provider value={sidebarSearchContext}>
           <SidebarFacetsList
             open={showSidebar}
@@ -103,7 +125,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
           isLiveSearch={isLiveSearch}
           setIsLiveSearch={setIsLiveSearch}
         />
-      )}
+      )} */}
     </div>
   );
 };

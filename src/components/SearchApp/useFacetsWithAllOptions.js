@@ -1,3 +1,5 @@
+// construct a data structure of all available options for all the facets
+
 import React from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import buildRequest from '@eeacms/search/lib/search/query';
@@ -33,7 +35,6 @@ export async function getFacetOptions(config, facetFieldNames) {
   );
 }
 
-// construct a data structure of all available options for all the facets
 function useFacetsWithAllOptions(appConfig) {
   const isMountedRef = useIsMounted();
   const [facetOptions, setFacetOptions] = React.useState(); // cache for all facet values, for some facets;
