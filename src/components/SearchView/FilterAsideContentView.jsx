@@ -21,9 +21,10 @@ export const FilterAsideContentView = (props) => {
   // console.log('redraw FilterAsideContentView');
   const { appConfig, children, current, wasInteracted } = props;
   const { sortOptions, resultViews } = appConfig;
-  const { activeViewId, setActiveViewId } = useViews();
-
-  const listingViewDef = resultViews.filter((v) => v.id === activeViewId)[0];
+  const views = useViews();
+  const listingViewDef = resultViews.filter(
+    (v) => v.id === views.activeViewId,
+  )[0];
   const ResultViewComponent =
     registry.resolve[listingViewDef.factories.view].component;
 
@@ -35,8 +36,31 @@ export const FilterAsideContentView = (props) => {
   //       : true;
   //   }),
   // ];
+  const searchContext = useSearchContext();
+  const { contentSectionsParams = {} } = appConfig;
 
-  const layoutMode = activeViewId === 'horizontalCard' ? 'fixed' : 'fullwidth';
+  React.useEffect(() => {
+    const facetField = contentSectionsParams.sectionFacetsField;
+    const { filters = [] } = searchContext;
+    const activeFilter =
+      filters.find(({ field }) => field === facetField) || {};
+    let activeValues = activeFilter.values || [];
+    const sectionMapping = Object.assign(
+      {},
+      ...contentSectionsParams.sections.map((s) => ({ [s.name]: s })),
+    );
+
+    if (activeValues.length > 0) {
+      const defaultViewId =
+        sectionMapping[activeValues?.[0]]?.defaultResultView || 'listing';
+      views.setActiveViewId(defaultViewId);
+    } else {
+      views.reset();
+    }
+  }, [searchContext, contentSectionsParams, views]);
+
+  const layoutMode =
+    views.activeViewId === 'horizontalCard' ? 'fixed' : 'fullwidth';
 
   const { isLoading, wasSearched } = useSearchContext();
 
