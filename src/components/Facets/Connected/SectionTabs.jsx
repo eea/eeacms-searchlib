@@ -103,9 +103,9 @@ const SectionTabs = (props) => {
               active={activeValues.includes(value)}
               onClick={() => {
                 searchContext.setFilter(facetField, value, 'any');
-                views.setActiveViewId(
-                  sectionMapping[value].defaultResultView || 'listing',
-                );
+                // views.setActiveViewId(
+                //   sectionMapping[value].defaultResultView || 'listing',
+                // );
               }}
             >
               {/*<Icon type={value} family="Content types" />*/}
