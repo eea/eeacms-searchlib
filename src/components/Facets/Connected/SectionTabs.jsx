@@ -11,7 +11,6 @@ import {
   // useWindowDimensions,
   useSearchContext,
   useAppConfig,
-  useViews,
 } from '@eeacms/search/lib/hocs';
 import { isLandingPageAtom } from '@eeacms/search/state';
 
@@ -22,7 +21,6 @@ const SectionTabs = (props) => {
   const searchContext = useSearchContext();
   const { appConfig } = useAppConfig();
   const [isLandingPage] = useAtom(isLandingPageAtom);
-  const views = useViews();
   const menuRef = React.useRef(null);
 
   const showOverflow = false;
@@ -58,11 +56,6 @@ const SectionTabs = (props) => {
     activeValues = [activeValues];
   }
 
-  const sectionMapping = Object.assign(
-    {},
-    ...contentSectionsParams.sections.map((s) => ({ [s.name]: s })),
-  );
-
   const allCount =
     sections.filter((section) => section.value === '_all_')?.[0]?.count ||
     sections.reduce((acc, { count }) => acc + count, 0);
@@ -72,11 +65,6 @@ const SectionTabs = (props) => {
     cmp(sectionOrder.indexOf(s1.value), sectionOrder.indexOf(s2.value)),
   );
 
-  if (activeValues.length > 0) {
-    const defaultResultView =
-      sectionMapping[activeValues[0]].defaultResultView || 'listing';
-    views.setActiveViewId(defaultResultView);
-  }
   return (
     <div>
       {showOverflow ? (
@@ -91,7 +79,6 @@ const SectionTabs = (props) => {
           <Menu.Item
             onClick={() => {
               searchContext.removeFilter(facetField, '', 'any');
-              views.reset();
             }}
             active={activeValues.length === 0}
           >
@@ -103,9 +90,6 @@ const SectionTabs = (props) => {
               active={activeValues.includes(value)}
               onClick={() => {
                 searchContext.setFilter(facetField, value, 'any');
-                views.setActiveViewId(
-                  sectionMapping[value].defaultResultView || 'listing',
-                );
               }}
             >
               {/*<Icon type={value} family="Content types" />*/}
