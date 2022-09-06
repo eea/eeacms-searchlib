@@ -83,7 +83,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
         >
           + More filters
         </Button>
-
+        {/* 
         {filterNames.length > 0 && (
           <Button
             basic
@@ -97,7 +97,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
               clearFilters(exclude);
             }}
           />
-        )}
+        )} */}
       </div>
       <SidebarFacetsList
         open={showSidebar}

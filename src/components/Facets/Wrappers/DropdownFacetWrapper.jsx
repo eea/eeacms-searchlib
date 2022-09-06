@@ -7,7 +7,7 @@ import {
   // SearchContext,
 } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet } from '@eeacms/search/components';
-import { Dropdown, Button } from 'semantic-ui-react'; // Button
+import { Dropdown, Button, Dimmer } from 'semantic-ui-react'; // Button
 import { atomFamily } from 'jotai/utils';
 import { useAtom, atom } from 'jotai';
 
@@ -54,54 +54,60 @@ const DropdownFacetWrapper = (props) => {
   useOutsideClick(nodeRef, () => setIsOpen(false));
 
   return (
-    <div className="dropdown-facet" ref={nodeRef}>
-      <Dropdown
-        open={isOpen}
-        onClick={() => setIsOpen(true)}
-        trigger={
-          <span>
-            {label ? <>{label} </> : <>{title} </>}
-            {filtersCount.length > 0 && (
-              <span className="count">({filtersCount})</span>
+    <>
+      <Dimmer active={isOpen} verticalAlign="top" className="facet-dimmer" />
+      <div className="dropdown-facet" ref={nodeRef}>
+        <Dropdown
+          open={isOpen}
+          onClick={() => setIsOpen(true)}
+          trigger={
+            <span>
+              {label ? <>{label} </> : <>{title} </>}
+              <i aria-hidden="true" class="icon ri-arrow-down-s-line"></i>
+            </span>
+          }
+        >
+          <Dropdown.Menu>
+            <span className="facet-label">
+              {props.label}{' '}
+              {filtersCount.length > 0 && (
+                <span className="count">({filtersCount})</span>
+              )}
+            </span>
+            {activeFilters.length > 0 && (
+              <Button
+                className="clear-filters"
+                size="mini"
+                onClick={() => {
+                  if (Array.isArray(activeFilters)) {
+                    (activeFilters || []).forEach((v) => {
+                      removeFilter(field, v, filterConfig.filterType);
+                    });
+                  } else {
+                    removeFilter(
+                      field,
+                      [activeFilters || ''],
+                      filterConfig.filterType,
+                    );
+                  }
+                  setIsOpen(false);
+                }}
+              >
+                clear selected
+              </Button>
             )}
-          </span>
-        }
-      >
-        <Dropdown.Menu>
-          {isOpen && (
-            <SUIFacet
-              {...props}
-              active={isOpen}
-              filterType={localFilterType}
-              onChangeFilterType={setLocalFilterType}
-            />
-          )}
-
-          {activeFilters.length > 0 && (
-            <Button
-              className="clear-filters"
-              size="mini"
-              onClick={() => {
-                if (Array.isArray(activeFilters)) {
-                  (activeFilters || []).forEach((v) => {
-                    removeFilter(field, v, filterConfig.filterType);
-                  });
-                } else {
-                  removeFilter(
-                    field,
-                    [activeFilters || ''],
-                    filterConfig.filterType,
-                  );
-                }
-                setIsOpen(false);
-              }}
-            >
-              Clear
-            </Button>
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
-    </div>
+            {isOpen && (
+              <SUIFacet
+                {...props}
+                active={isOpen}
+                filterType={localFilterType}
+                onChangeFilterType={setLocalFilterType}
+              />
+            )}
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+    </>
   );
 };
 

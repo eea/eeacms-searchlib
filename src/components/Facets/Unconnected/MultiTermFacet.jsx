@@ -36,12 +36,13 @@ const FacetOptions = (props) => {
                   checked ? onRemove(option.value) : onSelect(option.value)
                 }
               />
+              <span className="checkmark" />
               <span className="sui-multi-checkbox-facet__input-text">
                 <Term term={option.value} field={field} />
               </span>
             </div>
             <span className="sui-multi-checkbox-facet__option-count">
-              {option.count.toLocaleString('en')}
+              ({option.count.toLocaleString('en')})
             </span>
           </label>
         );
@@ -84,7 +85,7 @@ const ViewComponent = (props) => {
     showMore,
     showSearch,
     onSearch,
-    searchPlaceholder,
+    // searchPlaceholder,
     onChangeFilterType,
     field,
     filterType = 'any',
@@ -106,17 +107,19 @@ const ViewComponent = (props) => {
     },
   );
 
+  console.log('props', props);
+
   return (
     <fieldset className={cx('sui-facet searchlib-multiterm-facet', className)}>
       {/*<legend className="sui-facet__title">{label}</legend>*/}
 
       {showSearch && (
         <div className="sui-facet-search">
-          <Icon name="search" size="small" color="blue" />
+          {/* <Icon name="search" size="small" color="blue" /> */}
           <input
             className="sui-facet-search__text-input"
             type="search"
-            placeholder={searchPlaceholder || 'Search'}
+            placeholder={'Quick search'}
             onChange={(e) => {
               onSearch(e.target.value);
             }}
@@ -132,7 +135,7 @@ const ViewComponent = (props) => {
             <div className="sui-multi-checkbox-facet__checkbox"></div>
             <span className="sui-multi-checkbox-facet__input-text">
               <ToggleSort
-                label={label}
+                // label={label}
                 onToggle={() => toggleSort('value')}
                 on={sorting.sortOn === 'value'}
                 icon={
