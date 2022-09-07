@@ -145,9 +145,10 @@ const ViewComponent = (props) => {
             <ToggleSort
               label="Alphabetical order"
               onToggle={() => toggleSort('value')}
-              on={sorting.sortOn === 'value'}
+              // on={sorting.sortOn === 'value'}
               icon={
-                sorting.sortOrder === 'ascending' ? (
+                sorting.sortOrder === 'ascending' &&
+                sorting.sortOn === 'value' ? (
                   <Icon name="sort alphabet ascending" />
                 ) : (
                   <Icon name="sort alphabet descending" />
@@ -157,9 +158,10 @@ const ViewComponent = (props) => {
             <ToggleSort
               label="Count"
               onToggle={() => toggleSort('count')}
-              on={sorting.sortOn === 'count'}
+              // on={sorting.sortOn === 'count'}
               icon={
-                sorting.sortOrder === 'ascending' ? (
+                sorting.sortOrder === 'ascending' &&
+                sorting.sortOn === 'count' ? (
                   <Icon name="sort numeric ascending" />
                 ) : (
                   <Icon name="sort numeric descending" />
