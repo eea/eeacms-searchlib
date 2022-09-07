@@ -7,7 +7,7 @@ import {
   // SearchContext,
 } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet, ActiveFilters } from '@eeacms/search/components';
-import { Dropdown, Button, Dimmer } from 'semantic-ui-react'; // Button
+import { Dropdown, Dimmer } from 'semantic-ui-react';
 import { atomFamily } from 'jotai/utils';
 import { useAtom, atom } from 'jotai';
 
@@ -38,8 +38,6 @@ const DropdownFacetWrapper = (props) => {
   const filterConfig = appConfig.facets.find(
     (f) => (f.id || f.field) === field,
   );
-  const activeFilters =
-    (filters.find((f) => f.field === field) || {})?.values || [];
 
   const [defaultTypeValue] = (defaultValue || '').split(':');
 
@@ -48,7 +46,6 @@ const DropdownFacetWrapper = (props) => {
   );
   const dropdownAtom = dropdownOpenFamily(field);
   const [isOpen, setIsOpen] = useAtom(dropdownAtom);
-  // const [isOpen, setIsOpen] = React.useState(false);
   const nodeRef = React.useRef();
 
   useOutsideClick(nodeRef, () => setIsOpen(false));
@@ -63,39 +60,21 @@ const DropdownFacetWrapper = (props) => {
           trigger={
             <span>
               {label ? <>{label} </> : <>{title} </>}
-              <i aria-hidden="true" class="icon ri-arrow-down-s-line"></i>
+              {filtersCount.length > 0 && (
+                <span className="count">({filtersCount})</span>
+              )}
+              <i aria-hidden="true" className="icon ri-arrow-down-s-line" />
             </span>
           }
         >
           <Dropdown.Menu>
-            <span className="facet-label">
+            {/* <span className="facet-label">
               {props.label}{' '}
               {filtersCount.length > 0 && (
                 <span className="count">({filtersCount})</span>
               )}
-            </span>
-            {activeFilters.length > 0 && (
-              <Button
-                className="clear-filters"
-                size="mini"
-                onClick={() => {
-                  if (Array.isArray(activeFilters)) {
-                    (activeFilters || []).forEach((v) => {
-                      removeFilter(field, v, filterConfig.filterType);
-                    });
-                  } else {
-                    removeFilter(
-                      field,
-                      [activeFilters || ''],
-                      filterConfig.filterType,
-                    );
-                  }
-                  setIsOpen(false);
-                }}
-              >
-                clear selected
-              </Button>
-            )}
+            </span> */}
+
             {isOpen && (
               <SUIFacet
                 {...props}

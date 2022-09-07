@@ -132,28 +132,28 @@ const ViewComponent = (props) => {
           <div className="sui-multi-checkbox-facet__option-input-wrapper">
             <div className="sui-multi-checkbox-facet__checkbox"></div>
             <span className="sui-multi-checkbox-facet__input-text">
-              <ToggleSort
-                // label={label}
-                onToggle={() => toggleSort('value')}
-                on={sorting.sortOn === 'value'}
-                icon={
-                  sorting.sortOrder === 'ascending' ? (
-                    <Icon name="sort alphabet ascending" />
-                  ) : (
-                    <Icon name="sort alphabet descending" />
-                  )
-                }
-              >
-                <Select
-                  className="match-select"
-                  value={filterType}
-                  options={filterTypes}
-                  onChange={onChangeFilterType}
-                />
-              </ToggleSort>
+              <Select
+                className="match-select"
+                value={filterType}
+                options={filterTypes}
+                onChange={onChangeFilterType}
+              />
             </span>
           </div>
+
           <span className="sui-multi-checkbox-facet__option-count">
+            <ToggleSort
+              label="Alphabetical order"
+              onToggle={() => toggleSort('value')}
+              on={sorting.sortOn === 'value'}
+              icon={
+                sorting.sortOrder === 'ascending' ? (
+                  <Icon name="sort alphabet ascending" />
+                ) : (
+                  <Icon name="sort alphabet descending" />
+                )
+              }
+            />
             <ToggleSort
               label="Count"
               onToggle={() => toggleSort('count')}

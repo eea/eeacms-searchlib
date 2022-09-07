@@ -40,6 +40,21 @@ const ActiveFilters = (props) => {
           </Card>
         );
       })}
+
+      <Button
+        basic
+        className="clear-btn"
+        content="Clear all"
+        onClick={() => {
+          if (Array.isArray(activeFilter)) {
+            (activeFilter || []).forEach((v) => {
+              onRemove(v);
+            });
+          } else {
+            onRemove([activeFilter || '']);
+          }
+        }}
+      />
     </div>
   ) : null;
 };
