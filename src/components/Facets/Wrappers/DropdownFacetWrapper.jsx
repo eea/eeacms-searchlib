@@ -6,7 +6,7 @@ import {
   useOutsideClick,
   // SearchContext,
 } from '@eeacms/search/lib/hocs';
-import { Facet as SUIFacet } from '@eeacms/search/components';
+import { Facet as SUIFacet, ActiveFilters } from '@eeacms/search/components';
 import { Dropdown, Button, Dimmer } from 'semantic-ui-react'; // Button
 import { atomFamily } from 'jotai/utils';
 import { useAtom, atom } from 'jotai';
@@ -17,7 +17,7 @@ const dropdownOpenFamily = atomFamily(
 );
 
 const DropdownFacetWrapper = (props) => {
-  const { field, label, title, removeFilter } = props;
+  const { field, label, title, removeFilter, sortedOptions } = props;
   // console.log('redraw dropdown facet', field);
   const rawSearchContext = useSearchContext();
   const {
@@ -104,6 +104,14 @@ const DropdownFacetWrapper = (props) => {
                 onChangeFilterType={setLocalFilterType}
               />
             )}
+
+            <ActiveFilters
+              sortedOptions={sortedOptions}
+              onRemove={(value) => {
+                removeFilter(field, value, filterConfig.filterType);
+              }}
+              field={field}
+            />
           </Dropdown.Menu>
         </Dropdown>
       </div>

@@ -18,7 +18,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
 
   const { appConfig } = useAppConfig();
   const rawSearchContext = useSearchContext();
-  const { filters, clearFilters } = rawSearchContext;
+  const { filters } = rawSearchContext; // clearFilters
   const {
     // searchContext: sidebarSearchContext,
     applySearch,
