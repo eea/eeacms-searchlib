@@ -52,13 +52,12 @@ const DropdownFacetWrapper = (props) => {
 
   return (
     <>
-      <Dimmer active={isOpen} verticalAlign="top" className="facet-dimmer" />
       <div className="dropdown-facet" ref={nodeRef}>
         <Dropdown
           open={isOpen}
           onClick={() => setIsOpen(true)}
           trigger={
-            <span>
+            <span className="facet-title">
               {label ? <>{label} </> : <>{title} </>}
               {filtersCount.length > 0 && (
                 <span className="count">({filtersCount})</span>
@@ -94,6 +93,10 @@ const DropdownFacetWrapper = (props) => {
           </Dropdown.Menu>
         </Dropdown>
       </div>
+
+      {isOpen && (
+        <Dimmer active={isOpen} verticalAlign="top" className="facet-dimmer" />
+      )}
     </>
   );
 };
