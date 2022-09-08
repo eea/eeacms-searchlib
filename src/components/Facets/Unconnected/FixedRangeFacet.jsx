@@ -41,12 +41,13 @@ const FacetOptions = (props) => {
                   });
                 }}
               />
+              <span className="radio-checkmark" />
               <span className="sui-multi-checkbox-facet__input-text">
                 {getFilterValueDisplay(option.value)}
               </span>
             </div>
             <span className="sui-multi-checkbox-facet__option-count">
-              {option.count.toLocaleString('en')}
+              ({option.count.toLocaleString('en')})
             </span>
           </label>
         );
@@ -59,7 +60,7 @@ const ViewComponent = (props) => {
   const { className, label, onRemove, onSelect, options, facets } = props;
   return (
     <fieldset className={cx('sui-facet searchlib-fixedrange-facet', className)}>
-      <legend className="sui-facet__title">{label}</legend>
+      {/* <legend className="sui-facet__title">{label}</legend> */}
 
       {options.length < 1 && <div>No matching options</div>}
 

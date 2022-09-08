@@ -15,34 +15,38 @@ const ActiveFilters = (props) => {
   const [activeFilter, setActiveFilter] = React.useState(initialValue);
 
   return activeFilter.length > 0 ? (
-    <div className="facets-wrapper">
-      {activeFilter.map((option, i) => {
-        return (
-          <Card key={i} className="term active-term">
-            <Card.Content>
-              <Card.Header className="card-header">
-                <Term term={option} field={field} />
-                <Button
-                  className="clear-filters"
-                  size="mini"
-                  onClick={() => {
-                    let filteredValues = activeFilter.filter(
-                      (v) => v !== option,
-                    );
-                    setActiveFilter(filteredValues);
-                    onRemove(option);
-                  }}
-                >
-                  <Icon name="close" role="button" />
-                </Button>
-              </Card.Header>
-            </Card.Content>
-          </Card>
-        );
-      })}
+    <>
+      <div className="facets-wrapper">
+        {activeFilter.map((option, i) => {
+          return (
+            <Card key={i} className="term active-term">
+              <Card.Content>
+                <Card.Header className="card-header">
+                  <Term term={option} field={field} />
+                  <Button
+                    className="clear-filters"
+                    size="mini"
+                    onClick={() => {
+                      let filteredValues = activeFilter.filter(
+                        (v) => v !== option,
+                      );
+                      setActiveFilter(filteredValues);
+                      onRemove(option);
+                    }}
+                  >
+                    <Icon name="close" role="button" />
+                  </Button>
+                </Card.Header>
+              </Card.Content>
+            </Card>
+          );
+        })}
+      </div>
 
       <Button
-        basic
+        // basic
+
+        size="mini"
         className="clear-btn"
         content="Clear all"
         onClick={() => {
@@ -55,7 +59,7 @@ const ActiveFilters = (props) => {
           }
         }}
       />
-    </div>
+    </>
   ) : null;
 };
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sidebar } from 'semantic-ui-react'; // Button, Radio,
+import { Sidebar, Button } from 'semantic-ui-react';
 import { useSearchContext, useOutsideClick } from '@eeacms/search/lib/hocs';
 import FacetResolver from './FacetResolver';
 
@@ -28,6 +28,17 @@ export default function SidebarFacetsList(props) {
       >
         <div className="sidebar-wrapper">
           <div className="sidebar-content">
+            <div className="sidebar-header">
+              <h3>Filters</h3>
+              <Button
+                basic
+                className="clear-btn"
+                content="Clear all"
+                onClick={() => {
+                  searchContext.resetFilters();
+                }}
+              />
+            </div>
             {facets.map((facetInfo, i) => (
               <FacetResolver
                 key={i}
