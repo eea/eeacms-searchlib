@@ -18,7 +18,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
 
   const { appConfig } = useAppConfig();
   const rawSearchContext = useSearchContext();
-  const { filters, clearFilters } = rawSearchContext;
+  const { filters } = rawSearchContext; // clearFilters
   const {
     // searchContext: sidebarSearchContext,
     applySearch,
@@ -76,14 +76,18 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
             wrapper="DropdownFacetWrapper"
           />
         ))}
-        <Button
-          className="sui-button basic"
-          onClick={() => setShowSidebar(true)}
-          // disabled={isLiveSearch}
-        >
-          + More filters
-        </Button>
-
+        <div class="dropdown-facet">
+          <span className="facet-title">
+            <Button
+              className="sui-button basic"
+              onClick={() => setShowSidebar(true)}
+              // disabled={isLiveSearch}
+            >
+              + More filters
+            </Button>
+          </span>
+        </div>
+        {/* 
         {filterNames.length > 0 && (
           <Button
             basic
@@ -97,7 +101,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
               clearFilters(exclude);
             }}
           />
-        )}
+        )} */}
       </div>
       <SidebarFacetsList
         open={showSidebar}

@@ -36,12 +36,13 @@ const FacetOptions = (props) => {
                   checked ? onRemove(option.value) : onSelect(option.value)
                 }
               />
+              <span className="checkmark" />
               <span className="sui-multi-checkbox-facet__input-text">
                 <Term term={option.value} field={field} />
               </span>
             </div>
             <span className="sui-multi-checkbox-facet__option-count">
-              {option.count.toLocaleString('en')}
+              ({option.count.toLocaleString('en')})
             </span>
           </label>
         );
@@ -84,7 +85,7 @@ const ViewComponent = (props) => {
     showMore,
     showSearch,
     onSearch,
-    searchPlaceholder,
+    // searchPlaceholder,
     onChangeFilterType,
     field,
     filterType = 'any',
@@ -112,11 +113,11 @@ const ViewComponent = (props) => {
 
       {showSearch && (
         <div className="sui-facet-search">
-          <Icon name="search" size="small" color="blue" />
+          {/* <Icon name="search" size="small" color="blue" /> */}
           <input
             className="sui-facet-search__text-input"
             type="search"
-            placeholder={searchPlaceholder || 'Search'}
+            placeholder={'Quick search'}
             onChange={(e) => {
               onSearch(e.target.value);
             }}
@@ -131,34 +132,36 @@ const ViewComponent = (props) => {
           <div className="sui-multi-checkbox-facet__option-input-wrapper">
             <div className="sui-multi-checkbox-facet__checkbox"></div>
             <span className="sui-multi-checkbox-facet__input-text">
-              <ToggleSort
-                label={label}
-                onToggle={() => toggleSort('value')}
-                on={sorting.sortOn === 'value'}
-                icon={
-                  sorting.sortOrder === 'ascending' ? (
-                    <Icon name="sort alphabet ascending" />
-                  ) : (
-                    <Icon name="sort alphabet descending" />
-                  )
-                }
-              >
-                <Select
-                  className="match-select"
-                  value={filterType}
-                  options={filterTypes}
-                  onChange={onChangeFilterType}
-                />
-              </ToggleSort>
+              <Select
+                className="match-select"
+                value={filterType}
+                options={filterTypes}
+                onChange={onChangeFilterType}
+              />
             </span>
           </div>
+
           <span className="sui-multi-checkbox-facet__option-count">
+            <ToggleSort
+              label="Alphabetical order"
+              onToggle={() => toggleSort('value')}
+              // on={sorting.sortOn === 'value'}
+              icon={
+                sorting.sortOrder === 'ascending' &&
+                sorting.sortOn === 'value' ? (
+                  <Icon name="sort alphabet ascending" />
+                ) : (
+                  <Icon name="sort alphabet descending" />
+                )
+              }
+            />
             <ToggleSort
               label="Count"
               onToggle={() => toggleSort('count')}
-              on={sorting.sortOn === 'count'}
+              // on={sorting.sortOn === 'count'}
               icon={
-                sorting.sortOrder === 'ascending' ? (
+                sorting.sortOrder === 'ascending' &&
+                sorting.sortOn === 'count' ? (
                   <Icon name="sort numeric ascending" />
                 ) : (
                   <Icon name="sort numeric descending" />

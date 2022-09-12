@@ -6,8 +6,8 @@ import {
   useOutsideClick,
   // SearchContext,
 } from '@eeacms/search/lib/hocs';
-import { Facet as SUIFacet } from '@eeacms/search/components';
-import { Dropdown, Button } from 'semantic-ui-react'; // Button
+import { Facet as SUIFacet, ActiveFilters } from '@eeacms/search/components';
+import { Dropdown, Dimmer } from 'semantic-ui-react';
 import { atomFamily } from 'jotai/utils';
 import { useAtom, atom } from 'jotai';
 
@@ -17,7 +17,7 @@ const dropdownOpenFamily = atomFamily(
 );
 
 const DropdownFacetWrapper = (props) => {
-  const { field, label, title, removeFilter } = props;
+  const { field, label, title, removeFilter, sortedOptions } = props;
   // console.log('redraw dropdown facet', field);
   const rawSearchContext = useSearchContext();
   const {
@@ -38,8 +38,6 @@ const DropdownFacetWrapper = (props) => {
   const filterConfig = appConfig.facets.find(
     (f) => (f.id || f.field) === field,
   );
-  const activeFilters =
-    (filters.find((f) => f.field === field) || {})?.values || [];
 
   const [defaultTypeValue] = (defaultValue || '').split(':');
 
@@ -48,60 +46,58 @@ const DropdownFacetWrapper = (props) => {
   );
   const dropdownAtom = dropdownOpenFamily(field);
   const [isOpen, setIsOpen] = useAtom(dropdownAtom);
-  // const [isOpen, setIsOpen] = React.useState(false);
   const nodeRef = React.useRef();
 
   useOutsideClick(nodeRef, () => setIsOpen(false));
 
   return (
-    <div className="dropdown-facet" ref={nodeRef}>
-      <Dropdown
-        open={isOpen}
-        onClick={() => setIsOpen(true)}
-        trigger={
-          <span>
-            {label ? <>{label} </> : <>{title} </>}
-            {filtersCount.length > 0 && (
-              <span className="count">({filtersCount})</span>
-            )}
-          </span>
-        }
-      >
-        <Dropdown.Menu>
-          {isOpen && (
-            <SUIFacet
-              {...props}
-              active={isOpen}
-              filterType={localFilterType}
-              onChangeFilterType={setLocalFilterType}
-            />
-          )}
+    <>
+      <div className="dropdown-facet" ref={nodeRef}>
+        <Dropdown
+          open={isOpen}
+          onClick={() => setIsOpen(true)}
+          trigger={
+            <span className="facet-title">
+              {label ? <>{label} </> : <>{title} </>}
+              {filtersCount.length > 0 && (
+                <span className="count">({filtersCount})</span>
+              )}
+              <i aria-hidden="true" className="icon ri-arrow-down-s-line" />
+            </span>
+          }
+        >
+          <Dropdown.Menu>
+            {/* <span className="facet-label">
+              {props.label}{' '}
+              {filtersCount.length > 0 && (
+                <span className="count">({filtersCount})</span>
+              )}
+            </span> */}
 
-          {activeFilters.length > 0 && (
-            <Button
-              className="clear-filters"
-              size="mini"
-              onClick={() => {
-                if (Array.isArray(activeFilters)) {
-                  (activeFilters || []).forEach((v) => {
-                    removeFilter(field, v, filterConfig.filterType);
-                  });
-                } else {
-                  removeFilter(
-                    field,
-                    [activeFilters || ''],
-                    filterConfig.filterType,
-                  );
-                }
-                setIsOpen(false);
+            {isOpen && (
+              <SUIFacet
+                {...props}
+                active={isOpen}
+                filterType={localFilterType}
+                onChangeFilterType={setLocalFilterType}
+              />
+            )}
+
+            <ActiveFilters
+              sortedOptions={sortedOptions}
+              onRemove={(value) => {
+                removeFilter(field, value, filterConfig.filterType);
               }}
-            >
-              Clear
-            </Button>
-          )}
-        </Dropdown.Menu>
-      </Dropdown>
-    </div>
+              field={field}
+            />
+          </Dropdown.Menu>
+        </Dropdown>
+      </div>
+
+      {isOpen && (
+        <Dimmer active={isOpen} verticalAlign="top" className="facet-dimmer" />
+      )}
+    </>
   );
 };
 

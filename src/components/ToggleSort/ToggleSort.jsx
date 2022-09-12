@@ -9,9 +9,11 @@ const ToggleSort = ({ icon, label, on, onToggle, children }) => {
         onKeyDown={onToggle}
         role="button"
         tabIndex="-1"
+        title={'Sort by ' + label}
       >
-        {label}
-        {on && icon}
+        {/* {label} */}
+        {/* {on && icon} */}
+        {icon}
       </div>
       {children}
     </div>
