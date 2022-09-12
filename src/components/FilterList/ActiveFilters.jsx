@@ -15,40 +15,43 @@ const ActiveFilters = (props) => {
   const [activeFilter, setActiveFilter] = React.useState(initialValue);
 
   return activeFilter.length > 0 ? (
-    <div>
+    <div className="active-filters">
       {!activeFilter[0].type ? (
-        <div className="facets-wrapper">
-          {activeFilter.map((option, i) => {
-            return (
-              <Card key={i} className="term active-term">
-                <Card.Content>
-                  <Card.Header className="card-header">
-                    <Term term={option} field={field} />
-                    <Button
-                      className="clear-filters"
-                      size="mini"
-                      onClick={() => {
-                        let filteredValues = activeFilter.filter(
-                          (v) => v !== option,
-                        );
-                        setActiveFilter(filteredValues);
-                        onRemove(option);
-                      }}
-                    >
-                      <Icon name="close" role="button" />
-                    </Button>
-                  </Card.Header>
-                </Card.Content>
-              </Card>
-            );
-          })}
-        </div>
+        <>
+          <h5>Active filters:</h5>
+          <div className="facets-wrapper">
+            {activeFilter.map((option, i) => {
+              return (
+                <Card key={i} className="term active-term">
+                  <Card.Content>
+                    <Card.Header className="card-header">
+                      <Term term={option} field={field} />
+                      <Button
+                        className="clear-filters"
+                        size="mini"
+                        onClick={() => {
+                          let filteredValues = activeFilter.filter(
+                            (v) => v !== option,
+                          );
+                          setActiveFilter(filteredValues);
+                          onRemove(option);
+                        }}
+                      >
+                        <Icon name="close" role="button" />
+                      </Button>
+                    </Card.Header>
+                  </Card.Content>
+                </Card>
+              );
+            })}
+          </div>
+        </>
       ) : null}
 
       <Button
         size="mini"
         className="clear-btn"
-        content="Clear"
+        content="Clear all"
         onClick={() => {
           if (Array.isArray(activeFilter)) {
             (activeFilter || []).forEach((v) => {

@@ -76,7 +76,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
             wrapper="DropdownFacetWrapper"
           />
         ))}
-        <div class="dropdown-facet">
+        <div className="dropdown-facet">
           <span className="facet-title">
             <Button
               className="sui-button basic"
