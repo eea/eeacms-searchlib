@@ -6,6 +6,7 @@ export * from './lib/facets';
 export * from './lib/utils';
 export * from './lib/hocs';
 export * from './lib/search';
+export * from './lib/models';
 export * from './state';
 
 export { default as runRequest } from './lib/runRequest';
