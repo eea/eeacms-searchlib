@@ -87,7 +87,7 @@ const DropdownFacetsList = ({ defaultWrapper }) => {
             </Button>
           </span>
         </div>
-        {/* 
+        {/*
         {filterNames.length > 0 && (
           <Button
             basic
