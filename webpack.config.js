@@ -91,6 +91,7 @@ module.exports = {
     'react-compound-slider',
     'redux',
     'd3-scale',
+    'lodash.debounce',
     nodeExternals(),
   ], //nodeExternals()    // , 'semantic-ui-react'
 };

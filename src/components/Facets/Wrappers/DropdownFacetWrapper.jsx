@@ -4,12 +4,15 @@ import {
   useProxiedSearchContext,
   useSearchContext,
   useOutsideClick,
-  // SearchContext,
+  useWindowDimensions,
+  SearchContext,
 } from '@eeacms/search/lib/hocs';
 import { Facet as SUIFacet, ActiveFilters } from '@eeacms/search/components';
-import { Dropdown, Dimmer } from 'semantic-ui-react';
+import { Dropdown, Dimmer, Modal, Button } from 'semantic-ui-react';
 import { atomFamily } from 'jotai/utils';
 import { useAtom, atom } from 'jotai';
+
+const SMALL_SCREEN_SIZE = 766;
 
 const dropdownOpenFamily = atomFamily(
   (name) => atom(false),
@@ -22,7 +25,7 @@ const DropdownFacetWrapper = (props) => {
   const rawSearchContext = useSearchContext();
   const {
     searchContext: facetSearchContext,
-    // applySearch,
+    applySearch,
   } = useProxiedSearchContext(rawSearchContext);
   const { filters } = facetSearchContext;
 
@@ -32,7 +35,7 @@ const DropdownFacetWrapper = (props) => {
   const defaultValue = field
     ? filters?.find((f) => f.field === field)?.type || fallback
     : fallback;
-  const filtersCount = filters
+  const filtersCount = rawSearchContext.filters
     .filter((filter) => filter.field === field)
     .map((filter) => filter.values.length);
   const filterConfig = appConfig.facets.find(
@@ -50,48 +53,107 @@ const DropdownFacetWrapper = (props) => {
 
   useOutsideClick(nodeRef, () => setIsOpen(false));
 
+  const { width } = useWindowDimensions();
+  const isSmallScreen = width < SMALL_SCREEN_SIZE;
+
   return (
     <>
-      <div className="dropdown-facet" ref={nodeRef}>
-        <Dropdown
-          open={isOpen}
-          onClick={() => setIsOpen(true)}
-          trigger={
-            <span className="facet-title">
-              {label ? <>{label} </> : <>{title} </>}
-              {filtersCount.length > 0 && (
-                <span className="count">({filtersCount})</span>
-              )}
-              <i aria-hidden="true" className="icon ri-arrow-down-s-line" />
-            </span>
-          }
-        >
-          <Dropdown.Menu>
-            {/* <span className="facet-label">
-              {props.label}{' '}
-              {filtersCount.length > 0 && (
-                <span className="count">({filtersCount})</span>
-              )}
-            </span> */}
+      <div className="dropdown-facet">
+        {isSmallScreen ? (
+          <Modal
+            className="dropdown-facet-modal"
+            onClose={() => setIsOpen(false)}
+            onOpen={() => setIsOpen(true)}
+            open={isOpen}
+            trigger={
+              <span className="facet-title">
+                {label ? <>{label} </> : <>{title} </>}
+                {filtersCount.length > 0 && (
+                  <span className="count">({filtersCount})</span>
+                )}
+                <i aria-hidden="true" className="icon ri-arrow-down-s-line" />
+              </span>
+            }
+          >
+            <Modal.Header>
+              <span className="facet-label">
+                {props.label}{' '}
+                {filtersCount.length > 0 && (
+                  <span className="count">({filtersCount})</span>
+                )}
+              </span>
+            </Modal.Header>
+            <Modal.Content>
+              <SearchContext.Provider value={facetSearchContext}>
+                <SUIFacet
+                  {...props}
+                  active={isOpen}
+                  filterType={localFilterType}
+                  onChangeFilterType={setLocalFilterType}
+                />
+              </SearchContext.Provider>
 
-            {isOpen && (
-              <SUIFacet
-                {...props}
-                active={isOpen}
-                filterType={localFilterType}
-                onChangeFilterType={setLocalFilterType}
+              <ActiveFilters
+                sortedOptions={sortedOptions}
+                onRemove={(value) => {
+                  removeFilter(field, value, filterConfig.filterType);
+                }}
+                field={field}
               />
-            )}
+            </Modal.Content>
+            <Modal.Actions>
+              <Button
+                content="Close"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              />
+              <Button
+                primary
+                content="Apply"
+                onClick={() => {
+                  applySearch();
+                  setIsOpen(false);
+                }}
+              />
+            </Modal.Actions>
+          </Modal>
+        ) : (
+          <div ref={nodeRef}>
+            <Dropdown
+              open={isOpen}
+              onClick={() => setIsOpen(true)}
+              trigger={
+                <span className="facet-title">
+                  {label ? <>{label} </> : <>{title} </>}
+                  {filtersCount.length > 0 && (
+                    <span className="count">({filtersCount})</span>
+                  )}
+                  <i aria-hidden="true" className="icon ri-arrow-down-s-line" />
+                </span>
+              }
+            >
+              <Dropdown.Menu>
+                {isOpen && (
+                  <SUIFacet
+                    {...props}
+                    active={isOpen}
+                    filterType={localFilterType}
+                    onChangeFilterType={setLocalFilterType}
+                  />
+                )}
 
-            <ActiveFilters
-              sortedOptions={sortedOptions}
-              onRemove={(value) => {
-                removeFilter(field, value, filterConfig.filterType);
-              }}
-              field={field}
-            />
-          </Dropdown.Menu>
-        </Dropdown>
+                <ActiveFilters
+                  sortedOptions={sortedOptions}
+                  onRemove={(value) => {
+                    removeFilter(field, value, filterConfig.filterType);
+                  }}
+                  field={field}
+                />
+              </Dropdown.Menu>
+            </Dropdown>
+          </div>
+        )}
       </div>
 
       {isOpen && (
@@ -102,22 +164,3 @@ const DropdownFacetWrapper = (props) => {
 };
 
 export default DropdownFacetWrapper;
-
-// {/* <SearchContext.Provider value={facetSearchContext}>
-//   <SUIFacet
-//     {...props}
-//     active={isOpen}
-//     filterType={localFilterType}
-//     onChangeFilterType={setLocalFilterType}
-//   />
-// </SearchContext.Provider>
-// <div>
-//   <Button
-//     onClick={() => {
-//       applySearch();
-//       setIsOpen(false);
-//     }}
-//   >
-//     Apply
-//   </Button>
-// </div>  */}

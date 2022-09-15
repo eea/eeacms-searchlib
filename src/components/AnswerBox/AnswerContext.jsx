@@ -42,7 +42,10 @@ const AnswerContext = ({ item, answerItem }) => {
       </h3>
       <span dangerouslySetInnerHTML={{ __html: pre }}></span>
       <ExternalLink href={highlightUrl(item.href, ans)}>
-        <span dangerouslySetInnerHTML={{ __html: ans }}></span>
+        <span
+          className="answer__highlighted"
+          dangerouslySetInnerHTML={{ __html: ans }}
+        ></span>
       </ExternalLink>{' '}
       <span dangerouslySetInnerHTML={{ __html: post }}></span>
       <ResultSource item={item} />
