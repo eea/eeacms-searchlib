@@ -1,143 +1,95 @@
 import React from 'react';
-import cx from 'classnames';
 import { Label } from 'semantic-ui-react';
 import {
-  useAppConfig,
-  // useWindowDimensions
-} from '@eeacms/search/lib/hocs';
-import {
   SegmentedBreadcrumb,
-  // TagsList,
   StringList,
   DateTime,
 } from '@eeacms/search/components';
+import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
-// import MoreLikeThisTrigger from './MoreLikeThisTrigger';
+import { UniversalItem } from '@eeacms/volto-listing-block';
+
 import ExternalLink from './ExternalLink';
 import ResultContext from './ResultContext';
 import ContentClusters from './ContentClusters';
 
-const HorizontalCardItem = (props) => {
-  const {
-    result,
-    // showControls = true
-  } = props;
-  const { appConfig } = useAppConfig();
-  const { vocab = {}, debugQuery } = appConfig;
-  const [hovered, setHovered] = React.useState(false);
-
-  // console.log('result', result.metaTypes, result._result);
-
-  let metaType = result.metaTypes || '';
-  if (metaType.length === 0) {
-    metaType = 'Others';
-  }
-
-  const classColLeft = result.hasImage ? 'col-left' : 'col-left no-image';
-
-  // const { width } = useWindowDimensions();
-  // const isSmallScreen = width < 1000;
-  const clusters = result.clusterInfo;
-
+const ExtraContent = (props) => {
+  const { result, vocab } = props;
   return (
-    <div
-      className={cx('search-result', { hovered })}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div className="col-full">
-        <div className="meta">
-          <div className="result-info">
-            {/* <span className="result-info-title">Author: </span> */}
-            <ContentClusters clusters={clusters} item={result} />
-          </div>
+    <div>
+      <div className="result-bottom">
+        <div className="result-info">
+          <span className="result-info-title">Topics: </span>
+          <StringList value={result.tags} />
+        </div>
+        <div className="result-info">
+          <span className="result-info-title">Published: </span>
+          <DateTime format="DATE_MED" value={result.issued} />
         </div>
       </div>
-      <div className={classColLeft}>
-        <div className="details">
-          <h3>
-            <ExternalLink href={result.href} title={result.title}>
-              {/*{firstWords(result.title, 12)}*/}
-              {result.title}
-            </ExternalLink>
-            {result.isNew && (
-              <Label className="new-item" horizontal>
-                New
-              </Label>
-            )}
-            {result.isExpired && (
-              <Label className="archived-item" horizontal>
-                Archived
-              </Label>
-            )}
-          </h3>
-
-          {props.children ? props.children : <ResultContext {...props} />}
-
-          <div className="result-bottom">
-            <div className="result-info">
-              <span className="result-info-title">Topics: </span>
-              <StringList value={result.tags} />
-            </div>
-            <div className="result-info">
-              <span className="result-info-title">Published: </span>
-              <DateTime format="DATE_MED" value={result.issued} />
-            </div>
-          </div>
-
-          <div className="source">
-            <span className="result-info-title">Source: </span>
-            <ExternalLink href={result.href}>
-              <strong title={result.source} className="source">
-                {firstWords(
-                  getTermDisplayValue({
-                    vocab,
-                    field: 'cluster_name',
-                    term: result.source,
-                  }),
-                  8,
-                )}
-              </strong>
-              <SegmentedBreadcrumb
-                href={result.href}
-                short={true}
-                maxChars={40}
-              />
-            </ExternalLink>
-          </div>
-        </div>
-        {debugQuery && (
-          <div>
-            <div>Explanation:</div>
-            <pre>{JSON.stringify(result.explanation, undefined, 2)}</pre>
-          </div>
-        )}
-      </div>
-      {result.hasImage ? (
-        <div className="col-right">
-          <a
-            className={`centered fluid image img-thumbnail`}
-            href={result.href}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <img
-              alt={result.title}
-              src={result.thumbUrl}
-              onError={(e) => {
-                e.target.style.display = 'none';
-              }}
+      <div>
+        <div className="result-info">
+          <span className="result-info-title">Source: </span>
+          <ExternalLink href={result.href}>
+            <strong title={result.source} className="source">
+              {firstWords(
+                getTermDisplayValue({
+                  vocab,
+                  field: 'cluster_name',
+                  term: result.source,
+                }),
+                8,
+              )}
+            </strong>
+            <SegmentedBreadcrumb
+              href={result.href}
+              short={true}
+              maxChars={40}
             />
-          </a>
+          </ExternalLink>
         </div>
-      ) : null}
+      </div>
     </div>
   );
 };
 
+const HorizontalCardItem = (props) => {
+  const { result } = props;
+  const { appConfig } = useAppConfig();
+  const { vocab = {} } = appConfig;
+  const clusters = result.clusterInfo;
+
+  const item = {
+    title: (
+      <>
+        <ExternalLink href={result.href} title={result.title}>
+          {result.title}
+        </ExternalLink>
+        {result.isNew && <Label className="new-item">New</Label>}
+        {result.isExpired && <Label className="archived-item">Archived</Label>}
+      </>
+    ),
+    meta: <ContentClusters clusters={clusters} item={result} />,
+    description: props.children ? props.children : <ResultContext {...props} />,
+    preview_image_url: result.hasImage ? result.thumbUrl : undefined,
+    extra: <ExtraContent result={result} vocab={vocab} />,
+  };
+
+  const itemModel = {
+    hasImage: result.hasImage,
+    hasDescription: true,
+    '@type': 'searchItem',
+  };
+
+  return <UniversalItem item={item} itemModel={itemModel} />;
+};
+
 export default HorizontalCardItem;
 
+// import MoreLikeThisTrigger from './MoreLikeThisTrigger';
+// const { width } = useWindowDimensions();
+// const isSmallScreen = width < 1000;
 // {/*{showControls && !isSmallScreen && (
 //               <MoreLikeThisTrigger
 //                 view={Button}
