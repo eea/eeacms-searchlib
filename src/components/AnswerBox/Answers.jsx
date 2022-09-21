@@ -6,7 +6,6 @@ import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { buildResult } from '@eeacms/search/lib/search/state/results';
 
 import AnswerContext from './AnswerContext';
-import AnswerBoxDetails from './AnswerBoxDetails';
 import AnswerLinksList from './AnswersLinksList';
 import AnswerFeedback from './AnswerFeedback';
 
@@ -81,11 +80,6 @@ const Answers = (props) => {
             <div key={i} style={{ display: position === i ? 'block' : 'none' }}>
               <Segment className="answers-wrapper">
                 <div className="answerCard">
-                  {/* <h3 className="answers__directAnswer">{filtered[0].answer}</h3> */}
-                  <div className="answer-header">
-                    <div className="answer-header-title">Direct answers</div>
-                    <AnswerBoxDetails basic />
-                  </div>
                   {hasActiveFilters && <ExtractMessageWarning />}
                   <AnswerContext
                     item={primaryResult}

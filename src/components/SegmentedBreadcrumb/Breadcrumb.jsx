@@ -8,7 +8,16 @@ const URLBreadcrumb = ({
   short = false,
   maxChars = 10,
 }) => {
-  const url = new URL(href);
+  let url;
+  try {
+    url = new URL(href || '');
+  } catch {
+    // eslint-disable no-console
+    console.warn('Invalid href (not a URL) in SegmentedBreadcrumb', href);
+
+    return `${href}`;
+  }
+
   const { pathname } = url;
 
   let index = 0;

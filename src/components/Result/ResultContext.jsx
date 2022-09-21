@@ -15,7 +15,7 @@ function Highlight(props) {
   const { fragments = {} } = props;
   return Object.keys(fragments).map((name, i) => {
     return (
-      <p className={`highlight-${name}`} key={`${i}-${name}`}>
+      <span className={`highlight-${name}`} key={`${i}-${name}`}>
         {/*<span className="date">
           <DateTime format="DATE_MED" value={result.issued} /> &mdash;{' '}
         </span>*/}
@@ -25,7 +25,7 @@ function Highlight(props) {
             {` ... `}
           </span>
         ))}
-      </p>
+      </span>
     );
   });
 }

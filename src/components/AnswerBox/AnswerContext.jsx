@@ -5,6 +5,10 @@ import { ResultSource } from '@eeacms/search/components'; //, StringList, Iconn
 
 import { highlightUrl } from './utils';
 
+import { UniversalItem } from '@eeacms/volto-listing-block';
+
+import AnswerBoxDetails from './AnswerBoxDetails';
+
 const WHITESPACE_RE = /\n|\t/;
 
 const AnswerContext = ({ item, answerItem }) => {
@@ -25,32 +29,47 @@ const AnswerContext = ({ item, answerItem }) => {
     : context.slice(answerItem.offset_end, answerItem.context.length)
   ).replace(WHITESPACE_RE, ' ');
 
-  return (
-    <div className="answer__primary">
-      <h3 className="answer__primarylink">
-        <ExternalLink href={highlightUrl(item.href, ans)}>
-          {/*{Object.keys(clusters).map((cluster, index) => (
-              <Icon
-                key={index}
-                family="Content types"
-                {...clusters[cluster].icon}
-              />
-            ))}*/}
-
-          {item.title}
-        </ExternalLink>
-      </h3>
-      <span dangerouslySetInnerHTML={{ __html: pre }}></span>
+  const answerItems = {
+    title: (
       <ExternalLink href={highlightUrl(item.href, ans)}>
-        <span
-          className="answer__highlighted"
-          dangerouslySetInnerHTML={{ __html: ans }}
-        ></span>
-      </ExternalLink>{' '}
-      <span dangerouslySetInnerHTML={{ __html: post }}></span>
-      <ResultSource item={item} />
-    </div>
-  );
+        {item.title}
+      </ExternalLink>
+    ),
+    meta: (
+      <div className="answer-header">
+        <div className="answer-header-title">Direct answers</div>
+        <AnswerBoxDetails basic />
+      </div>
+    ),
+    description: (
+      <>
+        <span dangerouslySetInnerHTML={{ __html: pre }}></span>
+        <ExternalLink href={highlightUrl(item.href, ans)}>
+          <span
+            className="answer__highlighted"
+            dangerouslySetInnerHTML={{ __html: ans }}
+          ></span>
+        </ExternalLink>{' '}
+        <span dangerouslySetInnerHTML={{ __html: post }}></span>
+      </>
+    ),
+    // preview_image_url: result.hasImage ? result.thumbUrl : undefined,
+    extra: (
+      <div className="result-bottom">
+        <div className="result-info">
+          <ResultSource item={item} />
+        </div>
+      </div>
+    ),
+  };
+
+  const itemModel = {
+    // hasImage: result.hasImage,
+    hasDescription: true,
+    '@type': 'searchItem',
+  };
+
+  return <UniversalItem item={answerItems} itemModel={itemModel} />;
 };
 
 export default AnswerContext;
