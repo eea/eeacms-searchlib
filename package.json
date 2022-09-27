@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/search",
-  "version": "0.2.26",
+  "version": "0.2.27",
   "main": "dist/index.js",
   "homepage": "https://github.com/eea/eeacms-searchlib",
   "repository": {
