@@ -1,6 +1,6 @@
 import React, { Component, Fragment } from 'react';
 
-import './tooltip.css';
+// import './tooltip.css';
 
 // *******************************************************
 // TOOLTIP RAIL
@@ -148,7 +148,7 @@ export class Handle extends Component {
               position: 'absolute',
               marginLeft: '-11px',
               marginTop: '-35px',
-              backgroundColor: '#2C4870',
+              // backgroundColor: '#2C4870',
             }}
           >
             <div className="tooltip">
