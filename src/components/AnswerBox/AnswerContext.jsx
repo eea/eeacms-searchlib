@@ -5,14 +5,15 @@ import { ResultSource } from '@eeacms/search/components'; //, StringList, Iconn
 
 import { highlightUrl } from './utils';
 
-import { UniversalItem } from '@eeacms/volto-listing-block';
-
+import { useAppConfig } from '@eeacms/search/lib/hocs';
 import AnswerBoxDetails from './AnswerBoxDetails';
 
 const WHITESPACE_RE = /\n|\t/;
 
 const AnswerContext = ({ item, answerItem }) => {
   const { full_context = '', context, answer } = answerItem;
+  const { registry } = useAppConfig();
+  const UniversalItem = registry.resolve['UniversalItem'].component;
   // const clusters = item.clusterInfo;
   const start = (full_context || context || '').indexOf(answer);
 
