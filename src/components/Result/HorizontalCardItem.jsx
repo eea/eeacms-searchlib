@@ -8,8 +8,6 @@ import {
 import { useAppConfig } from '@eeacms/search/lib/hocs';
 import { firstWords, getTermDisplayValue } from '@eeacms/search/lib/utils';
 
-import { UniversalItem } from '@eeacms/volto-listing-block';
-
 import ExternalLink from './ExternalLink';
 import ResultContext from './ResultContext';
 import ContentClusters from './ContentClusters';
@@ -56,9 +54,11 @@ const ExtraContent = (props) => {
 
 const HorizontalCardItem = (props) => {
   const { result } = props;
-  const { appConfig } = useAppConfig();
+  const { appConfig, registry } = useAppConfig();
   const { vocab = {} } = appConfig;
   const clusters = result.clusterInfo;
+
+  const UniversalItem = registry.resolve['UniversalItem'].component;
 
   const item = {
     title: (
