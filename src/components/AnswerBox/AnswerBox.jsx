@@ -99,12 +99,12 @@ const AnswerBox = (props) => {
         <Message icon warning size="small">
           <Icon name="exclamation circle" />
           <Message.Content>
-            <p>
+            <span>
               No direct answers for your question.
               <Label circular color="teal">
                 {messageCounter}
               </Label>
-            </p>
+            </span>
           </Message.Content>
         </Message>
       </div>
