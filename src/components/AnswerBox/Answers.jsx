@@ -16,6 +16,7 @@ const Answers = (props) => {
   const { data = {}, searchedTerm, hasActiveFilters, resetFilters } = props;
   const { sortedClusters = [] } = data || {};
   const [position, setPosition] = React.useState(0);
+  const primaryAnswers = sortedClusters.filter((ans) => ans.length);
 
   const ExtractMessageWarning = React.useMemo(() => {
     return () => (
@@ -45,7 +46,7 @@ const Answers = (props) => {
 
   return (
     <div>
-      {sortedClusters.length > 1 && (
+      {primaryAnswers.length > 1 && (
         <Button.Group size="mini" floated="right" color="blue">
           <Button
             icon="angle left"
@@ -54,14 +55,14 @@ const Answers = (props) => {
           />
           <Button
             icon="angle right"
-            disabled={position === sortedClusters.length - 1}
+            disabled={position === primaryAnswers.length - 1}
             onClick={() => setPosition(position + 1)}
           />
         </Button.Group>
       )}
       <div>
         {/* <h2>{searchedTerm}</h2> */}
-        {sortedClusters.map((filtered, i) => {
+        {primaryAnswers.map((filtered, i) => {
           const primaryAnswer = filtered?.[0];
 
           if (!primaryAnswer) {
