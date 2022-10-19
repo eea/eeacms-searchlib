@@ -12,7 +12,6 @@ import { SearchContext as SUISearchContext } from '@elastic/react-search-ui';
 import { checkInteracted } from '@eeacms/search/lib/search/helpers';
 import { BodyContent } from './BodyContent';
 import { useSearchContext } from '@eeacms/search/lib/hocs';
-import { BodyClass } from '@plone/volto/helpers';
 import { useAtom } from 'jotai';
 import { isLandingPageAtom } from './state';
 
@@ -48,7 +47,6 @@ export const SearchView = (props) => {
 
   return (
     <div className={`searchapp searchapp-${appName} ${customClassName}`}>
-      <BodyClass className={`${appName}-view`} />
       <Layout
         appConfig={appConfig}
         header={
