@@ -26,7 +26,7 @@ export const FilterAsideContentView = (props) => {
     (v) => v.id === views.activeViewId,
   )[0];
   const ResultViewComponent =
-    registry.resolve[listingViewDef.factories.view].component;
+    registry.resolve[listingViewDef?.factories.view]?.component;
 
   // const availableResultViews = [
   //   ...resultViews.filter(({ id }) => {

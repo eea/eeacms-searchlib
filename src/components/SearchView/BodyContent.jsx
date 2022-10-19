@@ -12,11 +12,11 @@ export const BodyContent = (props) => {
   const itemViewProps = appConfig[`${activeViewId}ViewParams`];
   const listingViewDef = resultViews.filter((v) => v.id === activeViewId)[0];
 
-  const Item = registry.resolve[listingViewDef.factories.item].component;
+  const Item = registry.resolve[listingViewDef?.factories?.item]?.component;
 
   const NoResultsComponent =
     appConfig.noResultsView?.factory &&
-    registry.resolve[appConfig.noResultsView?.factory].component;
+    registry.resolve[appConfig.noResultsView?.factory]?.component;
 
   const ContentBodyView =
     registry.resolve[appConfig['contentBodyComponent'] || 'DefaultContentView']
