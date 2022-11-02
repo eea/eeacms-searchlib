@@ -13,7 +13,7 @@ const WHITESPACE_RE = /\n|\t/;
 const AnswerContext = ({ item, answerItem }) => {
   const { full_context = '', context, answer } = answerItem;
   const { registry } = useAppConfig();
-  const UniversalItem = registry.resolve['UniversalItem'].component;
+  const UniversalCard = registry.resolve['UniversalCard'].component;
   // const clusters = item.clusterInfo;
   const start = (full_context || context || '').indexOf(answer);
 
@@ -70,7 +70,7 @@ const AnswerContext = ({ item, answerItem }) => {
     '@type': 'searchItem',
   };
 
-  return <UniversalItem item={answerItems} itemModel={itemModel} />;
+  return <UniversalCard item={answerItems} itemModel={itemModel} />;
 };
 
 export default AnswerContext;

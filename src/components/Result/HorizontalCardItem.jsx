@@ -58,7 +58,7 @@ const HorizontalCardItem = (props) => {
   const { vocab = {} } = appConfig;
   const clusters = result.clusterInfo;
 
-  const UniversalItem = registry.resolve['UniversalItem'].component;
+  const UniversalCard = registry.resolve['UniversalCard'].component;
 
   const item = {
     title: (
@@ -82,7 +82,7 @@ const HorizontalCardItem = (props) => {
     '@type': 'searchItem',
   };
 
-  return <UniversalItem item={item} itemModel={itemModel} />;
+  return <UniversalCard item={item} itemModel={itemModel} />;
 };
 
 export default HorizontalCardItem;
